@@ -1,0 +1,226 @@
+{
+  "S1_random": {
+    "name": "S1_random",
+    "description": "Stratified random row split, 80/10/10. Comparable to the original experiments. Measures interpolation between adjacent grid nodes, not generalisation.",
+    "counts": {
+      "train": 100922980,
+      "val": 12615370,
+      "test": 12615370
+    },
+    "sha256": {
+      "train": "c987e6aa3b169165ea42ab538d56d45f0d1c10d558346cdab606cdc660969f28",
+      "val": "3ee3521fba12b101af28e4e98492887a4882401d05f5b9c8d7339895ba230d20",
+      "test": "d862167b898ebb212d9880d1e25ba3585b797e8bdac91eebf34c0f0ceed9e2e9"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 67817408,
+        "fuel-only infeasible": 14865553,
+        "completely infeasible": 18240019
+      },
+      "val": {
+        "fully valid": 8477177,
+        "fuel-only infeasible": 1858193,
+        "completely infeasible": 2280000
+      },
+      "test": {
+        "fully valid": 8477177,
+        "fuel-only infeasible": 1858193,
+        "completely infeasible": 2280000
+      }
+    },
+    "covers_all_classes": true
+  },
+  "S2_level_Hs": {
+    "name": "S2_level_Hs",
+    "description": "Hold out Hs = [0.25, 5.0, 9.75] entirely. Tests interpolation to unseen levels of one input.",
+    "counts": {
+      "train": 103944508,
+      "val": 12978452,
+      "test": 9230760
+    },
+    "sha256": {
+      "train": "0b6d3d869273777d301c60ded8b382bed3e371eb2494a2c7d0a33b8a4fad54d9",
+      "val": "acdaae1a2b053c2ab42eff4f88d1fd01c2935b631dfc3cf8fa6a01cd7de5f22e",
+      "test": "8378acd8dce86eb4c1ad091646ff0492bdfe3a8a70dde94f332d2f3b159250cc"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 69982138,
+        "fuel-only infeasible": 15214863,
+        "completely infeasible": 18747507
+      },
+      "val": {
+        "fully valid": 8737928,
+        "fuel-only infeasible": 1899721,
+        "completely infeasible": 2340803
+      },
+      "test": {
+        "fully valid": 6051696,
+        "fuel-only infeasible": 1467355,
+        "completely infeasible": 1711709
+      }
+    },
+    "covers_all_classes": true
+  },
+  "S2_level_Chi": {
+    "name": "S2_level_Chi",
+    "description": "Hold out Chi = [0.08726649731397629, 1.5707999467849731, 3.0543301105499268] entirely. Tests interpolation to unseen levels of one input.",
+    "counts": {
+      "train": 103057360,
+      "val": 12867680,
+      "test": 10228680
+    },
+    "sha256": {
+      "train": "4b3ef17e92777e87e376038d552239bb9bdae41c8e190e88c346f5178320c320",
+      "val": "bec8b8b9cc0ec68c616e81d175ff9fcd58683555a285263f26bd3569d873c6cb",
+      "test": "bbd65352193845fa4510b039cda2dd238cc8c467c1f2c2fb2f2e635ef50f7b33"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 69589664,
+        "fuel-only infeasible": 15267682,
+        "completely infeasible": 18200014
+      },
+      "val": {
+        "fully valid": 8688924,
+        "fuel-only infeasible": 1906312,
+        "completely infeasible": 2272444
+      },
+      "test": {
+        "fully valid": 6493174,
+        "fuel-only infeasible": 1407945,
+        "completely infeasible": 2327561
+      }
+    },
+    "covers_all_classes": true
+  },
+  "S2_level_draft": {
+    "name": "S2_level_draft",
+    "description": "Hold out draft = [8.5] entirely. Tests interpolation to unseen levels of one input.",
+    "counts": {
+      "train": 74767106,
+      "val": 9335374,
+      "test": 42051240
+    },
+    "sha256": {
+      "train": "4eff96283ff0adf9e60220f619a5893fe586f96bebc7beb75c8b1ca45f6932e4",
+      "val": "9f3d5cacf213914268d01cc428d9565f757e906371939a2dd7b5e4144975f483",
+      "test": "92505adfb5fa8ca7c2dce4477511d5c56a715daf4d3e29b88f962aed41e0be04"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 50290296,
+        "fuel-only infeasible": 10804446,
+        "completely infeasible": 13672364
+      },
+      "val": {
+        "fully valid": 6279216,
+        "fuel-only infeasible": 1349036,
+        "completely infeasible": 1707122
+      },
+      "test": {
+        "fully valid": 28202250,
+        "fuel-only infeasible": 6428457,
+        "completely infeasible": 7420533
+      }
+    },
+    "covers_all_classes": true
+  },
+  "S2_level_Vwind": {
+    "name": "S2_level_Vwind",
+    "description": "Hold out Vwind = [5.0, 20.0] entirely. Tests interpolation to unseen levels of one input.",
+    "counts": {
+      "train": 74767104,
+      "val": 9335376,
+      "test": 42051240
+    },
+    "sha256": {
+      "train": "44849d4e328cab035696f7a8da20003e3efa861634d84e38f497d9c5aa253403",
+      "val": "e7bd5f213ce89967017cb956934ffac8a639d022223c7fb6c8fbc3757064955f",
+      "test": "ca56c19dd88d693d925ee80ff37ce305de6a27e8d36101048c54c894bb5fc296"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 50054804,
+        "fuel-only infeasible": 11011117,
+        "completely infeasible": 13701183
+      },
+      "val": {
+        "fully valid": 6249812,
+        "fuel-only infeasible": 1374842,
+        "completely infeasible": 1710722
+      },
+      "test": {
+        "fully valid": 28467146,
+        "fuel-only infeasible": 6195980,
+        "completely infeasible": 7388114
+      }
+    },
+    "covers_all_classes": true
+  },
+  "S3_block": {
+    "name": "S3_block",
+    "description": "Hold out the joint region {'Hs': (7.0, 10.0), 'Chi': (1.0995559692382812, 2.0420379638671875)}. Tests whether a whole operating region can be predicted from its surroundings.",
+    "counts": {
+      "train": 101578773,
+      "val": 12683067,
+      "test": 11891880
+    },
+    "sha256": {
+      "train": "01e653da3f676e194d6f867defee236a215af796ed52d191592e64d204cb1341",
+      "val": "436092e75a93588a9bcb43b8ae055b77e83c95b8d33559c6e942bcc3ff1d2626",
+      "test": "e0077a325bc15c954b14c7829b68dcc68ed3c4424f249277c5cc09d367f02472"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 68255894,
+        "fuel-only infeasible": 13490400,
+        "completely infeasible": 19832479
+      },
+      "val": {
+        "fully valid": 8522390,
+        "fuel-only infeasible": 1684406,
+        "completely infeasible": 2476271
+      },
+      "test": {
+        "fully valid": 7993478,
+        "fuel-only infeasible": 3407133,
+        "completely infeasible": 491269
+      }
+    },
+    "covers_all_classes": true
+  },
+  "S4_corner": {
+    "name": "S4_corner",
+    "description": "Extrapolation beyond {'Hs': 8.5, 'Vwind': 21.25}. Expected to be the weakest regime; establishes the honest limit of the surrogate.",
+    "counts": {
+      "train": 79781966,
+      "val": 9961534,
+      "test": 36410220
+    },
+    "sha256": {
+      "train": "cccc32ddd58564df778ed816e79f027638bb17875f0d3ae1a6134054a4ff9183",
+      "val": "df82c0dabf39ff1e3659c117752a45cc98d3ffae074f9a8d2ad092ff6fd06756",
+      "test": "9b4dc09135b9a44db0b192df6830f88b7fb8add4854f5c46792cc4d3bc0301bc"
+    },
+    "class_counts": {
+      "train": {
+        "fully valid": 56504473,
+        "fuel-only infeasible": 10017355,
+        "completely infeasible": 13260138
+      },
+      "val": {
+        "fully valid": 7055116,
+        "fuel-only infeasible": 1250764,
+        "completely infeasible": 1655654
+      },
+      "test": {
+        "fully valid": 21212173,
+        "fuel-only infeasible": 7313820,
+        "completely infeasible": 7884227
+      }
+    },
+    "covers_all_classes": true
+  }
+}

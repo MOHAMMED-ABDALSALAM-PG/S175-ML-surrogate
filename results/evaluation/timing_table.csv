@@ -1,0 +1,5 @@
+configuration,seconds_per_point,speedup_vs_simulator_single
+"simulator, single point",8.939470006502233,1.0
+"simulator, batched (best measured)",0.01659438744907136,538.7044284664148
+"surrogate, single point (GPU, all 3 nets)",0.00244789861550089,3651.8955278190865
+"surrogate, batched 65k (GPU, per point)",2.485160374969079e-07,35971400.86628599

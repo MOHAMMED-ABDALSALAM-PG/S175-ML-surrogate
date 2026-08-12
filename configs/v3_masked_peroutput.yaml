@@ -1,0 +1,48 @@
+# The configuration the manuscript's method section actually describes:
+# per-output asymmetric weights combined with the masked loss.
+#
+# alpha > 1 penalises over-prediction  -> the output is biased to under-predict
+# alpha < 1 penalises under-prediction -> the output is biased to over-predict
+#
+# Ship speed takes alpha > 1 so the surrogate never promises more speed than
+# the simulator. The other nine take alpha < 1 so required power, fuel and
+# operational risk are never under-stated. check_alpha_directions() rejects any
+# vector that contradicts SAFE_DIRECTION, which is what would have caught the
+# published run's uniform alpha = 1.5.
+name: v3_masked_peroutput
+description: >
+  Per-output asymmetric masked loss. This is the corrected configuration; the
+  published run applied a single scalar alpha = 1.5 to all ten outputs with no
+  mask, which biased nine of them toward the unsafe side.
+
+split: S1_random
+
+# architecture -- matches the original tuning result so the comparison is like
+# for like; only the loss and the evaluation change.
+hidden: [512, 256, 128]
+hidden_clf1: [512, 256, 128]        # C1: is every output infeasible?
+hidden_clf2: [512, 256, 128, 64]    # C2: is fuel alone infeasible?
+batchnorm: true
+bn_after_act: false      # true reproduces the original Linear -> ReLU -> BN
+dropout: 0.0
+
+# loss
+alpha_speed: 1.5
+alpha_others: 0.33
+
+# optimisation
+lr: 0.001
+batch_size: 512          # replaced by whatever the timing pilot selects
+max_epochs: 200
+patience: 15
+amp: true
+
+# classifier decision thresholds. Positive class = infeasible, so a false
+# negative is the dangerous error. The threshold is the highest one that still
+# meets this recall floor on the *validation* split -- the most precise
+# classifier that honours the safety constraint, never an implicit 0.5.
+clf_target_recall: 0.99
+
+# timing pilot
+pilot_steps: 200
+pilot_batch_sizes: [512, 4096, 16384, 65536]

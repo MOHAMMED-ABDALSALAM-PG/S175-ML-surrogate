@@ -1,0 +1,114 @@
+{
+  "host": "des24.lab.kask.eti.pg.edu.pl",
+  "single_point": {
+    "n": 10,
+    "times_s": [
+      8.900722708029207,
+      9.013843938009813,
+      8.908993747958448,
+      9.101213818998076,
+      8.874463639978785,
+      10.414007479965221,
+      8.969946265046019,
+      8.758825204975437,
+      8.807932451018132,
+      10.80103891697945
+    ],
+    "mean_s": 9.25509881709586,
+    "median_s": 8.939470006502233,
+    "stdev_s": 0.7251586883205975,
+    "min_s": 8.758825204975437,
+    "max_s": 10.80103891697945
+  },
+  "batch": [
+    {
+      "points_requested": 1,
+      "points_produced": 1,
+      "times_s": [
+        8.931197402998805,
+        8.792515368957538,
+        8.917603671958204
+      ],
+      "median_total_s": 8.917603671958204,
+      "per_point_s": 8.917603671958204
+    },
+    {
+      "points_requested": 12,
+      "points_produced": 12,
+      "times_s": [
+        8.806310946994927,
+        8.79065860103583,
+        8.869007707049605
+      ],
+      "median_total_s": 8.806310946994927,
+      "per_point_s": 0.7338592455829106
+    },
+    {
+      "points_requested": 36,
+      "points_produced": 36,
+      "times_s": [
+        12.74405935202958,
+        12.859050827973988,
+        12.58238778897794
+      ],
+      "median_total_s": 12.74405935202958,
+      "per_point_s": 0.35400164866748834
+    },
+    {
+      "points_requested": 72,
+      "points_produced": 72,
+      "times_s": [
+        13.181163967994507,
+        12.977490553981625,
+        12.70354304695502
+      ],
+      "median_total_s": 12.977490553981625,
+      "per_point_s": 0.1802429243608559
+    },
+    {
+      "points_requested": 216,
+      "points_produced": 216,
+      "times_s": [
+        13.010480396042112,
+        13.205943069013301,
+        12.950856240990106
+      ],
+      "median_total_s": 13.010480396042112,
+      "per_point_s": 0.060233705537232
+    },
+    {
+      "points_requested": 432,
+      "points_produced": 432,
+      "times_s": [
+        13.489874720980879,
+        13.48360259499168,
+        13.44719575101044
+      ],
+      "median_total_s": 13.48360259499168,
+      "per_point_s": 0.03121204304396222
+    },
+    {
+      "points_requested": 864,
+      "points_produced": 864,
+      "times_s": [
+        14.097617631021421,
+        14.41833581397077,
+        14.337550755997654
+      ],
+      "median_total_s": 14.337550755997654,
+      "per_point_s": 0.01659438744907136
+    }
+  ],
+  "batch_fit": {
+    "fixed_setup_s": 10.933761733931306,
+    "marginal_per_point_s": 0.004740211962324954,
+    "r2": 0.4552119181837302,
+    "note": "least squares over the size ladder; per-point cost varies with the feasible/infeasible mix of the grid, so this is an average rather than a constant"
+  },
+  "implied_full_dataset": {
+    "n_rows": 126153720,
+    "seconds": 598006.3063975268,
+    "hours": 166.11286288820187,
+    "days": 6.921369287008411
+  }
+}

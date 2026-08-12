@@ -1,0 +1,31 @@
+{
+  "name": "S3_block",
+  "description": "Hold out the joint region {'Hs': (7.0, 10.0), 'Chi': (1.0995559692382812, 2.0420379638671875)}. Tests whether a whole operating region can be predicted from its surroundings.",
+  "counts": {
+    "train": 101578773,
+    "val": 12683067,
+    "test": 11891880
+  },
+  "sha256": {
+    "train": "01e653da3f676e194d6f867defee236a215af796ed52d191592e64d204cb1341",
+    "val": "436092e75a93588a9bcb43b8ae055b77e83c95b8d33559c6e942bcc3ff1d2626",
+    "test": "e0077a325bc15c954b14c7829b68dcc68ed3c4424f249277c5cc09d367f02472"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 68255894,
+      "fuel-only infeasible": 13490400,
+      "completely infeasible": 19832479
+    },
+    "val": {
+      "fully valid": 8522390,
+      "fuel-only infeasible": 1684406,
+      "completely infeasible": 2476271
+    },
+    "test": {
+      "fully valid": 7993478,
+      "fuel-only infeasible": 3407133,
+      "completely infeasible": 491269
+    }
+  }
+}

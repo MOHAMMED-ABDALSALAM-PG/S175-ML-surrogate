@@ -1,0 +1,8 @@
+split,train,val,test,test_fully_valid,test_fuel_only,test_all_infeasible,description
+S1_random,100922980,12615370,12615370,,,,"Stratified random row split, 80/10/10. Comparable to the original experiments. Measures interpolation between adjacent grid nodes, not generalisation."
+S2_level_Chi,103057360,12867680,10228680,,,,"Hold out Chi = [0.08726649731397629, 1.5707999467849731, 3.0543301105499268] entirely. Tests interpolation to unseen levels of one input."
+S2_level_Hs,103944508,12978452,9230760,,,,"Hold out Hs = [0.25, 5.0, 9.75] entirely. Tests interpolation to unseen levels of one input."
+S2_level_Vwind,74767104,9335376,42051240,,,,"Hold out Vwind = [5.0, 20.0] entirely. Tests interpolation to unseen levels of one input."
+S2_level_draft,74767106,9335374,42051240,,,,Hold out draft = [8.5] entirely. Tests interpolation to unseen levels of one input.
+S3_block,101578773,12683067,11891880,,,,"Hold out the joint region {'Hs': (7.0, 10.0), 'Chi': (1.0995559692382812, 2.0420379638671875)}. Tests whether a whole operating region can be predicted from its surroundings."
+S4_corner,79781966,9961534,36410220,,,,"Extrapolation beyond {'Hs': 8.5, 'Vwind': 21.25}. Expected to be the weakest regime; establishes the honest limit of the surrogate."

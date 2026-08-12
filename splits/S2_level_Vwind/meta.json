@@ -1,0 +1,31 @@
+{
+  "name": "S2_level_Vwind",
+  "description": "Hold out Vwind = [5.0, 20.0] entirely. Tests interpolation to unseen levels of one input.",
+  "counts": {
+    "train": 74767104,
+    "val": 9335376,
+    "test": 42051240
+  },
+  "sha256": {
+    "train": "44849d4e328cab035696f7a8da20003e3efa861634d84e38f497d9c5aa253403",
+    "val": "e7bd5f213ce89967017cb956934ffac8a639d022223c7fb6c8fbc3757064955f",
+    "test": "ca56c19dd88d693d925ee80ff37ce305de6a27e8d36101048c54c894bb5fc296"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 50054804,
+      "fuel-only infeasible": 11011117,
+      "completely infeasible": 13701183
+    },
+    "val": {
+      "fully valid": 6249812,
+      "fuel-only infeasible": 1374842,
+      "completely infeasible": 1710722
+    },
+    "test": {
+      "fully valid": 28467146,
+      "fuel-only infeasible": 6195980,
+      "completely infeasible": 7388114
+    }
+  }
+}

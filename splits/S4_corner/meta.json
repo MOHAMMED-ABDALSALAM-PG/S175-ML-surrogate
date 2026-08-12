@@ -1,0 +1,31 @@
+{
+  "name": "S4_corner",
+  "description": "Extrapolation beyond {'Hs': 8.5, 'Vwind': 21.25}. Expected to be the weakest regime; establishes the honest limit of the surrogate.",
+  "counts": {
+    "train": 79781966,
+    "val": 9961534,
+    "test": 36410220
+  },
+  "sha256": {
+    "train": "cccc32ddd58564df778ed816e79f027638bb17875f0d3ae1a6134054a4ff9183",
+    "val": "df82c0dabf39ff1e3659c117752a45cc98d3ffae074f9a8d2ad092ff6fd06756",
+    "test": "9b4dc09135b9a44db0b192df6830f88b7fb8add4854f5c46792cc4d3bc0301bc"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 56504473,
+      "fuel-only infeasible": 10017355,
+      "completely infeasible": 13260138
+    },
+    "val": {
+      "fully valid": 7055116,
+      "fuel-only infeasible": 1250764,
+      "completely infeasible": 1655654
+    },
+    "test": {
+      "fully valid": 21212173,
+      "fuel-only infeasible": 7313820,
+      "completely infeasible": 7884227
+    }
+  }
+}

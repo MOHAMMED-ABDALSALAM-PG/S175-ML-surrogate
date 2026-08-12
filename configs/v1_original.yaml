@@ -1,0 +1,42 @@
+# The ORIGINAL (v1) configuration, reproduced as a controlled baseline for the
+# paper's ablation. Same architecture and optimisation schedule as
+# v3_masked_peroutput; the differences are exactly the defects the audit found
+# in step7_8_full.py:
+#
+#   1. uniform alpha = 1.5 on ALL ten outputs (nine of them biased the unsafe
+#      way) -- original_loss bypasses the SAFE_DIRECTION guard, on purpose;
+#   2. no fuel mask: the fuel-only-infeasible rows are dropped entirely, so
+#      the regressor trains on the 67.8M fully-valid rows instead of 82.7M;
+#   3. BatchNorm placed after the activation (Linear -> ReLU -> BN).
+#
+# Batch size and AMP follow the timing pilot, NOT the original 512: the
+# comparison isolates the loss/data configuration, not the wall-clock speed.
+name: v1_original
+description: >
+  v1 baseline: uniform asymmetric alpha 1.5, no mask, fuel-only rows dropped,
+  BN after activation. Trained under the v2 harness for a controlled
+  comparison against v3_masked_peroutput.
+
+split: S1_random
+original_loss: true
+
+hidden: [512, 256, 128]
+hidden_clf1: [512, 256, 128]
+hidden_clf2: [512, 256, 128, 64]
+batchnorm: true
+bn_after_act: true       # the original layer order
+dropout: 0.0
+
+alpha_speed: 1.5
+alpha_others: 1.5        # uniform -- the defect under test
+
+lr: 0.001
+batch_size: 512
+max_epochs: 200
+patience: 15
+amp: true
+
+clf_target_recall: 0.99
+
+pilot_steps: 200
+pilot_batch_sizes: [512, 4096, 16384, 65536]

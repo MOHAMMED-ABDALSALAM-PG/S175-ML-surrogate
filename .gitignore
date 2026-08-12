@@ -1,0 +1,18 @@
+# never commit the dataset or its cache (15.9 GB raw / 10.6 GB binary)
+data/cache/
+S175_shaft_gen_off.txt
+S175_sample_5pct_stratified.csv
+*.txt.gz
+
+# split index arrays are 6.6 GB and fully regenerable from the recorded
+# seeds (scripts/01_prepare.py); their sha256 manifests ARE committed so a
+# regenerated split can be verified bit-for-bit
+splits/*/*.npy
+
+# trained models under runs/ ARE committed (~19 MB): checkpoints, histories,
+# run.json and eval.json make every reported number reproducible
+
+logs/
+__pycache__/
+*.pyc
+.venv/

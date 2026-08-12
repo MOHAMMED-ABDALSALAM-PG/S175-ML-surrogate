@@ -1,0 +1,31 @@
+{
+  "name": "S2_level_Hs",
+  "description": "Hold out Hs = [0.25, 5.0, 9.75] entirely. Tests interpolation to unseen levels of one input.",
+  "counts": {
+    "train": 103944508,
+    "val": 12978452,
+    "test": 9230760
+  },
+  "sha256": {
+    "train": "0b6d3d869273777d301c60ded8b382bed3e371eb2494a2c7d0a33b8a4fad54d9",
+    "val": "acdaae1a2b053c2ab42eff4f88d1fd01c2935b631dfc3cf8fa6a01cd7de5f22e",
+    "test": "8378acd8dce86eb4c1ad091646ff0492bdfe3a8a70dde94f332d2f3b159250cc"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 69982138,
+      "fuel-only infeasible": 15214863,
+      "completely infeasible": 18747507
+    },
+    "val": {
+      "fully valid": 8737928,
+      "fuel-only infeasible": 1899721,
+      "completely infeasible": 2340803
+    },
+    "test": {
+      "fully valid": 6051696,
+      "fuel-only infeasible": 1467355,
+      "completely infeasible": 1711709
+    }
+  }
+}
