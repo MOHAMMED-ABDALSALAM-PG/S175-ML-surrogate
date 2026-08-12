@@ -1,0 +1,13 @@
+{
+  "n_points": 864,
+  "grid": "identical to simulator timing grid (chi x Vwind x theta)",
+  "ml_batch864_total_s": 0.0027436689706519246,
+  "ml_batch864_per_point_us": 3.175542790106394,
+  "ml_single_total_s": 2.2863715540152043,
+  "ml_single_per_point_ms": 2.646263372702783,
+  "sim_batch864_total_s": 14.338,
+  "sim_batch864_per_point_ms": 16.594907407407405,
+  "sim_single_per_point_s": 8.939,
+  "speedup_batch_vs_batch": 5225.849092353565,
+  "speedup_single_vs_single": 3377.9706480500763
+}
