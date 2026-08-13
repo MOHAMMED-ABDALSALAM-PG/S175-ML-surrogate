@@ -1,0 +1,87 @@
+{
+  "config_path": "configs/v1_original.yaml",
+  "config": {
+    "name": "v1_original",
+    "description": "v1 baseline: uniform asymmetric alpha 1.5, no mask, fuel-only rows dropped, BN after activation. Trained under the v2 harness for a controlled comparison against v3_masked_peroutput.\n",
+    "split": "S1_random",
+    "original_loss": true,
+    "hidden": [
+      512,
+      256,
+      128
+    ],
+    "hidden_clf1": [
+      512,
+      256,
+      128
+    ],
+    "hidden_clf2": [
+      512,
+      256,
+      128,
+      64
+    ],
+    "batchnorm": true,
+    "bn_after_act": true,
+    "dropout": 0.0,
+    "alpha_speed": 1.5,
+    "alpha_others": 1.5,
+    "lr": 0.001,
+    "batch_size": 512,
+    "max_epochs": 200,
+    "patience": 15,
+    "amp": true,
+    "clf_target_recall": 0.99,
+    "pilot_steps": 200,
+    "pilot_batch_sizes": [
+      512,
+      4096,
+      16384,
+      65536
+    ]
+  },
+  "seed": 0,
+  "split": "S1_random",
+  "split_sha256": {
+    "train": "c987e6aa3b169165ea42ab538d56d45f0d1c10d558346cdab606cdc660969f28",
+    "val": "3ee3521fba12b101af28e4e98492887a4882401d05f5b9c8d7339895ba230d20",
+    "test": "d862167b898ebb212d9880d1e25ba3585b797e8bdac91eebf34c0f0ceed9e2e9"
+  },
+  "split_counts": {
+    "train": 100922980,
+    "val": 12615370,
+    "test": 12615370
+  },
+  "dataset": {
+    "source": "/home/macierz/mohabdal/S175_shaft_gen_off.txt",
+    "sha256": "4f018ecadb0ab880ab997dc99a3513b7d087a6948ca099d21cf90366e4f9141d",
+    "n_rows": 126153720
+  },
+  "batch_size": 65536,
+  "amp": true,
+  "device": "cuda",
+  "subsample": null,
+  "environment": {
+    "python": "3.14.4",
+    "torch": "2.13.0+cu130",
+    "numpy": "2.4.6",
+    "cuda_available": true,
+    "gpu": "Quadro RTX 8000",
+    "git_commit": "95db21b2b45af9e884d3f6d0cd488def66f64d16-dirty"
+  },
+  "components": {
+    "regressor": {
+      "component": "regressor",
+      "best_epoch": 73,
+      "best_val_loss": 0.0001396386367292953,
+      "epochs_run": 89,
+      "n_train_rows": 67817408,
+      "n_val_rows": 8477177,
+      "n_parameters": 172426,
+      "batch_size": 65536,
+      "amp": true,
+      "gpu_resident": true,
+      "seconds": 1405.7275331390556
+    }
+  }
+}

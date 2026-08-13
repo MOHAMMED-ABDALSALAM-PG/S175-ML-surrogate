@@ -1,76 +1,102 @@
-"""Speed-versus-accuracy comparison figure: simulator and surrogate.
+"""Per-point cost comparison figure: simulator vs surrogate (dot plot).
 
-Every point is a measurement on des24 -- nothing estimated:
+Every value is a measurement on des24 -- nothing estimated:
   simulator single point   8.939 s/pt   (median of 10 runs)
   simulator batched 864    16.59 ms/pt  (median of 3 runs, -CreateMetamodel)
   surrogate single point   2.646 ms/pt  (864 sequential calls, same inputs)
   surrogate batch 864      3.18 us/pt   (same 864 inputs as the simulator)
-  surrogate batch ladder   512..262144  (inference_speed.json)
+  surrogate batch 65,536   0.25 us/pt   (best measured, timing_table.csv)
 
-Accuracy (y) is the WORST output R^2, the conservative choice:
-  held-out test split          min R^2 = 0.99940 (fuel)
-  vs fresh off-grid sim runs   min R^2 = 0.99592 (slamming, midpoints)
-The simulator is the reference the R^2 is computed against, so it sits at
-R^2 = 1 by definition -- drawn as such, not presented as a measurement.
+Form: horizontal dot plot on a log time axis (bars would length-encode a log
+quantity, which misreads). One row per measured configuration, direct value
+labels, speed-up factors as a right-hand annotation column, accuracy stated
+in the subtitle -- it is constant across all rows, so it is not an axis.
 """
+import csv
 import json
 from pathlib import Path
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 
 ROOT = Path(__file__).resolve().parents[1]
-BLUE, LBLUE, GRAY, RED = "#2a78d6", "#7fb3e8", "#4a4a4a", "#d11a2a"
+BLUE, DARKBLUE = "#2a78d6", "#0b3a75"
+GRAY, INK, MUTED = "#4a4a4a", "#0b0b0b", "#52514e"
 
-speed = json.loads((ROOT / "figures/fixed_campaign/inference_speed.json").read_text())
 same = json.loads((ROOT / "results/evaluation/same_inputs_timing.json").read_text())
+with (ROOT / "results/evaluation/timing_table.csv").open() as f:
+    timing = {r["configuration"]: float(r["seconds_per_point"])
+              for r in csv.DictReader(f)}
 
-# surrogate per-point costs [s], all measured, sorted slow -> fast
-sur_t = [same["ml_single_per_point_ms"] / 1e3,          # single point
-         same["ml_batch864_per_point_us"] / 1e6]        # batch 864 (same inputs)
-sur_t += [1.0 / r for r in speed["rows_per_s"]["pipeline"]]  # ladder 512..262144
-sur_t = sorted(sur_t, reverse=True)
-R2_TEST, R2_OFFGRID = 0.99940, 0.99592
-sim_single, sim_batch = 8.939, 16.59e-3
+sim_single = same["sim_single_per_point_s"]
+sim_batch = same["sim_batch864_per_point_ms"] / 1e3
+sur_single = same["ml_single_per_point_ms"] / 1e3
+sur_batch864 = same["ml_batch864_per_point_us"] / 1e6
+sur_batch65k = timing["surrogate, batched 65k (GPU, per point)"]
 
-fig, ax = plt.subplots(figsize=(10, 6.2))
-# simulator reference
-ax.scatter([sim_single, sim_batch], [1.0, 1.0], s=90, marker="s", color=GRAY, zorder=3)
-ax.annotate("simulator, single point\n8.94 s/pt", (sim_single, 1.0),
-            textcoords="offset points", xytext=(0, -30), ha="center", fontsize=9, color=GRAY)
-ax.annotate("simulator, batched\n16.6 ms/pt", (sim_batch, 1.0),
-            textcoords="offset points", xytext=(0, 12), ha="center", fontsize=9, color=GRAY)
-ax.axhline(1.0, color=GRAY, lw=0.8, ls=":", alpha=0.6)
-# surrogate curves: same measured costs, two accuracy references
-ax.plot(sur_t, [R2_TEST] * len(sur_t), "-o", color=BLUE, lw=2, ms=7, zorder=3,
-        label="surrogate -- held-out test (worst output $R^2$)")
-ax.plot(sur_t, [R2_OFFGRID] * len(sur_t), "--o", color=LBLUE, lw=2, ms=7, zorder=3,
-        label="surrogate -- vs fresh off-grid simulator runs (worst output $R^2$)")
-ax.annotate("single point\n2.65 ms/pt", (sur_t[0], R2_TEST), textcoords="offset points",
-            xytext=(0, 12), ha="center", fontsize=9, color=BLUE)
-ax.annotate("batched\n0.25 $\\mu$s/pt", (sur_t[-1], R2_TEST), textcoords="offset points",
-            xytext=(10, 12), ha="center", fontsize=9, color=BLUE)
-# speed-up arrows, measured pairs
-for x0, x1, y, text in [
-        (sim_single, sur_t[0], 0.9975, "$\\times$3,378\n(single vs single)"),
-        (sim_batch, same["ml_batch864_per_point_us"] / 1e6, 0.99655,
-         "$\\times$5,226\n(same 864 points)")]:
-    ax.annotate("", xy=(x1, y), xytext=(x0, y),
-                arrowprops=dict(arrowstyle="->", color=RED, lw=1.4))
-    ax.annotate(text, ((x0 * x1) ** 0.5, y), textcoords="offset points",
-                xytext=(0, 6), ha="center", fontsize=9, color=RED)
+def fmt_speedup(factor: float) -> str:
+    if factor >= 1e6:
+        exp = len(f"{factor:.0f}") - 1
+        return f"$\\times{factor / 10 ** exp:.1f}\\times10^{{{exp}}}$"
+    return f"$\\times${factor:,.0f}"
+
+
+rows = [  # (label, seconds per point, is_surrogate, value text, speed-up text)
+    ("Simulator\nsingle point", sim_single, False, "8.94 s", "reference"),
+    ("Simulator\nbatched, 864 points", sim_batch, False, "16.6 ms",
+     fmt_speedup(sim_single / sim_batch)),
+    ("Surrogate\nsingle point, all 3 networks", sur_single, True, "2.65 ms",
+     fmt_speedup(sim_single / sur_single)),
+    ("Surrogate\nbatched, same 864 points", sur_batch864, True,
+     "3.18 $\\mu$s", fmt_speedup(sim_single / sur_batch864)),
+    ("Surrogate\nbatched 65,536 (best)", sur_batch65k, True, "0.25 $\\mu$s",
+     fmt_speedup(sim_single / sur_batch65k)),
+]
+
+fig, ax = plt.subplots(figsize=(11, 4.6))
+ys = range(len(rows))
+for y, (label, t, is_sur, vtext, _stext) in zip(ys, rows):
+    color = BLUE if is_sur else GRAY
+    marker = "o" if is_sur else "s"
+    ax.plot([t], [y], marker, color=color, ms=10, zorder=3)
+    ax.annotate(vtext, (t, y), textcoords="offset points",
+                xytext=(0, 11), ha="center", fontsize=10, color=INK)
+
+# right-hand annotation column: measured speed-up vs the single-point simulator
+ax.annotate("speed-up vs\nsimulator, single point", (1.005, 1.0),
+            xycoords="axes fraction", ha="left", va="bottom",
+            fontsize=9, color=MUTED)
+for y, (_l, _t, _s, _v, stext) in zip(ys, rows):
+    ax.annotate(stext, (1.005, y), xycoords=("axes fraction", "data"),
+                ha="left", va="center", fontsize=10,
+                color=MUTED if y == 0 else INK)
+
+ax.set_yticks(list(ys), [r[0] for r in rows], fontsize=10)
+ax.invert_yaxis()
+ax.set_ylim(len(rows) - 0.4, -0.75)
 ax.set_xscale("log")
-ax.set_xlim(2e-8, 80)
-ax.set_ylim(0.9945, 1.0012)
-ax.invert_xaxis()   # faster to the right
-ax.set_xlabel("measured wall time per evaluated point [s]  (log scale, faster $\\rightarrow$)",
+ax.set_xlim(6e-8, 60)
+ticks = [1e-7, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 10]
+ax.set_xticks(ticks, ["0.1 $\\mu$s", "1 $\\mu$s", "10 $\\mu$s",
+                      "100 $\\mu$s", "1 ms", "10 ms", "100 ms", "1 s", "10 s"])
+ax.set_xlabel("measured wall time per evaluated operating point (log scale)",
               fontsize=11)
-ax.set_ylabel("worst-output $R^2$  (axis truncated at 0.9945)", fontsize=11)
-ax.set_title("Accuracy versus per-point cost -- all points measured on the same host",
-             fontsize=13, fontweight="bold")
-ax.legend(fontsize=9, loc="lower left")
-ax.grid(alpha=0.3, which="both")
+ax.grid(axis="x", which="major", alpha=0.3)
+ax.grid(axis="y", alpha=0.15)
+ax.tick_params(axis="x", which="minor", bottom=False)
+for spine in ("top", "right", "left"):
+    ax.spines[spine].set_visible(False)
+# no legend box: every row label already names its entity, so identity is
+# carried by text, not color alone
+ax.set_title(
+    "Measured cost per evaluated operating point -- same host\n", fontsize=13,
+    fontweight="bold", loc="left")
+ax.annotate("accuracy unchanged: worst-output $R^2$ = 0.9994 (test), "
+            "0.9959 (off-grid)",
+            (0, 1.03), xycoords="axes fraction", ha="left", fontsize=10,
+            color=MUTED)
 fig.tight_layout()
 out = ROOT / "figures/fixed_campaign/fig_speed_vs_accuracy"
 fig.savefig(f"{out}.png", dpi=300, bbox_inches="tight")

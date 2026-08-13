@@ -77,17 +77,20 @@ class Scaler:
 @torch.no_grad()
 def predict_all(models, X, idx, x_scaler, device, chunk=CHUNK):
     """One pass over the test rows: regressor output (scaled) + both
-    classifier probabilities, gathered chunk-wise from the memmap."""
+    classifier probabilities, gathered chunk-wise from the memmap.
+    Classifiers may be None (regressor-only ablation runs)."""
     reg, c1, c2 = models
     n = len(idx)
     y_scaled = np.empty((n, len(OUTPUT_COLS)), dtype=np.float32)
-    p1 = np.empty(n, dtype=np.float32)
-    p2 = np.empty(n, dtype=np.float32)
+    p1 = np.empty(n, dtype=np.float32) if c1 is not None else None
+    p2 = np.empty(n, dtype=np.float32) if c2 is not None else None
     for s in range(0, n, chunk):
         xb = torch.from_numpy(x_scaler.transform(X[idx[s:s + chunk]])).to(device)
         y_scaled[s:s + chunk] = reg(xb).float().cpu().numpy()
-        p1[s:s + chunk] = torch.sigmoid(c1(xb).squeeze(-1)).float().cpu().numpy()
-        p2[s:s + chunk] = torch.sigmoid(c2(xb).squeeze(-1)).float().cpu().numpy()
+        if c1 is not None:
+            p1[s:s + chunk] = torch.sigmoid(c1(xb).squeeze(-1)).float().cpu().numpy()
+        if c2 is not None:
+            p2[s:s + chunk] = torch.sigmoid(c2(xb).squeeze(-1)).float().cpu().numpy()
     return y_scaled, p1, p2
 
 
@@ -109,7 +112,7 @@ def regression_metrics(y_true, y_pred, cls_test):
                  "safe_direction_met": met, "safe_direction_total": total}
 
 
-def evaluate_run(run_dir: Path, X, Y, cls, device) -> dict:
+def evaluate_run(run_dir: Path, X, Y, cls, device, chunk=CHUNK) -> dict:
     split_name = run_dir.parent.name
     seed = int(run_dir.name.split("_")[1])
     sp = load_split(SPLIT_DIR, split_name)
@@ -117,19 +120,26 @@ def evaluate_run(run_dir: Path, X, Y, cls, device) -> dict:
     log(f"=== {split_name} seed {seed}: {len(te):,} test rows ===")
 
     reg, reg_ck = load_component(run_dir, "regressor", device)
-    c1, c1_ck = load_component(run_dir, "clf1", device)
-    c2, c2_ck = load_component(run_dir, "clf2", device)
-
-    # all three components must share one input scaler
-    for name, ck in (("clf1", c1_ck), ("clf2", c2_ck)):
-        if not np.allclose(ck["x_scaler"]["mean"], reg_ck["x_scaler"]["mean"]):
-            raise ValueError(f"{run_dir}: {name} x_scaler differs from regressor's")
+    # loss-ablation arms train only the regressor; score what exists
+    have_clf = (run_dir / "clf1.pt").exists() and (run_dir / "clf2.pt").exists()
+    if have_clf:
+        c1, c1_ck = load_component(run_dir, "clf1", device)
+        c2, c2_ck = load_component(run_dir, "clf2", device)
+        # all three components must share one input scaler
+        for name, ck in (("clf1", c1_ck), ("clf2", c2_ck)):
+            if not np.allclose(ck["x_scaler"]["mean"], reg_ck["x_scaler"]["mean"]):
+                raise ValueError(f"{run_dir}: {name} x_scaler differs from regressor's")
+        thr1, thr2 = float(c1_ck["threshold"]), float(c2_ck["threshold"])
+    else:
+        c1 = c2 = None
+        thr1 = thr2 = None
+        log("  regressor-only run (no classifier checkpoints)")
     x_scaler = Scaler(reg_ck["x_scaler"])
     y_scaler = Scaler(reg_ck["y_scaler"])
-    thr1, thr2 = float(c1_ck["threshold"]), float(c2_ck["threshold"])
 
     t0 = time.perf_counter()
-    y_scaled, p1, p2 = predict_all((reg, c1, c2), X, te, x_scaler, device)
+    y_scaled, p1, p2 = predict_all((reg, c1, c2), X, te, x_scaler, device,
+                                   chunk=chunk)
     infer_s = time.perf_counter() - t0
     log(f"  inference {infer_s:.1f}s ({len(te)/infer_s:,.0f} rows/s)")
 
@@ -139,6 +149,21 @@ def evaluate_run(run_dir: Path, X, Y, cls, device) -> dict:
 
     # --- regressor, oracle feasibility -----------------------------------
     reg_out, reg_meta = regression_metrics(y_true, y_pred, cls_te)
+
+    if not have_clf:
+        result = {
+            "split": split_name, "seed": seed,
+            "regressor_only": True,
+            "n_test_rows": int(len(te)),
+            "test_class_counts": sdata.class_counts(cls_te),
+            "inference_seconds": infer_s,
+            "regressor": {"meta": reg_meta, "per_output": reg_out},
+        }
+        (run_dir / "eval.json").write_text(json.dumps(result, indent=2))
+        log(f"  R2 speed {reg_out['speed']['R2']:.4f} power {reg_out['power']['R2']:.4f} "
+            f"fuel {reg_out['fuel']['R2']:.4f} | safe-direction "
+            f"{reg_meta['safe_direction_met']}/{reg_meta['safe_direction_total']}")
+        return result
 
     # --- classifiers at their stored thresholds --------------------------
     # clf1 sees every row; clf2 is scored on the population it faces at
@@ -200,6 +225,9 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=None)
     ap.add_argument("--force", action="store_true",
                     help="re-evaluate runs that already have eval.json")
+    ap.add_argument("--chunk", type=int, default=CHUNK,
+                    help="rows per inference chunk; lower it when the GPU is "
+                         "shared with another job")
     args = ap.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -223,12 +251,16 @@ def main() -> int:
             log(f"SKIP {d.parent.name}/{d.name} (eval.json exists)")
             results.append(json.loads((d / "eval.json").read_text()))
             continue
-        results.append(evaluate_run(d, X, Y, cls, device))
+        results.append(evaluate_run(d, X, Y, cls, device, chunk=args.chunk))
 
     outdir = ROOT / "results" / "evaluation"
     outdir.mkdir(parents=True, exist_ok=True)
-    (outdir / "all_runs.json").write_text(json.dumps(results, indent=2))
-    log(f"wrote {outdir / 'all_runs.json'} ({len(results)} runs)")
+    # the canonical all_runs.json belongs to the main config; ablation and
+    # baseline configs aggregate into their own file so they never clobber it
+    agg = ("all_runs.json" if args.config_name == "v3_masked_peroutput"
+           else f"all_runs_{args.config_name}.json")
+    (outdir / agg).write_text(json.dumps(results, indent=2))
+    log(f"wrote {outdir / agg} ({len(results)} runs)")
     return 0
 
 

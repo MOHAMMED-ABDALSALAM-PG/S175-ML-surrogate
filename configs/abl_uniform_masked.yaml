@@ -1,0 +1,33 @@
+# Ablation arm B: identical to v3_masked_peroutput EXCEPT the per-output
+# weighting -- a single uniform alpha = 1.5 on all ten outputs, with the fuel
+# mask kept. Comparing this arm against v3 isolates the contribution of the
+# per-output direction weights alone (the mask and everything else are held
+# fixed); comparing it against v1_original isolates the fuel mask.
+name: abl_uniform_masked
+description: >
+  Ablation: uniform asymmetric alpha 1.5 on all outputs WITH the fuel mask.
+  Isolates the per-output weighting (vs v3) and the mask (vs v1_original).
+
+split: S1_random
+ablation_loss: true    # bypass the SAFE_DIRECTION guard on purpose
+
+hidden: [512, 256, 128]
+hidden_clf1: [512, 256, 128]
+hidden_clf2: [512, 256, 128, 64]
+batchnorm: true
+bn_after_act: false
+dropout: 0.0
+
+alpha_speed: 1.5
+alpha_others: 1.5        # uniform -- the single factor under test vs v3
+
+lr: 0.001
+batch_size: 512
+max_epochs: 200
+patience: 15
+amp: true
+
+clf_target_recall: 0.99
+
+pilot_steps: 200
+pilot_batch_sizes: [512, 4096, 16384, 65536]

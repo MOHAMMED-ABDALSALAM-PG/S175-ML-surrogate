@@ -62,6 +62,7 @@ CHUNK = 2_000_000
 # two-series timing chart pairs blue with dark orange (CVD-safe pairing),
 # reinforced by distinct markers so identity is never color-alone.
 BLUE = "#2a78d6"
+DARKBLUE = "#0b3a75"
 ORANGE = "#c2410c"
 RED = "#d11a2a"
 
@@ -256,10 +257,12 @@ def fig_residuals(y_true, y_pred, cls_te, outdir):
         over = float(np.mean(res > 0) * 100.0)
         mean = float(res.mean())
         lo, hi = np.percentile(res, [0.05, 99.95])
+        # blue-on-white scheme: one blue for the data, neutral ink for the
+        # zero reference, dark blue for the mean of the same (blue) series
         ax.hist(res, bins=120, range=(lo, hi), density=True, color=BLUE,
                 alpha=0.75)
-        ax.axvline(0.0, color=RED, ls="--", lw=1.4, label="Zero error")
-        ax.axvline(mean, color="black", lw=1.4, label=f"Mean={mean:.4f}")
+        ax.axvline(0.0, color="#4a4a4a", ls="--", lw=1.4, label="Zero error")
+        ax.axvline(mean, color=DARKBLUE, lw=1.6, label=f"Mean={mean:.4f}")
         ax.set_title(f"{c}\nOverest={over:.1f}%, Mean={mean:.4f}",
                      fontsize=11, fontweight="bold")
         ax.set_xlabel(f"Residual (Pred - Actual) [{UNITS[c]}]", fontsize=9)
@@ -367,6 +370,12 @@ def main() -> int:
     ap.add_argument("--config-name", default="v3_masked_peroutput")
     ap.add_argument("--split", default="S1_random")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--only", nargs="*", default=None,
+                    choices=["pipeline", "regression", "confusion",
+                             "residuals", "seaheat", "speed"],
+                    help="regenerate only the named figures (default: all); "
+                         "note 'speed' RE-MEASURES and overwrites "
+                         "inference_speed.json")
     args = ap.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -399,13 +408,20 @@ def main() -> int:
     pred_cls[p2 > thr2] = CLASS_FUEL_ONLY
     pred_cls[p1 > thr1] = CLASS_ALL_NEG
 
+    wanted = set(args.only) if args.only else {
+        "pipeline", "regression", "confusion", "residuals", "seaheat", "speed"}
     rng = np.random.default_rng(0)
-    fig_pipeline_scatter(y_true, y_pred, cls_te, pred_cls, len(te), outdir, rng)
-    fig_regression_scatter(y_true, y_pred, cls_te, outdir, rng)
-    fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir)
-    fig_residuals(y_true, y_pred, cls_te, outdir)
-    fig_sea_heatmap(y_true, y_pred, cls_te, hs, outdir)
-    if device.type == "cuda":
+    if "pipeline" in wanted:
+        fig_pipeline_scatter(y_true, y_pred, cls_te, pred_cls, len(te), outdir, rng)
+    if "regression" in wanted:
+        fig_regression_scatter(y_true, y_pred, cls_te, outdir, rng)
+    if "confusion" in wanted:
+        fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir)
+    if "residuals" in wanted:
+        fig_residuals(y_true, y_pred, cls_te, outdir)
+    if "seaheat" in wanted:
+        fig_sea_heatmap(y_true, y_pred, cls_te, hs, outdir)
+    if "speed" in wanted and device.type == "cuda":
         fig_inference_speed((reg, c1, c2), x_scaler, X, te, device, outdir)
     log("all figures done")
     return 0

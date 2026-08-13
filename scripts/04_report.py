@@ -112,7 +112,7 @@ def fig_r2_heatmap(evals):
         for j, c in enumerate(OUTPUT_COLS):
             mat[i, j] = np.mean([e["regressor"]["per_output"][c]["R2"] for e in rows])
     fig, ax = plt.subplots(figsize=(10, 4.2))
-    im = ax.imshow(mat, cmap="RdYlGn", vmin=0.9, vmax=1.0, aspect="auto")
+    im = ax.imshow(mat, cmap="Blues", vmin=0.9, vmax=1.0, aspect="auto")
     ax.set_xticks(range(len(OUTPUT_COLS)), OUTPUT_COLS, rotation=35, ha="right")
     labels = [s + (f" (n={sum(e['split'] == s for e in evals)})"
                    if sum(e["split"] == s for e in evals) > 1 else "")
@@ -120,9 +120,11 @@ def fig_r2_heatmap(evals):
     ax.set_yticks(range(len(splits)), labels)
     for i in range(len(splits)):
         for j in range(len(OUTPUT_COLS)):
+            # single-hue white->blue scale: dark ink on pale (low) cells,
+            # white ink once the cell is deep blue (high end of the scale)
             ax.text(j, i, f"{mat[i, j]:.3f}", ha="center", va="center",
                     fontsize=7.5,
-                    color="black" if mat[i, j] > 0.93 else "white")
+                    color="white" if mat[i, j] > 0.965 else "black")
     ax.set_title("Test-set R² per output and holdout regime (clamped predictions)")
     fig.colorbar(im, ax=ax, shrink=0.85, label="R² (floor of scale = 0.90)")
     save_fig(fig, "fig_r2_heatmap")

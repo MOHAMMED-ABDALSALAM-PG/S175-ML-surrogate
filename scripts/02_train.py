@@ -153,7 +153,8 @@ def pilot(cfg, X, Y, cls, sp, device):
     log(f"pilot pool: {n:,} rows")
 
     alpha = build_alpha_vector(cfg["alpha_speed"], cfg["alpha_others"])
-    check_alpha_directions(alpha)
+    if not (cfg.get("original_loss", False) or cfg.get("ablation_loss", False)):
+        check_alpha_directions(alpha)
 
     rows = []
     for bs in cfg.get("pilot_batch_sizes", [512, 4096, 16384, 65536]):
@@ -517,6 +518,11 @@ def train_component(component: str, cfg: dict, args, X, Y, cls,
             # The guard exists to stop this happening by accident; the ablation
             # does it on purpose, so it must say so in the config.
             log("  original_loss: SAFE_DIRECTION check bypassed (v1 baseline)")
+        elif cfg.get("ablation_loss", False):
+            # loss-ablation arm: alphas deliberately violate SAFE_DIRECTION
+            # (uniform or symmetric) while the fuel mask and standard data
+            # handling are kept. Must be stated in the config, never implied.
+            log("  ablation_loss: SAFE_DIRECTION check bypassed (loss ablation)")
         else:
             check_alpha_directions(alpha)   # the guard the original run lacked
         loss_fn = MaskedAsymmetricMSE(alpha).to(device)
