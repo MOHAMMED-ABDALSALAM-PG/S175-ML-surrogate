@@ -2,15 +2,16 @@
 \begin{table*}[ht]\centering
 \caption{Loss-configuration ablation, trained under the protocol of
 Section~\ref{sec:method} on the random split and scored on identical
-test rows. The v1 arm reproduces the original configuration (uniform
-$\alpha=1.5$, no fuel mask, fuel-only rows dropped, batch
-normalisation after the activation); the other arms share the v3 data
-handling and differ only in the weighting. Cells give the
-over-prediction rate on positive-truth rows; a \checkmark{} marks an
-output whose errors lie preferentially on its safe side.}
+test rows. The unmasked arm additionally drops the
+fuel-only-infeasible rows from training and places batch
+normalisation after the activation; the three masked arms share the
+data handling of the selected surrogate and differ only in the
+weighting. Cells give the over-prediction rate on positive-truth
+rows; a \checkmark{} marks an output whose errors lie preferentially
+on its safe side.}
 \label{tab:lossablation}
 \begin{tabular}{llrrrr}\hline
-Output & Safe side & uniform $\alpha$=1.5, no mask (v1) & uniform $\alpha$=1.5, masked & symmetric $\alpha$=1.0, masked & per-output $\alpha$, masked (v3) \\ \hline
+Output & Safe side & uniform $\alpha$=1.5, unmasked & uniform $\alpha$=1.5, masked & symmetric $\alpha$=1.0, masked & per-output $\alpha$, masked (selected) \\ \hline
 Ship speed & under & 29.3\,\checkmark & 42.6\,\checkmark & 35.4\,\checkmark & 40.7\,\checkmark \\
 Brake power & over & 34.4 & 37.4 & 40.9 & 75.0\,\checkmark \\
 Brake torque & over & 33.9 & 38.4 & 52.4\,\checkmark & 72.4\,\checkmark \\

@@ -41,11 +41,12 @@ from s175.columns import OUTPUT_COLS, SAFE_DIRECTION
 EV = ROOT / "results" / "evaluation"
 
 # plot order: the progression toward the selected configuration, light -> dark
+# reader-facing labels: no internal version codenames (v1/v3) in paper assets
 ARMS = [
-    ("v1_original",          "uniform α=1.5, no mask (v1)", "#a9c6e2", "o"),
-    ("abl_uniform_masked",   "uniform α=1.5, masked",       "#6f9fd0", "s"),
-    ("abl_symmetric_masked", "symmetric α=1.0, masked",     "#31538f", "^"),
-    ("v3_masked_peroutput",  "per-output α, masked (v3)",   "#14284a", "D"),
+    ("v1_original",          "uniform α=1.5, unmasked",        "#a9c6e2", "o"),
+    ("abl_uniform_masked",   "uniform α=1.5, masked",          "#6f9fd0", "s"),
+    ("abl_symmetric_masked", "symmetric α=1.0, masked",        "#31538f", "^"),
+    ("v3_masked_peroutput",  "per-output α, masked (selected)", "#14284a", "D"),
 ]
 NICE = {"speed": "Ship speed", "power": "Brake power", "torque": "Brake torque",
         "lat_acc": "Lateral acc.\\ RMS", "MSI": "MSI", "roll": "Roll RMS",
@@ -84,12 +85,13 @@ def main() -> int:
         "\\begin{table*}[ht]\\centering",
         "\\caption{Loss-configuration ablation, trained under the protocol of",
         "Section~\\ref{sec:method} on the random split and scored on identical",
-        "test rows. The v1 arm reproduces the original configuration (uniform",
-        "$\\alpha=1.5$, no fuel mask, fuel-only rows dropped, batch",
-        "normalisation after the activation); the other arms share the v3 data",
-        "handling and differ only in the weighting. Cells give the",
-        "over-prediction rate on positive-truth rows; a \\checkmark{} marks an",
-        "output whose errors lie preferentially on its safe side.}",
+        "test rows. The unmasked arm additionally drops the",
+        "fuel-only-infeasible rows from training and places batch",
+        "normalisation after the activation; the three masked arms share the",
+        "data handling of the selected surrogate and differ only in the",
+        "weighting. Cells give the over-prediction rate on positive-truth",
+        "rows; a \\checkmark{} marks an output whose errors lie preferentially",
+        "on its safe side.}",
         "\\label{tab:lossablation}",
         "\\begin{tabular}{llrrrr}\\hline",
         "Output & Safe side & " + heads.replace("α", "$\\alpha$") + " \\\\ \\hline",
