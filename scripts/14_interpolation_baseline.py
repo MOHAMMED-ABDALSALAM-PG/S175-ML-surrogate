@@ -38,11 +38,16 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+import torch
+
 from s175 import data as sdata
 from s175.columns import FEATURE_COLS, OUTPUT_COLS, FUEL_IDX
-from s175.metrics import per_output
+from s175.metrics import clamp_physical, per_output
 
 interp_test = __import__("08_interpolation_test")
+ev = __import__("03_evaluate")
+
+RUN_DIR = ROOT / "runs" / "v3_masked_peroutput" / "S1_random" / "seed_0"
 
 RAW = Path("/home/macierz/mohabdal/S175_shaft_gen_off.txt")
 CACHE_DIR = ROOT / "data" / "cache"
@@ -141,6 +146,12 @@ def main() -> int:
     Y_ram = np.array(Y)  # 5 GB; the corner gathers need RAM-speed random access
     log(f"outputs resident in RAM in {time.perf_counter()-t0:.0f}s")
 
+    # the surrogate's regressor, for the matched clean-cell comparison
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    reg, reg_ck = ev.load_component(RUN_DIR, "regressor", device)
+    x_scaler = ev.Scaler(reg_ck["x_scaler"])
+    y_scaler = ev.Scaler(reg_ck["y_scaler"])
+
     results = {}
     rows_csv = []
     for design, path in interp_test.SIM_FILES.items():
@@ -150,6 +161,13 @@ def main() -> int:
         log(f"=== {design}: {len(df):,} fresh off-grid rows ===")
 
         blend, contaminated = interpolate(q, levels, strides, perm, Y_ram)
+
+        # surrogate predictions at the identical query points
+        with torch.no_grad():
+            xb = torch.from_numpy(
+                x_scaler.transform(q.astype(np.float32))).to(device)
+            y_sur = reg(xb).float().cpu().numpy()
+        y_sur = clamp_physical(y_scaler.inverse(y_sur)).astype(np.float64)
 
         all_neg = (y_true == SENTINEL).all(axis=1)
         fuel_only = (y_true[:, FUEL_IDX] == SENTINEL) & ~all_neg
@@ -164,19 +182,24 @@ def main() -> int:
                                  blend[clean][:, [j]], cols=[c])[c]
             m_naive = per_output(y_true[scored][:, [j]],
                                  blend[scored][:, [j]], cols=[c])[c]
+            m_sur = per_output(y_true[clean][:, [j]],
+                               y_sur[clean][:, [j]], cols=[c])[c]
             per[c] = {
                 "n_scored": int(scored.sum()),
                 "n_clean": int(clean.sum()),
                 "pct_contaminated": 100.0 * (1 - clean.sum() / scored.sum()),
                 "clean": {"R2": m_clean["R2"], "MAE": m_clean["MAE"]},
                 "naive": {"R2": m_naive["R2"], "MAE": m_naive["MAE"]},
+                "surrogate_clean": {"R2": m_sur["R2"], "MAE": m_sur["MAE"]},
             }
-            log(f"  {c:12s} clean R2 {m_clean['R2']:.4f} (n={clean.sum():,}) | "
-                f"naive R2 {m_naive['R2']:8.3f} | contaminated "
+            log(f"  {c:12s} interp clean R2 {m_clean['R2']:.4f} | surrogate "
+                f"clean R2 {m_sur['R2']:.4f} (n={clean.sum():,}) | naive R2 "
+                f"{m_naive['R2']:8.3f} | contaminated "
                 f"{per[c]['pct_contaminated']:.1f}%")
             rows_csv.append([design, c, per[c]["n_scored"], per[c]["n_clean"],
                              round(per[c]["pct_contaminated"], 2),
                              m_clean["R2"], m_clean["MAE"],
+                             m_sur["R2"], m_sur["MAE"],
                              m_naive["R2"], m_naive["MAE"]])
         results[design] = {
             "n_rows": int(len(df)),
@@ -191,6 +214,7 @@ def main() -> int:
         w = csv.writer(f)
         w.writerow(["design", "output", "n_scored", "n_clean",
                     "pct_contaminated", "clean_R2", "clean_MAE",
+                    "surrogate_clean_R2", "surrogate_clean_MAE",
                     "naive_R2", "naive_MAE"])
         w.writerows(rows_csv)
     log(f"wrote {OUT / 'interpolation_baseline.json'} and .csv")

@@ -254,7 +254,11 @@ def fig_residuals(y_true, y_pred, cls_te, outdir):
         ax = axes[i // 5, i % 5]
         defined = (cls_te == CLASS_VALID) if c == "fuel" else (cls_te != CLASS_ALL_NEG)
         res = y_pred[defined, i] - y_true[defined, i]
-        over = float(np.mean(res > 0) * 100.0)
+        # over-prediction on positive-truth rows, matching the table metric
+        # (overpred_pct_positive); over all defined rows the clamped zeros of
+        # the probability outputs dilute the rate and contradict the table
+        pos = y_true[defined, i] > 1e-6
+        over = float(np.mean(res[pos] > 0) * 100.0)
         mean = float(res.mean())
         lo, hi = np.percentile(res, [0.05, 99.95])
         # blue-on-white scheme: one blue for the data, neutral ink for the
@@ -263,7 +267,7 @@ def fig_residuals(y_true, y_pred, cls_te, outdir):
                 alpha=0.75)
         ax.axvline(0.0, color="#4a4a4a", ls="--", lw=1.4, label="Zero error")
         ax.axvline(mean, color=DARKBLUE, lw=1.6, label=f"Mean={mean:.4f}")
-        ax.set_title(f"{c}\nOverest={over:.1f}%, Mean={mean:.4f}",
+        ax.set_title(f"{c}\nOverest={over:.1f}% (positive rows), Mean={mean:.4f}",
                      fontsize=11, fontweight="bold")
         ax.set_xlabel(f"Residual (Pred - Actual) [{UNITS[c]}]", fontsize=9)
         ax.set_ylabel("Density", fontsize=9)
@@ -370,6 +374,9 @@ def main() -> int:
     ap.add_argument("--config-name", default="v3_masked_peroutput")
     ap.add_argument("--split", default="S1_random")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--chunk", type=int, default=CHUNK,
+                    help="rows per inference chunk; lower it when the GPU is "
+                         "shared with another job")
     ap.add_argument("--only", nargs="*", default=None,
                     choices=["pipeline", "regression", "confusion",
                              "residuals", "seaheat", "speed"],
@@ -397,7 +404,8 @@ def main() -> int:
     thr1, thr2 = float(c1_ck["threshold"]), float(c2_ck["threshold"])
 
     t0 = time.perf_counter()
-    y_scaled, p1, p2 = predict_all((reg, c1, c2), X, te, x_scaler, device)
+    y_scaled, p1, p2 = predict_all((reg, c1, c2), X, te, x_scaler, device,
+                                   chunk=args.chunk)
     log(f"inference {time.perf_counter()-t0:.1f}s")
     y_pred = clamp_physical(y_scaler.inverse(y_scaled))
     y_true = np.asarray(Y[te])

@@ -1,0 +1,129 @@
+{
+  "n_sample_rows": 6306419,
+  "overlap_by_split": {
+    "S1_random": {
+      "n_test": 12615370,
+      "n_overlap": 630811,
+      "pct_overlap": 5.000336890634203
+    },
+    "S2_level_Hs": {
+      "n_test": 9230760,
+      "n_overlap": 458166,
+      "pct_overlap": 4.963469963469963
+    },
+    "S2_level_Chi": {
+      "n_test": 10228680,
+      "n_overlap": 511336,
+      "pct_overlap": 4.999041909611015
+    },
+    "S2_level_draft": {
+      "n_test": 42051240,
+      "n_overlap": 2115447,
+      "pct_overlap": 5.030641189177775
+    },
+    "S2_level_Vwind": {
+      "n_test": 42051240,
+      "n_overlap": 2102153,
+      "pct_overlap": 4.999027377076158
+    },
+    "S3_block": {
+      "n_test": 11891880,
+      "n_overlap": 595146,
+      "pct_overlap": 5.004641822823641
+    },
+    "S4_corner": {
+      "n_test": 36410220,
+      "n_overlap": 1821201,
+      "pct_overlap": 5.001895072317607
+    }
+  },
+  "clean_S1_eval": {
+    "n_clean_test_rows": 11984559,
+    "safe_direction": "10/10",
+    "per_output": {
+      "speed": {
+        "R2_full_test": 0.9999076864411806,
+        "R2_clean_test": 0.9999076892834259,
+        "MAE_full_test": 0.01939188316464424,
+        "MAE_clean_test": 0.019390147179365158,
+        "overpred_full": 40.73924784502152,
+        "overpred_clean": 40.73851218599798
+      },
+      "power": {
+        "R2_full_test": 0.9999203175968188,
+        "R2_clean_test": 0.9999203089437397,
+        "MAE_full_test": 47.87363052368164,
+        "MAE_clean_test": 47.87404251098633,
+        "overpred_full": 75.00808389056222,
+        "overpred_clean": 75.00235011055959
+      },
+      "torque": {
+        "R2_full_test": 0.9999215672182012,
+        "R2_clean_test": 0.9999215719899794,
+        "MAE_full_test": 3.2894504070281982,
+        "MAE_clean_test": 3.289315938949585,
+        "overpred_full": 72.35859964374764,
+        "overpred_clean": 72.35503076938903
+      },
+      "lat_acc": {
+        "R2_full_test": 0.9998268096376736,
+        "R2_clean_test": 0.9998268514851039,
+        "MAE_full_test": 0.00016337844135705382,
+        "MAE_clean_test": 0.00016337151464540511,
+        "overpred_full": 64.9069753815138,
+        "overpred_clean": 64.90998853559887
+      },
+      "MSI": {
+        "R2_full_test": 0.9998976280118508,
+        "R2_clean_test": 0.9998975744088437,
+        "MAE_full_test": 0.05682646110653877,
+        "MAE_clean_test": 0.056832242757081985,
+        "overpred_full": 51.46415932315963,
+        "overpred_clean": 51.464131455758064
+      },
+      "roll": {
+        "R2_full_test": 0.999651786431706,
+        "R2_clean_test": 0.9996519404396991,
+        "MAE_full_test": 0.02236262895166874,
+        "MAE_clean_test": 0.022361215204000473,
+        "overpred_full": 71.0653297510133,
+        "overpred_clean": 71.06493693535737
+      },
+      "slam": {
+        "R2_full_test": 0.9998158177082611,
+        "R2_clean_test": 0.9998156559820468,
+        "MAE_full_test": 0.007542931009083986,
+        "MAE_clean_test": 0.007542376406490803,
+        "overpred_full": 76.86743191010137,
+        "overpred_clean": 76.87414901545057
+      },
+      "green_water": {
+        "R2_full_test": 0.9998669430667738,
+        "R2_clean_test": 0.9998669767526901,
+        "MAE_full_test": 0.03184676915407181,
+        "MAE_clean_test": 0.03184285759925842,
+        "overpred_full": 58.65482099425204,
+        "overpred_clean": 58.661534418937656
+      },
+      "prop_emerg": {
+        "R2_full_test": 0.9999188763831124,
+        "R2_clean_test": 0.9999188413040495,
+        "MAE_full_test": 0.09130120277404785,
+        "MAE_clean_test": 0.09130444377660751,
+        "overpred_full": 59.75333660621997,
+        "overpred_clean": 59.75408590781757
+      },
+      "fuel": {
+        "R2_full_test": 0.9994003695033272,
+        "R2_clean_test": 0.9994000507242513,
+        "MAE_full_test": 0.4272496998310089,
+        "MAE_clean_test": 0.42726239562034607,
+        "overpred_full": 73.97111090165983,
+        "overpred_clean": 73.96703486504505
+      }
+    },
+    "clf1_fnr": 0.008955746230617507,
+    "clf2_fnr": 0.009497787154391587,
+    "three_class_accuracy": 0.9969615068856518
+  }
+}
