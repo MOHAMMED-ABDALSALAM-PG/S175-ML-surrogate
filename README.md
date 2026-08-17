@@ -112,6 +112,13 @@ distributed in this repository. The dataset is available **upon request to
 the corresponding author, Prof. Joanna Szłapczyńska** (Gdańsk University of
 Technology).
 
+## Acknowledgements
+
+The authors gratefully acknowledge Prof. Roberto Vettor for developing the
+theoretical general ship model that underlies the S175 WeatherRouting
+performance simulator used in this study. His foundational contribution to
+the formulation of the ship-performance model is sincerely appreciated.
+
 ## License
 
 To be decided by the authors before the repository is made public.
