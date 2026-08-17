@@ -24,9 +24,9 @@ if ! flock -n 9; then
 fi
 
 # ---------------------------------------------------------------------------
-# Revision protocol (2026-08 review): after the matrix, evaluate everything on
-# the screening-disjoint test rows -- the paper's PRIMARY numbers -- retrain
-# the corrected unmasked ablation arm, and regenerate every paper asset.
+# Clean-asset protocol: after the matrix, evaluate everything on the
+# screening-disjoint test rows (the primary numbers), train the
+# abl_unmasked_fixedbn ablation arm, and regenerate every derived asset.
 # Each step is idempotent; failures are reported but do not stop the chain.
 #   bash scripts/run_all.sh clean_assets    # run only this block
 if [ "${1:-}" = "clean_assets" ]; then

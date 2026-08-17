@@ -7,13 +7,12 @@
 # Ship speed takes alpha > 1 so the surrogate never promises more speed than
 # the simulator. The other nine take alpha < 1 so required power, fuel and
 # operational risk are never under-stated. check_alpha_directions() rejects any
-# vector that contradicts SAFE_DIRECTION, which is what would have caught the
-# published run's uniform alpha = 1.5.
+# vector that contradicts SAFE_DIRECTION.
 name: v3_masked_peroutput
 description: >
   Per-output asymmetric masked loss. This is the corrected configuration; the
-  published run applied a single scalar alpha = 1.5 to all ten outputs with no
-  mask, which biased nine of them toward the unsafe side.
+  v1 configuration applies a single scalar alpha = 1.5 to all ten outputs with
+  no mask, which biases nine of them toward the unsafe side.
 
 split: S1_random
 

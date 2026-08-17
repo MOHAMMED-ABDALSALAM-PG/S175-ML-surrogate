@@ -1,7 +1,7 @@
 # The ORIGINAL (v1) configuration, reproduced as a controlled baseline for the
 # paper's ablation. Same architecture and optimisation schedule as
-# v3_masked_peroutput; the differences are exactly the defects the audit found
-# in step7_8_full.py:
+# v3_masked_peroutput; it differs from v3_masked_peroutput in
+# exactly three respects:
 #
 #   1. uniform alpha = 1.5 on ALL ten outputs (nine of them biased the unsafe
 #      way) -- original_loss bypasses the SAFE_DIRECTION guard, on purpose;
@@ -28,7 +28,7 @@ bn_after_act: true       # the original layer order
 dropout: 0.0
 
 alpha_speed: 1.5
-alpha_others: 1.5        # uniform -- the defect under test
+alpha_others: 1.5        # uniform -- the factor under test
 
 lr: 0.001
 batch_size: 512

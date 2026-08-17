@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# One-shot chain for the 2026-08 revision assets. Runs GPU steps sequentially
-# to avoid contention: waits for the ablation clean evals and the
+# One-shot chain for the clean-evaluation assets. Runs GPU steps sequentially
+# to avoid contention: waits for any ablation clean evals and
 # abl_unmasked_fixedbn training already in flight, then regenerates every
-# remaining paper asset on the screening-disjoint rows.
+# remaining derived asset on the screening-disjoint rows.
 set -u
 PY=$HOME/env314/bin/python
 cd "$(dirname "$0")/.."
