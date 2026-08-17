@@ -47,12 +47,12 @@ def save_fig(fig, stem: str):
     print(f"wrote figures/{stem}.png")
 
 
-def load_evals() -> list[dict]:
+def load_evals(eval_name: str = "eval.json") -> list[dict]:
     evals = []
-    for p in sorted(RUNS.glob("*/seed_*/eval.json")):
+    for p in sorted(RUNS.glob(f"*/seed_*/{eval_name}")):
         evals.append(json.loads(p.read_text()))
     if not evals:
-        raise SystemExit("no eval.json files -- run 03_evaluate.py first")
+        raise SystemExit(f"no {eval_name} files -- run 03_evaluate.py first")
     evals.sort(key=lambda e: (SPLIT_ORDER.index(e["split"]), e["seed"]))
     return evals
 
@@ -83,13 +83,18 @@ def write_tables(evals):
 
     with open(OUT / "end_to_end_table.csv", "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["split", "seed", "accuracy",
+        w.writerow(["split", "seed", "accuracy", "balanced_accuracy", "macro_f1",
+                    "recall_valid", "recall_fuel_only", "recall_all_infeasible",
                     "dangerous_allneg_passed", "dangerous_allneg_rate",
                     "dangerous_fuel_passed", "dangerous_fuel_rate",
                     "n_test_rows"])
         for e in evals:
             z = e["end_to_end"]
+            rec = z.get("per_class_recall", [float("nan")] * 3)
             w.writerow([e["split"], e["seed"], z["accuracy"],
+                        z.get("balanced_accuracy", float("nan")),
+                        z.get("macro_f1", float("nan")),
+                        rec[0], rec[1], rec[2],
                         z["dangerous_allneg_passed"], z["dangerous_allneg_rate"],
                         z["dangerous_fuel_passed"], z["dangerous_fuel_rate"],
                         e["n_test_rows"]])
@@ -195,8 +200,16 @@ def fig_e2e_confusion(evals):
 
 
 def main() -> int:
-    evals = load_evals()
-    print(f"{len(evals)} evaluated runs")
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--clean", action="store_true",
+                    help="build tables/figures from eval_clean.json (test rows "
+                         "disjoint from the screening subsample -- the paper's "
+                         "primary evaluation)")
+    args = ap.parse_args()
+    evals = load_evals("eval_clean.json" if args.clean else "eval.json")
+    print(f"{len(evals)} evaluated runs"
+          + (" (screening-disjoint)" if args.clean else ""))
     write_tables(evals)
     fig_r2_heatmap(evals)
     fig_clf_fnr(evals)

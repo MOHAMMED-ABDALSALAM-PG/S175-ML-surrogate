@@ -1,0 +1,40 @@
+# Ablation arm added for the revision (reviewer, Table 7): the UNMASKED data
+# handling of the original configuration, but with the batch-normalisation
+# placement of every other arm (Linear -> BN -> ReLU). Compared with
+# abl_uniform_masked, the ONLY difference is the fuel mask and, inherently,
+# the training population it admits (no mask => the fuel-only-infeasible rows
+# cannot be used and are dropped); the architecture is identical. Compared
+# with v1_original, the ONLY difference is the BN placement. Together the
+# three arms decompose the original configuration's deficit into a masking
+# effect and a BN-placement effect, so the masking comparison is no longer
+# confounded.
+name: abl_unmasked_fixedbn
+description: >
+  Ablation: uniform asymmetric alpha 1.5, NO fuel mask (fuel-only rows
+  dropped), BN before activation like every masked arm. Isolates the mask /
+  training-population effect (vs abl_uniform_masked) and the BN placement
+  (vs v1_original).
+
+split: S1_random
+original_loss: true      # uniform alpha, no mask, fuel-only rows dropped
+
+hidden: [512, 256, 128]
+hidden_clf1: [512, 256, 128]
+hidden_clf2: [512, 256, 128, 64]
+batchnorm: true
+bn_after_act: false      # the corrected placement -- the single change vs v1_original
+dropout: 0.0
+
+alpha_speed: 1.5
+alpha_others: 1.5        # uniform -- matches the original configuration
+
+lr: 0.001
+batch_size: 512
+max_epochs: 200
+patience: 15
+amp: true
+
+clf_target_recall: 0.99
+
+pilot_steps: 200
+pilot_batch_sizes: [512, 4096, 16384, 65536]

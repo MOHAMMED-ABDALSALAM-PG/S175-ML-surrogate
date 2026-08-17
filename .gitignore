@@ -16,3 +16,7 @@ logs/
 __pycache__/
 *.pyc
 .venv/
+
+# screening-subsample row indices (49 MB) are regenerated deterministically by
+# scripts/03_evaluate.py --clean from the committed subsample lattice mapping
+results/evaluation/screening_rows.npy

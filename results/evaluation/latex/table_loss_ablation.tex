@@ -2,26 +2,30 @@
 \begin{table*}[ht]\centering
 \caption{Loss-configuration ablation, trained under the protocol of
 Section~\ref{sec:method} on the random split and scored on identical
-test rows. The unmasked arm additionally drops the
-fuel-only-infeasible rows from training and places batch
-normalisation after the activation; the three masked arms share the
-data handling of the selected surrogate and differ only in the
-weighting. Cells give the over-prediction rate on positive-truth
+screening-disjoint test rows. The first arm reproduces the original
+configuration in full (no fuel mask, fuel-only-infeasible rows
+dropped, batch normalisation after the activation); the second arm
+keeps that data handling but uses the corrected batch-normalisation
+placement of every other arm, so comparing it with the uniform
+masked arm isolates the effect of the mask and the training
+population it admits, while comparing it with the first arm isolates
+the normalisation placement. The three masked arms differ only in
+the weighting. Cells give the over-prediction rate on positive-truth
 rows; a \checkmark{} marks an output whose errors lie preferentially
 on its safe side.}
 \label{tab:lossablation}
-\begin{tabular}{llrrrr}\hline
-Output & Safe side & uniform $\alpha$=1.5, unmasked & uniform $\alpha$=1.5, masked & symmetric $\alpha$=1.0, masked & per-output $\alpha$, masked (selected) \\ \hline
-Ship speed & under & 29.3\,\checkmark & 42.6\,\checkmark & 35.4\,\checkmark & 40.7\,\checkmark \\
-Brake power & over & 34.4 & 37.4 & 40.9 & 75.0\,\checkmark \\
-Brake torque & over & 33.9 & 38.4 & 52.4\,\checkmark & 72.4\,\checkmark \\
-Lateral acc.\ RMS & over & 58.0\,\checkmark & 41.7 & 51.5\,\checkmark & 64.9\,\checkmark \\
-MSI & over & 53.8\,\checkmark & 35.7 & 42.1 & 51.5\,\checkmark \\
-Roll RMS & over & 33.5 & 36.4 & 55.6\,\checkmark & 71.1\,\checkmark \\
-Slamming prob. & over & 48.6 & 34.0 & 54.0\,\checkmark & 76.9\,\checkmark \\
-Green water prob. & over & 45.7 & 45.9 & 39.4 & 58.7\,\checkmark \\
-Prop.\ emergence prob. & over & 45.5 & 30.4 & 66.4\,\checkmark & 59.8\,\checkmark \\
-Fuel consumption & over & 34.9 & 40.3 & 44.1 & 74.0\,\checkmark \\
+\begin{tabular}{llrrrrr}\hline
+Output & Safe side & original configuration & uniform $\alpha$=1.5, unmasked & uniform $\alpha$=1.5, masked & symmetric $\alpha$=1.0, masked & per-output $\alpha$, masked (selected) \\ \hline
+Ship speed & under & 29.3\,\checkmark & 48.5\,\checkmark & 42.6\,\checkmark & 35.4\,\checkmark & 40.7\,\checkmark \\
+Brake power & over & 34.4 & 39.8 & 37.4 & 40.9 & 75.0\,\checkmark \\
+Brake torque & over & 33.9 & 39.4 & 38.4 & 52.4\,\checkmark & 72.4\,\checkmark \\
+Lateral acc.\ RMS & over & 58.0\,\checkmark & 37.4 & 41.7 & 51.5\,\checkmark & 64.9\,\checkmark \\
+MSI & over & 53.8\,\checkmark & 44.1 & 35.7 & 42.1 & 51.5\,\checkmark \\
+Roll RMS & over & 33.5 & 52.5\,\checkmark & 36.4 & 55.6\,\checkmark & 71.1\,\checkmark \\
+Slamming prob. & over & 48.6 & 43.5 & 34.0 & 54.0\,\checkmark & 76.9\,\checkmark \\
+Green water prob. & over & 45.7 & 37.8 & 45.9 & 39.4 & 58.7\,\checkmark \\
+Prop.\ emergence prob. & over & 45.5 & 28.3 & 30.4 & 66.4\,\checkmark & 59.8\,\checkmark \\
+Fuel consumption & over & 34.9 & 47.9 & 40.3 & 44.1 & 74.0\,\checkmark \\
 \hline
-Outputs on safe side & & 3/10 & 1/10 & 6/10 & 10/10 \\ \hline
+Outputs on safe side & & 3/10 & 2/10 & 1/10 & 6/10 & 10/10 \\ \hline
 \end{tabular}\end{table*}

@@ -43,7 +43,8 @@ EV = ROOT / "results" / "evaluation"
 # plot order: the progression toward the selected configuration, light -> dark
 # reader-facing labels: no internal version codenames (v1/v3) in paper assets
 ARMS = [
-    ("v1_original",          "uniform α=1.5, unmasked",        "#a9c6e2", "o"),
+    ("v1_original",          "original configuration", "#c4d7ea", "o"),
+    ("abl_unmasked_fixedbn", "uniform α=1.5, unmasked",        "#a9c6e2", "v"),
     ("abl_uniform_masked",   "uniform α=1.5, masked",          "#6f9fd0", "s"),
     ("abl_symmetric_masked", "symmetric α=1.0, masked",        "#31538f", "^"),
     ("v3_masked_peroutput",  "per-output α, masked (selected)", "#14284a", "D"),
@@ -54,13 +55,22 @@ NICE = {"speed": "Ship speed", "power": "Brake power", "torque": "Brake torque",
         "prop_emerg": "Prop.\\ emergence prob.", "fuel": "Fuel consumption"}
 
 
-def load(name):
-    p = ROOT / "runs" / name / "S1_random" / "seed_0" / "eval.json"
+def load(name, eval_name="eval.json"):
+    p = ROOT / "runs" / name / "S1_random" / "seed_0" / eval_name
+    if not p.exists() and eval_name != "eval.json":
+        raise SystemExit(f"{p} missing -- run 03_evaluate.py --clean "
+                         f"--config-name {name} first")
     return json.loads(p.read_text())["regressor"]
 
 
 def main() -> int:
-    regs = {name: load(name) for name, *_ in ARMS}
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--clean", action="store_true",
+                    help="use eval_clean.json (screening-disjoint test rows)")
+    args = ap.parse_args()
+    eval_name = "eval_clean.json" if args.clean else "eval.json"
+    regs = {name: load(name, eval_name) for name, *_ in ARMS}
 
     # ------------------------------------------------------------- CSV
     with open(EV / "ablation_loss_comparison.csv", "w", newline="") as f:
@@ -85,15 +95,19 @@ def main() -> int:
         "\\begin{table*}[ht]\\centering",
         "\\caption{Loss-configuration ablation, trained under the protocol of",
         "Section~\\ref{sec:method} on the random split and scored on identical",
-        "test rows. The unmasked arm additionally drops the",
-        "fuel-only-infeasible rows from training and places batch",
-        "normalisation after the activation; the three masked arms share the",
-        "data handling of the selected surrogate and differ only in the",
-        "weighting. Cells give the over-prediction rate on positive-truth",
+        "screening-disjoint test rows. The first arm reproduces the original",
+        "configuration in full (no fuel mask, fuel-only-infeasible rows",
+        "dropped, batch normalisation after the activation); the second arm",
+        "keeps that data handling but uses the corrected batch-normalisation",
+        "placement of every other arm, so comparing it with the uniform",
+        "masked arm isolates the effect of the mask and the training",
+        "population it admits, while comparing it with the first arm isolates",
+        "the normalisation placement. The three masked arms differ only in",
+        "the weighting. Cells give the over-prediction rate on positive-truth",
         "rows; a \\checkmark{} marks an output whose errors lie preferentially",
         "on its safe side.}",
         "\\label{tab:lossablation}",
-        "\\begin{tabular}{llrrrr}\\hline",
+        "\\begin{tabular}{llrrrrr}\\hline",
         "Output & Safe side & " + heads.replace("α", "$\\alpha$") + " \\\\ \\hline",
     ]
     for c in OUTPUT_COLS:

@@ -297,6 +297,13 @@ def dataset_table():
 
 
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--clean", action="store_true",
+                    help="score only test rows disjoint from the screening "
+                         "subsample (requires results/evaluation/"
+                         "screening_rows.npy from 03_evaluate.py --clean)")
+    args = ap.parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     run_dir = ROOT / "runs" / "v3_masked_peroutput" / "S1_random" / "seed_0"
     arr, _ = sdata.load(RAW, cache_dir=CACHE_DIR)
@@ -307,6 +314,14 @@ def main() -> int:
     log(f"reference model {run_dir} on {device}")
 
     te = sp.test
+    if args.clean:
+        srows = np.load(ROOT / "results" / "evaluation" / "screening_rows.npy")
+        in_sample = np.zeros(len(X), dtype=bool)
+        in_sample[srows] = True
+        n0 = len(te)
+        te = te[~in_sample[te]]
+        log(f"--clean: excluded {n0 - len(te):,} screening-overlap rows "
+            f"({len(te):,} remain)")
     y_pred = predict_reg(models[0], np.asarray(X[te]), x_scaler, y_scaler, device)
     y_true = np.asarray(Y[te])
     X_te = np.asarray(X[te])

@@ -36,8 +36,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from s175 import data as sdata
-from s175.columns import (OUTPUT_COLS, FUEL_IDX, CLASS_VALID, CLASS_FUEL_ONLY,
-                          CLASS_ALL_NEG, CLASS_NAMES)
+from s175.columns import (OUTPUT_COLS, FEATURE_COLS, FUEL_IDX, CLASS_VALID,
+                          CLASS_FUEL_ONLY, CLASS_ALL_NEG, CLASS_NAMES)
 from s175.metrics import (binary_classifier, clamp_physical, per_output,
                           safe_direction_score, wilson_interval)
 from s175.models import MLP
@@ -112,12 +112,42 @@ def regression_metrics(y_true, y_pred, cls_test):
                  "safe_direction_met": met, "safe_direction_total": total}
 
 
-def evaluate_run(run_dir: Path, X, Y, cls, device, chunk=CHUNK) -> dict:
+def screening_mask(X) -> np.ndarray:
+    """Boolean mask over the full table: True where the row also appears in
+    the 5% screening subsample (model-family screening + both alpha sweeps).
+    The exact row mapping comes from 15_clean_test_eval's lattice index and is
+    cached, so every --clean evaluation uses the identical row set."""
+    cache = ROOT / "results" / "evaluation" / "screening_rows.npy"
+    if cache.exists():
+        srows = np.load(cache)
+    else:
+        clean = __import__("15_clean_test_eval")
+        baseline = __import__("14_interpolation_baseline")
+        levels = {c: np.unique(np.asarray(X[:, k], dtype=np.float32))
+                  for k, c in enumerate(FEATURE_COLS)}
+        strides, perm = baseline.build_lattice_index(X, levels)
+        srows = clean.sample_row_numbers(X, levels, strides, perm)
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        np.save(cache, srows)
+    mask = np.zeros(len(X), dtype=bool)
+    mask[srows] = True
+    return mask
+
+
+def evaluate_run(run_dir: Path, X, Y, cls, device, chunk=CHUNK,
+                 exclude_rows=None, eval_name="eval.json") -> dict:
     split_name = run_dir.parent.name
     seed = int(run_dir.name.split("_")[1])
     sp = load_split(SPLIT_DIR, split_name)
     te = sp.test
-    log(f"=== {split_name} seed {seed}: {len(te):,} test rows ===")
+    n_excluded = 0
+    if exclude_rows is not None:
+        keep = ~exclude_rows[te]
+        n_excluded = int(len(te) - keep.sum())
+        te = te[keep]
+    log(f"=== {split_name} seed {seed}: {len(te):,} test rows"
+        + (f" ({n_excluded:,} screening-overlap rows excluded)"
+           if exclude_rows is not None else "") + " ===")
 
     reg, reg_ck = load_component(run_dir, "regressor", device)
     # loss-ablation arms train only the regressor; score what exists
@@ -155,11 +185,12 @@ def evaluate_run(run_dir: Path, X, Y, cls, device, chunk=CHUNK) -> dict:
             "split": split_name, "seed": seed,
             "regressor_only": True,
             "n_test_rows": int(len(te)),
+            "n_screening_rows_excluded": n_excluded,
             "test_class_counts": sdata.class_counts(cls_te),
             "inference_seconds": infer_s,
             "regressor": {"meta": reg_meta, "per_output": reg_out},
         }
-        (run_dir / "eval.json").write_text(json.dumps(result, indent=2))
+        (run_dir / eval_name).write_text(json.dumps(result, indent=2))
         log(f"  R2 speed {reg_out['speed']['R2']:.4f} power {reg_out['power']['R2']:.4f} "
             f"fuel {reg_out['fuel']['R2']:.4f} | safe-direction "
             f"{reg_meta['safe_direction_met']}/{reg_meta['safe_direction_total']}")
@@ -200,10 +231,25 @@ def evaluate_run(run_dir: Path, X, Y, cls, device, chunk=CHUNK) -> dict:
         "dangerous_fuel_rate": float(fuel_missed / n_fuel_pos) if n_fuel_pos else float("nan"),
         "dangerous_fuel_rate_ci95": list(wilson_interval(int(fuel_missed), int(n_fuel_pos))),
     }
+    # class-imbalance-robust summaries of the three-class decision: the raw
+    # accuracy is dominated by the majority (fully valid) class, so report
+    # per-class recall, balanced accuracy and macro-F1 alongside it
+    rec, f1s = [], []
+    for i in range(3):
+        row_n = conf[i].sum()
+        col_n = conf[:, i].sum()
+        r = float(conf[i, i] / row_n) if row_n else float("nan")
+        p = float(conf[i, i] / col_n) if col_n else float("nan")
+        rec.append(r)
+        f1s.append(2.0 * p * r / (p + r) if (p + r) > 0 else 0.0)
+    e2e["per_class_recall"] = rec
+    e2e["balanced_accuracy"] = float(np.mean(rec))
+    e2e["macro_f1"] = float(np.mean(f1s))
 
     result = {
         "split": split_name, "seed": seed,
         "n_test_rows": int(len(te)),
+        "n_screening_rows_excluded": n_excluded,
         "test_class_counts": sdata.class_counts(cls_te),
         "thresholds": {"clf1": thr1, "clf2": thr2},
         "inference_seconds": infer_s,
@@ -211,7 +257,7 @@ def evaluate_run(run_dir: Path, X, Y, cls, device, chunk=CHUNK) -> dict:
         "clf1": m1, "clf2": m2,
         "end_to_end": e2e,
     }
-    (run_dir / "eval.json").write_text(json.dumps(result, indent=2))
+    (run_dir / eval_name).write_text(json.dumps(result, indent=2))
     log(f"  R2 speed {reg_out['speed']['R2']:.4f} power {reg_out['power']['R2']:.4f} "
         f"fuel {reg_out['fuel']['R2']:.4f} | clf1 FNR {m1['false_negative_rate']:.2e} "
         f"clf2 FNR {m2['false_negative_rate']:.2e} | e2e acc {e2e['accuracy']:.4f}")
@@ -228,6 +274,10 @@ def main() -> int:
     ap.add_argument("--chunk", type=int, default=CHUNK,
                     help="rows per inference chunk; lower it when the GPU is "
                          "shared with another job")
+    ap.add_argument("--clean", action="store_true",
+                    help="score only test rows strictly disjoint from the 5%% "
+                         "screening subsample; writes eval_clean.json and "
+                         "all_runs_clean*.json (the paper's primary numbers)")
     args = ap.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -235,6 +285,13 @@ def main() -> int:
     X, Y = sdata.split_xy(arr)
     cls = sdata.feasibility(Y, strict=False)
     log(f"loaded {len(X):,} rows | device {device}")
+
+    exclude = None
+    eval_name = "eval.json"
+    if args.clean:
+        exclude = screening_mask(X)
+        eval_name = "eval_clean.json"
+        log(f"screening subsample: {int(exclude.sum()):,} rows flagged for exclusion")
 
     run_dirs = sorted((RUNS / args.config_name).glob("*/seed_*"))
     if args.split:
@@ -247,18 +304,20 @@ def main() -> int:
 
     results = []
     for d in run_dirs:
-        if (d / "eval.json").exists() and not args.force:
-            log(f"SKIP {d.parent.name}/{d.name} (eval.json exists)")
-            results.append(json.loads((d / "eval.json").read_text()))
+        if (d / eval_name).exists() and not args.force:
+            log(f"SKIP {d.parent.name}/{d.name} ({eval_name} exists)")
+            results.append(json.loads((d / eval_name).read_text()))
             continue
-        results.append(evaluate_run(d, X, Y, cls, device, chunk=args.chunk))
+        results.append(evaluate_run(d, X, Y, cls, device, chunk=args.chunk,
+                                    exclude_rows=exclude, eval_name=eval_name))
 
     outdir = ROOT / "results" / "evaluation"
     outdir.mkdir(parents=True, exist_ok=True)
     # the canonical all_runs.json belongs to the main config; ablation and
     # baseline configs aggregate into their own file so they never clobber it
-    agg = ("all_runs.json" if args.config_name == "v3_masked_peroutput"
-           else f"all_runs_{args.config_name}.json")
+    stem = "all_runs_clean" if args.clean else "all_runs"
+    agg = (f"{stem}.json" if args.config_name == "v3_masked_peroutput"
+           else f"{stem}_{args.config_name}.json")
     (outdir / agg).write_text(json.dumps(results, indent=2))
     log(f"wrote {outdir / agg} ({len(results)} runs)")
     return 0

@@ -377,6 +377,10 @@ def main() -> int:
     ap.add_argument("--chunk", type=int, default=CHUNK,
                     help="rows per inference chunk; lower it when the GPU is "
                          "shared with another job")
+    ap.add_argument("--clean", action="store_true",
+                    help="score only test rows disjoint from the screening "
+                         "subsample (requires results/evaluation/"
+                         "screening_rows.npy from 03_evaluate.py --clean)")
     ap.add_argument("--only", nargs="*", default=None,
                     choices=["pipeline", "regression", "confusion",
                              "residuals", "seaheat", "speed"],
@@ -395,6 +399,14 @@ def main() -> int:
     cls = sdata.feasibility(Y, strict=False)
     sp = load_split(SPLIT_DIR, args.split)
     te = sp.test
+    if args.clean:
+        srows = np.load(ROOT / "results" / "evaluation" / "screening_rows.npy")
+        in_sample = np.zeros(len(X), dtype=bool)
+        in_sample[srows] = True
+        n0 = len(te)
+        te = te[~in_sample[te]]
+        log(f"--clean: excluded {n0 - len(te):,} screening-overlap rows "
+            f"({len(te):,} remain)")
     log(f"{args.split} seed {args.seed}: {len(te):,} test rows | {device}")
 
     reg, reg_ck = load_component(run_dir, "regressor", device)

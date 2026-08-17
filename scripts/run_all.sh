@@ -22,6 +22,27 @@ if ! flock -n 9; then
   echo "another run_all.sh already holds $LOCK -- exiting"
   exit 0
 fi
+
+# ---------------------------------------------------------------------------
+# Revision protocol (2026-08 review): after the matrix, evaluate everything on
+# the screening-disjoint test rows -- the paper's PRIMARY numbers -- retrain
+# the corrected unmasked ablation arm, and regenerate every paper asset.
+# Each step is idempotent; failures are reported but do not stop the chain.
+#   bash scripts/run_all.sh clean_assets    # run only this block
+if [ "${1:-}" = "clean_assets" ]; then
+  set -x
+  "$PY" scripts/02_train.py --config configs/abl_unmasked_fixedbn.yaml --component regressor
+  for cfg in v3_masked_peroutput v1_original abl_uniform_masked abl_symmetric_masked abl_unmasked_fixedbn; do
+    "$PY" scripts/03_evaluate.py --config-name "$cfg" --clean
+  done
+  "$PY" scripts/04_report.py --clean
+  "$PY" scripts/12_loss_ablation.py --clean
+  "$PY" scripts/18_paper_tables_clean.py
+  "$PY" scripts/05_paper_figures.py --clean
+  "$PY" scripts/10_legacy_style_figures.py --clean --only pipeline regression confusion residuals seaheat
+  exit 0
+fi
+
 CONFIG=configs/v3_masked_peroutput.yaml
 NAME=v3_masked_peroutput
 
