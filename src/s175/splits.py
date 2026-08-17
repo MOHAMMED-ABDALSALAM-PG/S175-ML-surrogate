@@ -138,7 +138,7 @@ class Split:
             digests[part] = hashlib.sha256(arr.tobytes()).hexdigest()
         meta = {"name": self.name, "description": self.description,
                 "counts": self.counts(), "sha256": digests}
-        # Recorded so the coverage guarantee is auditable from disk alone,
+        # Recorded so the coverage guarantee is verifiable from disk alone,
         # without reloading the 10.6 GB table. Accept a precomputed breakdown
         # so the caller does not pay for the same pass twice.
         if class_counts is not None:

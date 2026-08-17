@@ -115,7 +115,7 @@ def wilson_interval(k: int, n: int, z: float = 1.959963985) -> tuple[float, floa
 
 
 def binary_classifier(y_true: np.ndarray, y_pred: np.ndarray) -> dict:
-    """Confusion matrix plus the rates the audit asked for.
+    """Confusion matrix plus the safety-relevant rates.
 
     Positive class = infeasible. A false negative is therefore the dangerous
     error: the surrogate returns numbers where the simulator has none.

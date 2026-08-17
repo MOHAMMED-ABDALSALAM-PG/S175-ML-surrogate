@@ -16,7 +16,7 @@ Two deliberate differences from the original `step7_8_full.py`:
 
 *  The classifiers emit a single logit rather than two, so the decision
    threshold is an explicit, tunable number instead of an implicit argmax at
-   0.5. The audit's point stands: for a safety-critical false-negative rate,
+   0.5. The rationale: for a safety-critical false-negative rate,
    the threshold must be selected on validation, not assumed.
 """
 from __future__ import annotations
