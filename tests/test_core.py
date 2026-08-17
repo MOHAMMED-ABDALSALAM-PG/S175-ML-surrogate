@@ -60,7 +60,7 @@ check("alpha=0.33 on the other nine over-predicts the mean",
       all(o > 10.0 for o in others),
       f"min fitted {min(others):.4f} vs mean 10.0")
 
-print("\n[2] the published v1 configuration reproduces the defect")
+print("\n[2] the v1 configuration biases nine outputs the unsafe way")
 v1_fitted = fit_constant([1.5] * 10, target=10.0)
 check("scalar alpha=1.5 pushes ALL ten outputs below the mean",
       all(v < 10.0 for v in v1_fitted),

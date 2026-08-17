@@ -1,4 +1,4 @@
-"""Evaluation metrics, with the reporting defects from the audit fixed.
+"""Evaluation metrics.
 
 Changes against the original `step7_8_full.py` metric block:
 

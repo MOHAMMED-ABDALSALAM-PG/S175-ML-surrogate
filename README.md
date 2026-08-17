@@ -46,7 +46,7 @@ runs/               trained checkpoints (~700 KB each) + full provenance:
 splits/             split manifests with sha256 (index arrays regenerable)
 results/evaluation/ all metric tables (CSV/JSON)
 figures/            all paper figures, 300 dpi PNG + vector PDF
-tests/              executable assertions, incl. the v1 defect reproduction
+tests/              executable assertions, incl. the v1-vs-v3 loss contrast
 ```
 
 ## The model
@@ -102,7 +102,8 @@ python scripts/04_report.py
 Split manifests carry SHA-256 checksums, every `run.json` records config,
 seed, dataset and split hashes, library versions and git commit, and
 `tests/test_core.py` contains the executable assertions — including a
-reproduction of the v1 uniform-α defect that motivated the corrected loss.
+demonstration of how the v1 uniform-α weighting differs from the corrected
+per-output loss.
 
 ## Data availability
 
