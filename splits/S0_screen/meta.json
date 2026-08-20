@@ -1,0 +1,31 @@
+{
+  "name": "S0_screen",
+  "description": "Screening subsample (the historical 5% stratified sample, mapped to exact table rows), partitioned 80/10/10 into train / val / selection with S1's stratification. Loss weights are selected on the 'test' (selection) part; the primary test sets stay disjoint via the clean test evaluation.",
+  "counts": {
+    "train": 5045133,
+    "val": 630643,
+    "test": 630643
+  },
+  "sha256": {
+    "train": "d366bee5c2273bcbbbc4892a38eaf915bf1ecd4d0d012666debcf05a1ab38af1",
+    "val": "b5a7686c15b17cee36c31868f8f23a858e970510fdf809a3cb8071318053f40d",
+    "test": "2bf0178a7430b2c10c9ba402ff7bf36400beb0b499f78665a2eb8273da6f98a3"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 3390529,
+      "fuel-only infeasible": 742939,
+      "completely infeasible": 911665
+    },
+    "val": {
+      "fully valid": 423817,
+      "fuel-only infeasible": 92868,
+      "completely infeasible": 113958
+    },
+    "test": {
+      "fully valid": 423817,
+      "fuel-only infeasible": 92868,
+      "completely infeasible": 113958
+    }
+  }
+}

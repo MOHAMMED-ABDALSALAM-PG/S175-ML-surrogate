@@ -1,0 +1,51 @@
+{
+  "sample_csv": "/home/macierz/mohabdal/S175_sample_5pct_stratified.csv",
+  "sample_csv_sha256": "257bb635caad5dcbcceff2dc1b328e674f95ac1b3f69a9b297e91de5eef67295",
+  "n_sample_rows": 6306419,
+  "mapping": "lattice index (14_interpolation_baseline.build_lattice_index)",
+  "split_seed": 0,
+  "fractions": {
+    "train": 0.8,
+    "val": 0.1,
+    "selection": 0.1
+  },
+  "stratification": "make_strata (feasibility class x Hs band x Vwind band)",
+  "dataset_sha256": "4f018ecadb0ab880ab997dc99a3513b7d087a6948ca099d21cf90366e4f9141d",
+  "test_set_overlap": {
+    "S1_random": {
+      "n_test": 12615370,
+      "n_overlap": 630811,
+      "pct_overlap": 5.000336890634203
+    },
+    "S2_level_Hs": {
+      "n_test": 9230760,
+      "n_overlap": 458166,
+      "pct_overlap": 4.963469963469963
+    },
+    "S2_level_Chi": {
+      "n_test": 10228680,
+      "n_overlap": 511336,
+      "pct_overlap": 4.999041909611015
+    },
+    "S2_level_draft": {
+      "n_test": 42051240,
+      "n_overlap": 2115447,
+      "pct_overlap": 5.030641189177775
+    },
+    "S2_level_Vwind": {
+      "n_test": 42051240,
+      "n_overlap": 2102153,
+      "pct_overlap": 4.999027377076158
+    },
+    "S3_block": {
+      "n_test": 11891880,
+      "n_overlap": 595146,
+      "pct_overlap": 5.004641822823641
+    },
+    "S4_corner": {
+      "n_test": 36410220,
+      "n_overlap": 1821201,
+      "pct_overlap": 5.001895072317607
+    }
+  }
+}
