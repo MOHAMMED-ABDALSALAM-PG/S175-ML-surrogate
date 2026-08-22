@@ -1,6 +1,6 @@
 {
   "name": "S0_screen",
-  "description": "Screening subsample (the historical 5% stratified sample, mapped to exact table rows), partitioned 80/10/10 into train / val / selection with S1's stratification. Loss weights are selected on the 'test' (selection) part; the primary test sets stay disjoint via the clean test evaluation.",
+  "description": "Screening subsample (the original 5% stratified sample, mapped to exact table rows), partitioned 80/10/10 into train / val / selection with S1's stratification. Loss weights are selected on the 'test' (selection) part; the primary test sets stay disjoint via the clean test evaluation.",
   "counts": {
     "train": 5045133,
     "val": 630643,

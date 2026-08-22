@@ -49,7 +49,7 @@ def log(msg):
     print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
 
 
-# the old project's CSV names one column differently
+# the screening-sample CSV names one column differently
 CSV_NAME = {c: ("rpm" if c == "EngRPM" else c) for c in FEATURE_COLS}
 
 

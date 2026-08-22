@@ -98,7 +98,7 @@ ax.annotate("accuracy unchanged: worst-output $R^2$ = 0.9994 (test), "
             (0, 1.03), xycoords="axes fraction", ha="left", fontsize=10,
             color=MUTED)
 fig.tight_layout()
-out = ROOT / "figures/fixed_campaign/fig_speed_vs_accuracy"
+out = ROOT / "figures/fig_speed_vs_accuracy"
 fig.savefig(f"{out}.png", dpi=300, bbox_inches="tight")
 fig.savefig(f"{out}.pdf", bbox_inches="tight")
 print("wrote", out)

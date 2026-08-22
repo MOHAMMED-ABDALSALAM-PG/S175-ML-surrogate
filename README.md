@@ -39,14 +39,15 @@ scripts/
   04_report.py      aggregate tables + core figures
   05_paper_figures.py  pred-vs-true, per-input error, response slices, timing
   06_timing_simulator.py  simulator wall-clock measurement
-  07_eval_v1_checkpoint.py  original v1 model under the identical protocol
   08_interpolation_test.py  surrogate vs fresh simulator runs at OFF-GRID inputs
+  run_alpha_grid.sh   joint loss-weight grid: screening split → 30 pairs ×
+                      5 seeds → prespecified selection rule (scripts 19–24)
 runs/               trained checkpoints (~700 KB each) + full provenance:
                     config, seed, split sha256, environment, history, metrics
 splits/             split manifests with sha256 (index arrays regenerable)
 results/evaluation/ all metric tables (CSV/JSON)
 figures/            all paper figures, 300 dpi PNG + vector PDF
-tests/              executable assertions, incl. the v1-vs-v3 loss contrast
+tests/              executable assertions, incl. the asymmetric-loss direction contrast
 ```
 
 ## The model
@@ -80,7 +81,7 @@ model = MLP(**ck["model_config"]); model.load_state_dict(ck["model"]).eval()
   inputs strictly *between* training grid levels — R² ≥ 0.996 (midpoints,
   4,608 points) and ≥ 0.997 (random positions, 54,675 points).
 - **Safety bias:** the per-output asymmetric loss puts all 10 outputs on their
-  safe error side in-distribution (the uniform-α v1 baseline: 2 of 10 on the
+  safe error side in-distribution (the uniform-α baseline: 2 of 10 on the
   same test rows) and largely holds off-grid (18/20 cells across the two
   off-grid designs).
 - **Honest limits:** at corner extrapolation the completely-infeasible
@@ -102,7 +103,7 @@ python scripts/04_report.py
 Split manifests carry SHA-256 checksums, every `run.json` records config,
 seed, dataset and split hashes, library versions and git commit, and
 `tests/test_core.py` contains the executable assertions — including a
-demonstration of how the v1 uniform-α weighting differs from the corrected
+demonstration of how a uniform-α weighting differs from the selected
 per-output loss.
 
 ## Data availability

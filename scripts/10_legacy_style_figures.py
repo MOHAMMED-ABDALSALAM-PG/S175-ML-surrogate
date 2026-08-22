@@ -1,10 +1,8 @@
-"""Recreate the original campaign's figure layouts from the FIXED experiments.
+"""Render the paper's per-output figure set from the trained runs.
 
-The old export (~/S175_results_export) contains the figures used in earlier
-drafts and presentations. Those figures show the superseded results (uniform
-alpha, no mask). This script regenerates the same figure *types* -- same
-layout, same panels, same annotations -- from the corrected v3 runs, so they
-can be dropped into the paper in place of the old ones.
+Regenerates the standard figure types -- pred-vs-actual grids, confusion
+matrices, residual histograms, the sea-condition error heatmap, and the
+throughput curve -- from the v3_masked_peroutput runs.
 
 Figures (default: S1_random seed 0, the headline run):
 
@@ -17,11 +15,9 @@ Figures (default: S1_random seed 0, the headline run):
   step7_error_heatmap_sea_conditions    MAE/range % by output and Hs band
   step8_inference_speed                 measured throughput vs batch size
 
-One deliberate fix vs the old heatmap: the old version normalised MAE by the
-per-band output range, which divides by zero wherever an output is constant
-within a band (slam is identically 0 in calm seas -- the old figure printed
-2.6e15 %). Here MAE is normalised by the output's GLOBAL range, which is what
-the caption claimed anyway.
+The sea-condition heatmap normalises MAE by each output's GLOBAL range, not
+the per-band range: a per-band normalisation divides by zero wherever an
+output is constant within a band (slam is identically 0 in calm seas).
 
 Run:
   python scripts/10_legacy_style_figures.py                 # S1_random seed 0
@@ -391,7 +387,7 @@ def main() -> int:
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     run_dir = RUNS / args.config_name / args.split / f"seed_{args.seed}"
-    outdir = ROOT / "figures" / "fixed_campaign"
+    outdir = ROOT / "figures"
     outdir.mkdir(parents=True, exist_ok=True)
 
     arr, _meta = sdata.load(RAW, cache_dir=CACHE_DIR)

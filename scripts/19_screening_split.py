@@ -77,7 +77,7 @@ def main() -> int:
                                        VAL_FRAC, SELECTION_FRAC)
     sp = Split(
         "S0_screen", srows[tr], srows[va], srows[te],
-        "Screening subsample (the historical 5% stratified sample, mapped to "
+        "Screening subsample (the original 5% stratified sample, mapped to "
         "exact table rows), partitioned 80/10/10 into train / val / selection "
         "with S1's stratification. Loss weights are selected on the "
         "'test' (selection) part; the primary test sets stay disjoint via the "
