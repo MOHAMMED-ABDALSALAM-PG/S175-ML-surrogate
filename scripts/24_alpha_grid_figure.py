@@ -55,7 +55,7 @@ def main() -> int:
         ax.set_xticks(range(len(ALPHA_SPEED)), [fmt(a) for a in ALPHA_SPEED])
         ax.set_yticks(range(len(ALPHA_OTHER)), [fmt(a) for a in ALPHA_OTHER])
         ax.set_xlabel(r"$\alpha_\mathrm{speed}$")
-        ax.set_ylabel(r"$\alpha_\mathrm{others}$")
+        ax.set_ylabel(r"$\alpha_\mathrm{other}$")
         ax.set_title(title, fontsize=10)
         for i in range(len(ALPHA_OTHER)):
             for j in range(len(ALPHA_SPEED)):

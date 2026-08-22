@@ -77,7 +77,7 @@ def main() -> int:
     box(ax, 0.355, 0.44, 0.30, 0.115,
         "Joint loss-weight grid (subsample):\n"
         "$\\alpha_\\mathrm{speed} \\in \\{1.0, 1.5, 2.0, 3.0, 5.0\\} \\times "
-        "\\alpha_\\mathrm{others} \\in \\{1.5, ..., 0.33\\}$\n"
+        "\\alpha_\\mathrm{other} \\in \\{1.5, ..., 0.33\\}$\n"
         "30 pairs $\\times$ 5 seeds, trained jointly")
     box(ax, 0.685, 0.44, 0.30, 0.115,
         "Prespecified rule: all ten outputs safe-side\n"
@@ -85,7 +85,7 @@ def main() -> int:
         "$\\rightarrow$ only $(1.5, 0.33)$ eligible")
     box(ax, 0.355, 0.28, 0.63, 0.115,
         "Final regressor: masked loss, per-output weights "
-        "($\\alpha_\\mathrm{speed} = 1.5$, $\\alpha_\\mathrm{others} = 0.33$)\n"
+        "($\\alpha_\\mathrm{speed} = 1.5$, $\\alpha_\\mathrm{other} = 0.33$)\n"
         "every output biased toward its safe error side", bold=True)
 
     arrow(ax, 0.84, 0.80, 0.67, 0.723)      # screening -> stage 2
