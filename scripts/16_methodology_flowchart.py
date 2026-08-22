@@ -2,7 +2,7 @@
 
 The previous hand-made diagram showed only the uniform alpha search and a
 final configuration of "masked, asymmetric, alpha = 1.5"; it predated the
-second, per-output sweep and the selected configuration (speed 1.5, others
+joint loss-weight grid and the selected configuration (speed 1.5, others
 0.33). Generating the figure keeps it in lockstep with the method.
 
   python scripts/16_methodology_flowchart.py
@@ -75,13 +75,14 @@ def main() -> int:
         "infeasible cases; fuel term masked where undefined",
         fill=FILL_STAGE)
     box(ax, 0.355, 0.44, 0.30, 0.115,
-        "Sweep 1 (subsample): uniform\n"
-        "$\\alpha \\in \\{1.0, 1.5, 2.0, 3.0, 5.0\\}$\n"
-        "$\\rightarrow \\alpha_\\mathrm{speed} = 1.5$")
+        "Joint loss-weight grid (subsample):\n"
+        "$\\alpha_\\mathrm{speed} \\in \\{1.0, 1.5, 2.0, 3.0, 5.0\\} \\times "
+        "\\alpha_\\mathrm{others} \\in \\{1.5, ..., 0.33\\}$\n"
+        "30 pairs $\\times$ 5 seeds, trained jointly")
     box(ax, 0.685, 0.44, 0.30, 0.115,
-        "Sweep 2 (subsample): others\n"
-        "$\\alpha \\in \\{1.5, 0.8, 0.67, 0.5, 0.33\\}$\n"
-        "$\\rightarrow \\alpha_\\mathrm{others} = 0.33$ (10/10 safe side)")
+        "Prespecified rule: all ten outputs safe-side\n"
+        "in every seed, then lowest standardised MAE\n"
+        "$\\rightarrow$ only $(1.5, 0.33)$ eligible")
     box(ax, 0.355, 0.28, 0.63, 0.115,
         "Final regressor: masked loss, per-output weights "
         "($\\alpha_\\mathrm{speed} = 1.5$, $\\alpha_\\mathrm{others} = 0.33$)\n"
@@ -89,10 +90,9 @@ def main() -> int:
 
     arrow(ax, 0.84, 0.80, 0.67, 0.723)      # screening -> stage 2
     arrow(ax, 0.42, 0.80, 0.20, 0.725)      # split -> stage 1
-    arrow(ax, 0.505, 0.60, 0.505, 0.558)    # stage 2 -> sweep 1
-    arrow(ax, 0.657, 0.497, 0.683, 0.497)   # sweep 1 -> sweep 2
-    arrow(ax, 0.835, 0.44, 0.75, 0.398)     # sweep 2 -> final
-    arrow(ax, 0.505, 0.44, 0.56, 0.398)     # sweep 1 baseline context -> final
+    arrow(ax, 0.505, 0.60, 0.505, 0.558)    # stage 2 -> grid
+    arrow(ax, 0.657, 0.497, 0.683, 0.497)   # grid -> selection rule
+    arrow(ax, 0.835, 0.44, 0.75, 0.398)     # selection rule -> final
 
     # ---- assembly and evaluation -----------------------------------------
     box(ax, 0.015, 0.09, 0.47, 0.13,
