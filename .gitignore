@@ -24,3 +24,4 @@ results/evaluation/screening_rows.npy
 # generated LaTeX assets belong to the manuscript, not the repository
 results/evaluation/latex/
 figures/fig_methodology_flowchart.*
+
