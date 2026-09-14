@@ -1,0 +1,68 @@
+{
+  "config_path": "/home/macierz/mohabdal/S175_surrogate_v2/configs/grid/grid_a1_o0.33.yaml",
+  "config": {
+    "name": "grid_a1_o0.33",
+    "description": "Loss-weight grid point alpha_speed=1.0, alpha_other=0.33, regressor only, on the screening split.\n",
+    "split": "S0_screen",
+    "ablation_loss": true,
+    "hidden": [
+      512,
+      256,
+      128
+    ],
+    "batchnorm": true,
+    "bn_after_act": false,
+    "dropout": 0.0,
+    "alpha_speed": 1.0,
+    "alpha_others": 0.33,
+    "lr": 0.001,
+    "batch_size": 512,
+    "max_epochs": 200,
+    "patience": 15,
+    "amp": true
+  },
+  "seed": 3,
+  "split": "S0_screen",
+  "split_sha256": {
+    "train": "d366bee5c2273bcbbbc4892a38eaf915bf1ecd4d0d012666debcf05a1ab38af1",
+    "val": "b5a7686c15b17cee36c31868f8f23a858e970510fdf809a3cb8071318053f40d",
+    "test": "2bf0178a7430b2c10c9ba402ff7bf36400beb0b499f78665a2eb8273da6f98a3"
+  },
+  "split_counts": {
+    "train": 5045133,
+    "val": 630643,
+    "test": 630643
+  },
+  "dataset": {
+    "source": "/home/macierz/mohabdal/S175_shaft_gen_off.txt",
+    "sha256": "4f018ecadb0ab880ab997dc99a3513b7d087a6948ca099d21cf90366e4f9141d",
+    "n_rows": 126153720
+  },
+  "batch_size": 65536,
+  "amp": true,
+  "device": "cuda",
+  "subsample": null,
+  "environment": {
+    "python": "3.14.4",
+    "torch": "2.13.0+cu130",
+    "numpy": "2.4.6",
+    "cuda_available": true,
+    "gpu": "Quadro RTX 5000",
+    "git_commit": "954a79afb53e16a39a2a69f1114d5c36be0bd460-dirty"
+  },
+  "components": {
+    "regressor": {
+      "component": "regressor",
+      "best_epoch": 53,
+      "best_val_loss": 0.0007097761518181435,
+      "epochs_run": 69,
+      "n_train_rows": 4133468,
+      "n_val_rows": 516685,
+      "n_parameters": 171530,
+      "batch_size": 65536,
+      "amp": true,
+      "gpu_resident": true,
+      "seconds": 74.04035732732154
+    }
+  }
+}

@@ -9,7 +9,7 @@ S175_sample_5pct_stratified.csv
 # regenerated split can be verified bit-for-bit
 splits/*/*.npy
 
-# trained models under runs/ ARE committed (~19 MB): checkpoints, histories,
+# trained models under runs/ ARE committed (~130 MB): checkpoints, histories,
 # run.json and eval.json make every reported number reproducible
 
 logs/
