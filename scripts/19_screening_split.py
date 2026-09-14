@@ -54,7 +54,10 @@ def log(msg: str) -> None:
 
 def main() -> int:
     out_dir = SPLIT_DIR / "S0_screen"
-    if (out_dir / "meta.json").exists():
+    # meta.json is written before the overlap check, so an interrupted run can
+    # leave the split on disk without the provenance file that carries the
+    # test-set disjointness evidence: require both before short-circuiting.
+    if (out_dir / "meta.json").exists() and (out_dir / "provenance.json").exists():
         sp = load_split(SPLIT_DIR, "S0_screen")   # checksum-verifies the files
         log(f"S0_screen already on disk and verified: "
             f"{len(sp.train):,} / {len(sp.val):,} / {len(sp.test):,} rows")

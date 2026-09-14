@@ -60,11 +60,11 @@ check("alpha=0.33 on the other nine over-predicts the mean",
       all(o > 10.0 for o in others),
       f"min fitted {min(others):.4f} vs mean 10.0")
 
-print("\n[2] the v1 configuration biases nine outputs the unsafe way")
-v1_fitted = fit_constant([1.5] * 10, target=10.0)
+print("\n[2] a uniform alpha biases every output the same way")
+uniform_fitted = fit_constant([1.5] * 10, target=10.0)
 check("scalar alpha=1.5 pushes ALL ten outputs below the mean",
-      all(v < 10.0 for v in v1_fitted),
-      f"max fitted {max(v1_fitted):.4f} -- this is the published bug")
+      all(v < 10.0 for v in uniform_fitted),
+      f"max fitted {max(uniform_fitted):.4f} -- the wrong side for the nine")
 
 print("\n[3] alpha direction guard")
 try:
@@ -76,7 +76,7 @@ try:
     check_alpha_directions([1.5] * 10); raised = False
 except ValueError:
     raised = True
-check("the published scalar-1.5 vector is rejected", raised)
+check("a uniform scalar-1.5 vector is rejected", raised)
 
 print("\n[4] mask keeps the nine valid outputs of a fuel-only row")
 cls = torch.tensor([0, 1, 0, 2], dtype=torch.int8)

@@ -23,12 +23,23 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import sys
 import time
 from pathlib import Path
 
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from s175.columns import OUTPUT_COLS
+
+# The grid itself is defined once, by the script that trains it; extending the
+# search there is enough for the completeness check below to follow.
+grid = __import__("20_alpha_grid")
+ALPHA_SPEED, ALPHA_OTHER = grid.ALPHA_SPEED, grid.ALPHA_OTHER
+
 SPLIT = "S0_screen"
 
 # Prespecified extension path, used only if no pair is eligible.
@@ -54,6 +65,18 @@ def main() -> int:
         log("no selection_eval.json found -- run 21_alpha_grid_eval.py first")
         return 1
 
+    # A pair whose runs all failed produces no selection_eval.json at all, so
+    # it is absent from `evals` rather than incomplete within it: check the
+    # grid product first, or the rule would be applied to a partial grid.
+    missing = sorted({(a_s, a_o) for a_s in ALPHA_SPEED for a_o in ALPHA_OTHER}
+                     - set(evals))
+    if missing:
+        for a_s, a_o in missing:
+            log(f"  absent: alpha=({a_s:g}, {a_o:g}) -- no seed scored")
+        log(f"{len(missing)} grid pairs absent -- selection needs the full "
+            f"{len(ALPHA_SPEED)}x{len(ALPHA_OTHER)} grid")
+        return 1
+
     incomplete = {k: sorted(set(want_seeds) - set(v))
                   for k, v in evals.items()
                   if set(want_seeds) - set(v)}
@@ -66,7 +89,18 @@ def main() -> int:
     rows = []
     for (a_s, a_o), by_seed in sorted(evals.items()):
         seeds = [by_seed[s] for s in want_seeds]
-        safe_all = all(e["safe_direction"] == "10/10" for e in seeds)
+        # safe_direction is "met/total"; total shrinks when an output has no
+        # positive-truth rows to judge, and a shrunken grid-wide denominator is
+        # an error in the partition, not a pair that passed.
+        scored = [tuple(int(x) for x in e["safe_direction"].split("/"))
+                  for e in seeds]
+        short = [t for t in scored if t[1] != len(OUTPUT_COLS)]
+        if short:
+            log(f"  alpha=({a_s:g}, {a_o:g}): only {short[0][1]} of "
+                f"{len(OUTPUT_COLS)} outputs could be judged -- the selection "
+                f"partition has no positive-truth rows for some output")
+            return 1
+        safe_all = all(met == total for met, total in scored)
         rel = np.array([e["mean_rel_MAE_sd_pct"] for e in seeds])
         r2 = np.array([e["mean_R2"] for e in seeds])
         oe = np.array([e["per_output"]["speed"]["overpred_pct_positive"]

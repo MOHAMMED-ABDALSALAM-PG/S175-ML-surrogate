@@ -32,6 +32,11 @@ def fmt(a: float) -> str:
 
 def main() -> int:
     sel = json.loads(SRC.read_text())
+    if sel["selected"] is None:
+        raise SystemExit(
+            f"{SRC} records no eligible pair ({sel.get('reason', 'unknown')}) "
+            "-- extend the grid per the selection rule and re-run script 22 "
+            "before drawing the manuscript figure")
     by_pair = {(g["alpha_speed"], g["alpha_other"]): g for g in sel["grid"]}
     picked = (sel["selected"]["alpha_speed"], sel["selected"]["alpha_other"])
 
@@ -41,12 +46,18 @@ def main() -> int:
     mae = np.array([[by_pair[(sp, ao)]["mean_rel_MAE_sd_pct"]
                      for sp in ALPHA_SPEED] for ao in ALPHA_OTHER])
 
+    # imshow clips silently, so the MAE scale is taken from the data (padded
+    # to a tenth) rather than pinned to today's range; the ink switch follows
+    # it, keeping the printed number legible against its own cell.
+    lo = np.floor(mae.min() * 10.0) / 10.0
+    hi = np.ceil(mae.max() * 10.0) / 10.0
+
     fig, axes = plt.subplots(1, 2, figsize=(10.6, 3.9))
     panels = [
         (axes[0], safe, 0.0, 10.0, "{:.0f}", 6.5,
          "(a) Worst seed: outputs on their safe side",
          "outputs safe-side, of 10 (worst of 5 seeds)"),
-        (axes[1], mae, 1.6, 2.3, "{:.2f}", 2.06,
+        (axes[1], mae, lo, hi, "{:.2f}", lo + 0.66 * (hi - lo),
          "(b) Mean standardised MAE over five seeds",
          "mean MAE [% of output SD]"),
     ]

@@ -11,8 +11,8 @@ identical optimisation schedule, and scored on identical test rows:
 
 The three masked arms differ only in the weighting.
 
-This replaces the earlier comparison against the original v1 checkpoint
-(07_eval_v1_checkpoint.py), whose training split overlapped these test rows.
+This replaces the earlier comparison against the original v1 checkpoint,
+whose training split overlapped these test rows.
 
 Run after scripts/03_evaluate.py has produced eval.json for every arm:
   python scripts/12_loss_ablation.py

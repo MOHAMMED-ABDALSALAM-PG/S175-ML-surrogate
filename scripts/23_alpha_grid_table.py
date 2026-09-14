@@ -29,6 +29,11 @@ def fmt_alpha(a: float) -> str:
 def main() -> None:
     sel = json.loads(SRC.read_text())
     selected = sel["selected"]
+    if selected is None:
+        raise SystemExit(
+            f"{SRC} records no eligible pair ({sel.get('reason', 'unknown')}) "
+            "-- extend the grid per the selection rule and re-run script 22 "
+            "before emitting the manuscript table")
     by_pair = {(g["alpha_speed"], g["alpha_other"]): g for g in sel["grid"]}
     assert len(by_pair) == len(ALPHA_SPEED) * len(ALPHA_OTHER)
 
@@ -46,7 +51,7 @@ def main() -> None:
         f"\\begin{{tabular}}{{c{'c' * len(ALPHA_SPEED)}}}",
         "\\hline",
         f" & \\multicolumn{{{len(ALPHA_SPEED)}}}{{c}}{{$\\alpha_\\mathrm{{speed}}$}} \\\\",
-        f"$\\alpha_\\mathrm{{others}}$ & {header} \\\\",
+        f"$\\alpha_\\mathrm{{other}}$ & {header} \\\\",
         "\\hline",
         f"\\multicolumn{{{ncols}}}{{l}}{{\\emph{{(a) Worst seed: outputs on their safe side, of 10}}}} \\\\",
     ]

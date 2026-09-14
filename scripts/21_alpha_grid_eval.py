@@ -50,9 +50,12 @@ def main() -> int:
                     help="re-evaluate runs that already have selection_eval.json")
     args = ap.parse_args()
 
+    # regressor.pt is written well before run.json, so a run that is still
+    # training (or was interrupted) has a checkpoint and no config to read:
+    # that is a run to skip, not a crash.
     run_dirs = sorted(ROOT.glob(f"runs/grid_a*/{SPLIT}/seed_*"))
     todo = [d for d in run_dirs
-            if (d / "regressor.pt").exists()
+            if (d / "regressor.pt").exists() and (d / "run.json").exists()
             and (args.force or not (d / "selection_eval.json").exists())]
     log(f"{len(run_dirs)} grid run dirs, {len(todo)} to evaluate")
     if not todo:

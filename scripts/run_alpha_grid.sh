@@ -30,5 +30,12 @@ grid_rc=$?
 "$PY" scripts/22_alpha_grid_select.py
 select_rc=$?
 
+# The manuscript's grid table and figure are regenerated only when the rule
+# actually selected a pair (rc 2 = nothing eligible, extend the grid first).
+if [ "$select_rc" -eq 0 ]; then
+  "$PY" scripts/23_alpha_grid_table.py || { echo "grid table failed"; exit 1; }
+  "$PY" scripts/24_alpha_grid_figure.py || { echo "grid figure failed"; exit 1; }
+fi
+
 echo "=== $(date) alpha grid end (grid rc=$grid_rc, select rc=$select_rc) ==="
 exit $(( grid_rc != 0 ? grid_rc : select_rc ))

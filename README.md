@@ -41,7 +41,8 @@ scripts/
   06_timing_simulator.py  simulator wall-clock measurement
   08_interpolation_test.py  surrogate vs fresh simulator runs at OFF-GRID inputs
   run_alpha_grid.sh   joint loss-weight grid: screening split → 30 pairs ×
-                      5 seeds → prespecified selection rule (scripts 19–24)
+                      5 seeds → prespecified selection rule → grid table and
+                      figure (scripts 19–24, in order)
 runs/               trained checkpoints (~700 KB each) + full provenance:
                     config, seed, split sha256, environment, history, metrics
 splits/             split manifests with sha256 (index arrays regenerable)
