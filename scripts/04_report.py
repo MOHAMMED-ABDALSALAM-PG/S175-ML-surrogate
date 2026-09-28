@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from s175.columns import OUTPUT_COLS
+from s175.labels import output_label, regime_label
 from s175.metrics import aggregate_seeds
 
 RUNS = ROOT / "runs" / "v3_masked_peroutput"
@@ -116,28 +117,31 @@ def fig_r2_heatmap(evals):
         rows = [e for e in evals if e["split"] == s]
         for j, c in enumerate(OUTPUT_COLS):
             mat[i, j] = np.mean([e["regressor"]["per_output"][c]["R2"] for e in rows])
-    fig, ax = plt.subplots(figsize=(10, 4.2))
+    fig, ax = plt.subplots(figsize=(5.9, 3.4), layout="constrained")
     im = ax.imshow(mat, cmap="Blues", vmin=0.9, vmax=1.0, aspect="auto")
-    ax.set_xticks(range(len(OUTPUT_COLS)), OUTPUT_COLS, rotation=35, ha="right")
-    labels = [s + (f" (n={sum(e['split'] == s for e in evals)})"
+    ax.set_xticks(range(len(OUTPUT_COLS)),
+                  [output_label(c) for c in OUTPUT_COLS], rotation=40,
+                  ha="right", rotation_mode="anchor", fontsize=8)
+    labels = [regime_label(s) + (f" (n={sum(e['split'] == s for e in evals)})"
                    if sum(e["split"] == s for e in evals) > 1 else "")
               for s in splits]
-    ax.set_yticks(range(len(splits)), labels)
+    ax.set_yticks(range(len(splits)), labels, fontsize=8)
     for i in range(len(splits)):
         for j in range(len(OUTPUT_COLS)):
             # single-hue white->blue scale: dark ink on pale (low) cells,
             # white ink once the cell is deep blue (high end of the scale)
             ax.text(j, i, f"{mat[i, j]:.3f}", ha="center", va="center",
-                    fontsize=7.5,
+                    fontsize=7.7,
                     color="white" if mat[i, j] > 0.965 else "black")
-    ax.set_title("Test-set R² per output and holdout regime (clamped predictions)")
-    fig.colorbar(im, ax=ax, shrink=0.85, label="R² (floor of scale = 0.90)")
+    cb = fig.colorbar(im, ax=ax, shrink=0.85, fraction=0.04, pad=0.01)
+    cb.set_label("R² (floor of scale = 0.90)", fontsize=8)
+    cb.ax.tick_params(labelsize=8)
     save_fig(fig, "fig_r2_heatmap")
 
 
 def fig_clf_fnr(evals):
     splits = [s for s in SPLIT_ORDER if any(e["split"] == s for e in evals)]
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(7.4, 3.2), sharey=True)
     for ax, name, title in ((axes[0], "clf1", "C1: completely infeasible"),
                             (axes[1], "clf2", "C2: fuel-only infeasible")):
         xs, ys, lo, hi = [], [], [], []
@@ -152,13 +156,17 @@ def fig_clf_fnr(evals):
         ax.errorbar(xs, ys, yerr=[lo, hi], fmt="o", capsize=3, color="#31538f")
         ax.axhline(0.01, color="#b03a2e", ls="--", lw=1,
                    label="1% (validation recall floor 0.99)")
-        ax.set_xticks(range(len(splits)), splits, rotation=30, ha="right")
-        ax.set_title(title)
+        ax.set_xticks(range(len(splits)), [regime_label(s) for s in splits],
+                      rotation=30, ha="right", rotation_mode="anchor",
+                      fontsize=8)
+        ax.set_title(title, fontsize=9)
         ax.set_yscale("log")
+        ax.tick_params(axis="y", labelsize=8)
         ax.grid(True, axis="y", alpha=0.3)
-    axes[0].set_ylabel("test false-negative rate (log scale, Wilson 95% CI)")
-    axes[0].legend(fontsize=8)
-    fig.suptitle("Feasibility classifiers at their validation-selected thresholds")
+    axes[0].set_ylabel("test false-negative rate\n(log scale, Wilson 95% CI)",
+                       fontsize=8)
+    axes[0].legend(fontsize=7.5)
+    fig.tight_layout()
     save_fig(fig, "fig_clf_fnr")
 
 

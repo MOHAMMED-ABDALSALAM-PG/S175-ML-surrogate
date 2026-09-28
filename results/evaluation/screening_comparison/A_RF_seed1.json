@@ -1,0 +1,69 @@
+{
+ "approach": "A",
+ "family": "RF",
+ "seed": 1,
+ "split_state": 42,
+ "n_train": 5045135,
+ "n_val": 630642,
+ "n_test": 630642,
+ "index_sha256": {
+  "train": "79ca2666c2f6ba02304a3d6497a09be2c0fcdc47a0139d9a275c548576790630",
+  "val": "774315ae8e5034fef4fcc41a4884781396b402524c97e9b155c5f7de91c75c31",
+  "test": "f2d212131572ae356204b4d1ca078e33854a1dc2533d33a8768f83925776fa57"
+ },
+ "data_sha256": "257bb635caad5dcbcceff2dc1b328e674f95ac1b3f69a9b297e91de5eef67295",
+ "script_sha256": "82d747c3783f1f550bbf242e21e1a2a538b03628bee21150110ed70a10f0ab04",
+ "limit": null,
+ "fit_seconds": 838.3154736999422,
+ "params": {
+  "regressor": {
+   "bootstrap": "True",
+   "ccp_alpha": "0.0",
+   "criterion": "'squared_error'",
+   "max_depth": "20",
+   "max_features": "1.0",
+   "max_leaf_nodes": "None",
+   "max_samples": "None",
+   "min_impurity_decrease": "0.0",
+   "min_samples_leaf": "5",
+   "min_samples_split": "2",
+   "min_weight_fraction_leaf": "0.0",
+   "monotonic_cst": "None",
+   "n_estimators": "100",
+   "n_jobs": "4",
+   "oob_score": "False",
+   "random_state": "1",
+   "verbose": "0",
+   "warm_start": "False"
+  }
+ },
+ "detection": {
+  "threshold_on_prediction": 5.972166833250083,
+  "val_f1": 0.9828410039611346,
+  "f1": 0.9831375596758077,
+  "precision": 0.9952525243442999,
+  "recall": 0.9713139928745679,
+  "missed_infeasible": 3269,
+  "false_alarms": 528
+ },
+ "speed_all_valid_rows": {
+  "n_rows": 516684,
+  "MAE": 0.19096452592703986,
+  "RMSE": 1.020741735845225,
+  "R2": 0.8775686387910987
+ },
+ "speed_valid_and_predicted_valid": {
+  "n_rows": 516156,
+  "MAE": 0.1766162744820512,
+  "RMSE": 0.8674605358483333,
+  "R2": 0.9109096033363551
+ },
+ "seconds_total": 920.8002531528473,
+ "env": {
+  "python": "3.14.4",
+  "numpy": "2.4.6",
+  "sklearn": "1.9.0",
+  "host": "apl11.lab.kask.eti.pg.edu.pl",
+  "threads": 4
+ }
+}

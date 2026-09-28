@@ -1,0 +1,75 @@
+{
+ "approach": "A",
+ "family": "MLP",
+ "seed": 0,
+ "split_state": 42,
+ "n_train": 5045135,
+ "n_val": 630642,
+ "n_test": 630642,
+ "index_sha256": {
+  "train": "79ca2666c2f6ba02304a3d6497a09be2c0fcdc47a0139d9a275c548576790630",
+  "val": "774315ae8e5034fef4fcc41a4884781396b402524c97e9b155c5f7de91c75c31",
+  "test": "f2d212131572ae356204b4d1ca078e33854a1dc2533d33a8768f83925776fa57"
+ },
+ "data_sha256": "257bb635caad5dcbcceff2dc1b328e674f95ac1b3f69a9b297e91de5eef67295",
+ "script_sha256": "82d747c3783f1f550bbf242e21e1a2a538b03628bee21150110ed70a10f0ab04",
+ "limit": null,
+ "fit_seconds": 5833.22553356085,
+ "params": {
+  "regressor": {
+   "activation": "'relu'",
+   "alpha": "0.0001",
+   "batch_size": "1024",
+   "beta_1": "0.9",
+   "beta_2": "0.999",
+   "early_stopping": "True",
+   "epsilon": "1e-08",
+   "hidden_layer_sizes": "(256, 128, 64)",
+   "learning_rate": "'adaptive'",
+   "learning_rate_init": "0.001",
+   "loss": "'squared_error'",
+   "max_fun": "15000",
+   "max_iter": "300",
+   "momentum": "0.9",
+   "n_iter_no_change": "15",
+   "nesterovs_momentum": "True",
+   "power_t": "0.5",
+   "random_state": "0",
+   "shuffle": "True",
+   "solver": "'adam'",
+   "tol": "0.0001",
+   "validation_fraction": "0.1",
+   "verbose": "False",
+   "warm_start": "False"
+  }
+ },
+ "detection": {
+  "threshold_on_prediction": 6.381207601235374,
+  "val_f1": 0.9899755900541609,
+  "f1": 0.9898808026513798,
+  "precision": 0.995667652098259,
+  "recall": 0.9841608311834185,
+  "missed_infeasible": 1805,
+  "false_alarms": 488
+ },
+ "speed_all_valid_rows": {
+  "n_rows": 516684,
+  "MAE": 0.14169779063479254,
+  "RMSE": 0.7362207390701342,
+  "R2": 0.9363091525451797
+ },
+ "speed_valid_and_predicted_valid": {
+  "n_rows": 516196,
+  "MAE": 0.13514766293431132,
+  "RMSE": 0.6482903347423817,
+  "R2": 0.949885670418805
+ },
+ "seconds_total": 5908.826174497604,
+ "env": {
+  "python": "3.14.4",
+  "numpy": "2.4.6",
+  "sklearn": "1.9.0",
+  "host": "apl11.lab.kask.eti.pg.edu.pl",
+  "threads": 4
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "approach": "B",
+ "family": "MLP",
+ "seed": 1,
+ "split_state": 42,
+ "n_train": 5045135,
+ "n_val": 630642,
+ "n_test": 630642,
+ "index_sha256": {
+  "train": "79ca2666c2f6ba02304a3d6497a09be2c0fcdc47a0139d9a275c548576790630",
+  "val": "774315ae8e5034fef4fcc41a4884781396b402524c97e9b155c5f7de91c75c31",
+  "test": "f2d212131572ae356204b4d1ca078e33854a1dc2533d33a8768f83925776fa57"
+ },
+ "data_sha256": "257bb635caad5dcbcceff2dc1b328e674f95ac1b3f69a9b297e91de5eef67295",
+ "script_sha256": "82d747c3783f1f550bbf242e21e1a2a538b03628bee21150110ed70a10f0ab04",
+ "limit": null,
+ "detection_default_0p5": {
+  "f1": 0.994439864592286,
+  "precision": 0.9938471786421722,
+  "recall": 0.9950332578669334,
+  "missed_infeasible": 566,
+  "false_alarms": 702
+ },
+ "detection": {
+  "threshold_on_probability": 0.43179389551553654,
+  "val_f1": 0.9943785517431747,
+  "f1": 0.9943631498035643,
+  "precision": 0.9926111174263954,
+  "recall": 0.9961213780515629,
+  "missed_infeasible": 442,
+  "false_alarms": 845
+ },
+ "fit_seconds": 5703.32271338487,
+ "fit_seconds_parts": {
+  "classifier": 5162.169113437645,
+  "regressor": 541.1535999472253
+ },
+ "params": {
+  "classifier": {
+   "activation": "'relu'",
+   "alpha": "0.0001",
+   "batch_size": "1024",
+   "beta_1": "0.9",
+   "beta_2": "0.999",
+   "early_stopping": "True",
+   "epsilon": "1e-08",
+   "hidden_layer_sizes": "(256, 128, 64)",
+   "learning_rate": "'adaptive'",
+   "learning_rate_init": "0.001",
+   "max_fun": "15000",
+   "max_iter": "300",
+   "momentum": "0.9",
+   "n_iter_no_change": "15",
+   "nesterovs_momentum": "True",
+   "power_t": "0.5",
+   "random_state": "1",
+   "shuffle": "True",
+   "solver": "'adam'",
+   "tol": "0.0001",
+   "validation_fraction": "0.1",
+   "verbose": "False",
+   "warm_start": "False"
+  },
+  "regressor": {
+   "activation": "'relu'",
+   "alpha": "0.0001",
+   "batch_size": "1024",
+   "beta_1": "0.9",
+   "beta_2": "0.999",
+   "early_stopping": "True",
+   "epsilon": "1e-08",
+   "hidden_layer_sizes": "(256, 128, 64)",
+   "learning_rate": "'adaptive'",
+   "learning_rate_init": "0.001",
+   "loss": "'squared_error'",
+   "max_fun": "15000",
+   "max_iter": "300",
+   "momentum": "0.9",
+   "n_iter_no_change": "15",
+   "nesterovs_momentum": "True",
+   "power_t": "0.5",
+   "random_state": "1",
+   "shuffle": "True",
+   "solver": "'adam'",
+   "tol": "0.0001",
+   "validation_fraction": "0.1",
+   "verbose": "False",
+   "warm_start": "False"
+  }
+ },
+ "speed_all_valid_rows": {
+  "n_rows": 516684,
+  "MAE": 0.02578150777114068,
+  "RMSE": 0.03497459353830897,
+  "R2": 0.9998562637582923
+ },
+ "speed_valid_and_predicted_valid": {
+  "n_rows": 515839,
+  "MAE": 0.025776002285764422,
+  "RMSE": 0.03495056904181499,
+  "R2": 0.9998561472519658
+ },
+ "seconds_total": 5786.821855068207,
+ "env": {
+  "python": "3.14.4",
+  "numpy": "2.4.6",
+  "sklearn": "1.9.0",
+  "host": "apl11.lab.kask.eti.pg.edu.pl",
+  "threads": 4
+ }
+}

@@ -37,6 +37,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from s175.columns import OUTPUT_COLS, SAFE_DIRECTION
+from s175.labels import output_label
 
 EV = ROOT / "results" / "evaluation"
 
@@ -120,7 +121,7 @@ def main() -> int:
     print("wrote", EV / "latex" / "table_loss_ablation.tex")
 
     # ------------------------------------------------------------- figure
-    fig, ax = plt.subplots(figsize=(8.2, 5.0))
+    fig, ax = plt.subplots(figsize=(3.5, 4.4))
     ys = np.arange(len(OUTPUT_COLS))[::-1]
     ax.axvline(50, color="k", lw=0.8, ls=":", zorder=1)
     for i, y in enumerate(ys):
@@ -131,21 +132,20 @@ def main() -> int:
     for name, lbl, color, marker in ARMS:
         rates = [regs[name]["per_output"][c]["overpred_pct_positive"]
                  for c in OUTPUT_COLS]
-        ax.scatter(rates, ys, s=46, color=color, marker=marker, label=lbl,
+        ax.scatter(rates, ys, s=24, color=color, marker=marker, label=lbl,
                    zorder=3, edgecolors="white", linewidths=0.6)
     for i, y in enumerate(ys):
         want_over = SAFE_DIRECTION[OUTPUT_COLS[i]] == "over"
         ax.annotate("safe →" if want_over else "← safe",
                     (98 if want_over else 2, y),
                     ha="right" if want_over else "left", va="center",
-                    fontsize=7.5, color="#5a6b7f", zorder=2)
-    ax.set_yticks(ys, OUTPUT_COLS)
+                    fontsize=6.5, color="#5a6b7f", zorder=2)
+    ax.set_yticks(ys, [output_label(c) for c in OUTPUT_COLS], fontsize=7)
     ax.set_xlim(0, 100)
-    ax.set_xlabel("over-prediction rate on positive-truth rows [%]")
-    ax.set_title("Which side does each output err on, per loss configuration\n"
-                 "(shaded half = the output's safe side; same training and test rows)")
-    ax.legend(fontsize=8.5, loc="upper center", bbox_to_anchor=(0.5, -0.13),
-              ncol=2, frameon=False)
+    ax.tick_params(axis="x", labelsize=7)
+    ax.set_xlabel("over-prediction rate on positive-truth rows [%]", fontsize=7)
+    ax.legend(fontsize=6.5, loc="upper center", bbox_to_anchor=(0.35, -0.12),
+              ncol=1, frameon=False, handletextpad=0.3)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     fig.savefig(ROOT / "figures" / "fig_loss_ablation_safety.png", dpi=300,

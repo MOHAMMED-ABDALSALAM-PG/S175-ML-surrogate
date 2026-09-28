@@ -44,6 +44,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from s175 import data as sdata
 from s175.columns import (OUTPUT_COLS, FEATURE_COLS, UNITS, CLASS_VALID,
                           CLASS_FUEL_ONLY, CLASS_ALL_NEG)
+from s175.labels import output_label
 from s175.metrics import clamp_physical, r2
 from s175.models import MLP
 from s175.splits import load_split
@@ -113,7 +114,7 @@ def save(fig, outdir: Path, name: str):
 
 
 def panel_label(c: str) -> str:
-    return f"{c} [{UNITS[c]}]"
+    return output_label(c, units=True)
 
 
 # ---------------------------------------------------------------------------
@@ -198,25 +199,27 @@ def _confusion_panel(ax, conf, labels, cmap, title):
     for r in range(conf.shape[0]):
         for cc in range(conf.shape[1]):
             ax.text(cc, r, f"{conf[r, cc]:,}", ha="center", va="center",
-                    fontsize=13, fontweight="bold",
+                    fontsize=7, fontweight="bold",
                     color="white" if conf[r, cc] > thresh else "black")
-    ax.set_xticks(range(len(labels)), labels, fontsize=11)
-    ax.set_yticks(range(len(labels)), labels, fontsize=11)
-    ax.set_xlabel("Predicted", fontsize=11)
-    ax.set_ylabel("Actual", fontsize=11)
-    ax.set_title(title, fontsize=13, fontweight="bold")
+    ax.set_xticks(range(len(labels)), labels, fontsize=7)
+    ax.set_yticks(range(len(labels)), labels, fontsize=7)
+    ax.set_xlabel("Predicted", fontsize=7.5)
+    ax.set_ylabel("Actual", fontsize=7.5)
+    ax.set_title(title, fontsize=8, fontweight="bold")
 
 
 def fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir):
     """Clf1 / Clf2 / combined three-class, absolute counts -- old layout."""
-    fig, axes = plt.subplots(1, 3, figsize=(24, 6.5))
+    fig, axes = plt.subplots(1, 3, figsize=(7.9, 2.9),
+                             width_ratios=(1.0, 1.0, 1.5))
 
     lab1 = cls_te == CLASS_ALL_NEG
     pr1 = p1 > thr1
     c1 = np.array([[np.sum(~lab1 & ~pr1), np.sum(~lab1 & pr1)],
                    [np.sum(lab1 & ~pr1), np.sum(lab1 & pr1)]], dtype=np.int64)
     acc1 = (c1[0, 0] + c1[1, 1]) / c1.sum()
-    _confusion_panel(axes[0], c1, ["Feasible", "Infeasible"], "Blues",
+    _confusion_panel(axes[0], c1, ["Not completely\ninfeasible",
+                                   "Completely\ninfeasible"], "Blues",
                      f"Classifier 1\nAcc={acc1:.4f}, FN={c1[1, 0]:,}")
 
     sub = cls_te != CLASS_ALL_NEG                    # population C2 faces
@@ -225,7 +228,8 @@ def fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir):
     c2 = np.array([[np.sum(~lab2 & ~pr2), np.sum(~lab2 & pr2)],
                    [np.sum(lab2 & ~pr2), np.sum(lab2 & pr2)]], dtype=np.int64)
     acc2 = (c2[0, 0] + c2[1, 1]) / c2.sum()
-    _confusion_panel(axes[1], c2, ["Fuel-Valid", "Fuel-Invalid"], "Oranges",
+    _confusion_panel(axes[1], c2, ["Fuel valid", "Fuel-only\ninfeasible"],
+                     "Oranges",
                      f"Classifier 2\nAcc={acc2:.4f}, FN={c2[1, 0]:,}")
 
     conf = np.zeros((3, 3), dtype=np.int64)
@@ -233,17 +237,19 @@ def fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir):
         for p in (CLASS_VALID, CLASS_FUEL_ONLY, CLASS_ALL_NEG):
             conf[t, p] = int(np.sum((cls_te == t) & (pred_cls == p)))
     acc3 = np.trace(conf) / conf.sum()
-    _confusion_panel(axes[2], conf, ["Valid", "Fuel-1", "All-1"], "Greens",
+    _confusion_panel(axes[2], conf, ["Fully valid", "Fuel-only\ninfeasible",
+                                     "Completely\ninfeasible"], "Greens",
                      f"Combined 3-Class\nAcc={acc3:.4f}")
-    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.tight_layout(w_pad=0.8)
     save(fig, outdir, "step7_classification_confusion")
 
 
 def fig_residuals(y_true, y_pred, cls_te, outdir):
-    """2x5 residual histograms on defined rows, old layout."""
-    fig, axes = plt.subplots(2, 5, figsize=(30, 11))
+    """4x3 residual histograms on defined rows; the two spare cells hold
+    the shared legend."""
+    fig, axes = plt.subplots(4, 3, figsize=(5.6, 6.2))
     for i, c in enumerate(OUTPUT_COLS):
-        ax = axes[i // 5, i % 5]
+        ax = axes[i // 3, i % 3]
         defined = (cls_te == CLASS_VALID) if c == "fuel" else (cls_te != CLASS_ALL_NEG)
         res = y_pred[defined, i] - y_true[defined, i]
         # over-prediction on positive-truth rows, matching the table metric
@@ -257,15 +263,36 @@ def fig_residuals(y_true, y_pred, cls_te, outdir):
         # zero reference, dark blue for the mean of the same (blue) series
         ax.hist(res, bins=120, range=(lo, hi), density=True, color=BLUE,
                 alpha=0.75)
-        ax.axvline(0.0, color="#4a4a4a", ls="--", lw=1.4, label="Zero error")
-        ax.axvline(mean, color=DARKBLUE, lw=1.6, label=f"Mean={mean:.4f}")
-        ax.set_title(f"{c}\nOverest={over:.1f}% (positive rows), Mean={mean:.4f}",
-                     fontsize=11, fontweight="bold")
-        ax.set_xlabel(f"Residual (Pred - Actual) [{UNITS[c]}]", fontsize=9)
-        ax.set_ylabel("Density", fontsize=9)
-        ax.legend(fontsize=7)
+        ax.axvline(0.0, color="#4a4a4a", ls="--", lw=1.0, label="Zero error")
+        ax.axvline(mean, color=DARKBLUE, lw=1.2, label="Mean residual")
+        ax.set_title(output_label(c), fontsize=7.8, fontweight="bold")
+        ax.text(0.03, 0.97, f"Over-predicted: {over:.1f} %\n"
+                f"mean residual: {mean:.4f}", transform=ax.transAxes,
+                ha="left", va="top", fontsize=7, linespacing=1.15,
+                bbox=dict(facecolor="white", edgecolor="none", alpha=0.8,
+                          pad=0.8))
+        # headroom above the peak keeps the annotation clear of the bars
+        ax.set_ylim(0, 1.5 * ax.get_ylim()[1])
+        ax.set_xlabel(f"Residual [{UNITS[c]}]", fontsize=7.2)
+        if i % 3 == 0:
+            ax.set_ylabel("Density", fontsize=7.2)
+        ax.tick_params(labelsize=7)
+        # at most three short ticks (-t, 0, t) so narrow panels stay legible
+        t = float(f"{max(-lo, hi) / 2:.1g}")
+        ax.set_xticks([v for v in (-t, 0.0, t) if lo <= v <= hi],
+                      [f"{v:g}".replace("-", "−") for v in (-t, 0.0, t)
+                       if lo <= v <= hi])
+        ax.yaxis.set_major_locator(plt.MaxNLocator(4))
         ax.grid(alpha=0.25)
-    fig.tight_layout(rect=(0, 0, 1, 0.95))
+    for k in range(len(OUTPUT_COLS), 12):
+        axes[k // 3, k % 3].axis("off")
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    axes[3, 1].legend(handles, labels, loc="center left", fontsize=7.2,
+                      frameon=False,
+                      title="residual = surrogate − simulator\n"
+                            "over-predicted share on positive rows",
+                      title_fontsize=7)
+    fig.tight_layout(h_pad=0.6, w_pad=0.4)
     save(fig, outdir, "step7_residual_distributions")
 
 
@@ -284,8 +311,8 @@ def fig_sea_heatmap(y_true, y_pred, cls_te, hs, outdir):
             if m.any() and rng_glob > 0:
                 mae = float(np.mean(np.abs(y_pred[m, i] - y_true[m, i])))
                 grid[i, j] = 100.0 * mae / rng_glob
-    fig, ax = plt.subplots(figsize=(13, 10))
-    vmax = max(1.0, float(np.nanmax(grid)))
+    fig, ax = plt.subplots(figsize=(4.5, 4.1))
+    vmax = float(np.nanmax(grid))
     im = ax.imshow(grid, cmap="YlOrRd", vmin=0.0, vmax=vmax, aspect="auto")
     for i in range(grid.shape[0]):
         for j in range(grid.shape[1]):
@@ -293,15 +320,15 @@ def fig_sea_heatmap(y_true, y_pred, cls_te, hs, outdir):
                 # ink switches on the cell's colour (its position on the scale),
                 # not on the data max -- pale cells always take dark ink
                 ax.text(j, i, f"{grid[i, j]:.3f}%", ha="center", va="center",
-                        fontsize=11, fontweight="bold",
+                        fontsize=7.5, fontweight="bold",
                         color="white" if grid[i, j] > 0.6 * vmax else "black")
-    ax.set_xticks(range(len(SEA_BANDS)), [b[2] for b in SEA_BANDS], fontsize=11)
+    ax.set_xticks(range(len(SEA_BANDS)),
+                  [b[2].replace(" ", "\n") for b in SEA_BANDS], fontsize=7.5)
     ax.set_yticks(range(len(OUTPUT_COLS)), [panel_label(c) for c in OUTPUT_COLS],
-                  fontsize=11)
-    ax.set_title("Relative Error (MAE / global output range, %) by Output and "
-                 "Sea Condition\n(Regressor, rows with a defined target)",
-                 fontsize=14, fontweight="bold")
-    fig.colorbar(im, ax=ax, label="MAE / global range (%)")
+                  fontsize=7.5)
+    cb = fig.colorbar(im, ax=ax, pad=0.03)
+    cb.set_label("MAE / global range (%)", fontsize=7.5)
+    cb.ax.tick_params(labelsize=7.5)
     fig.tight_layout()
     save(fig, outdir, "step7_error_heatmap_sea_conditions")
 

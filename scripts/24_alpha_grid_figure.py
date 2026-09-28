@@ -52,34 +52,38 @@ def main() -> int:
     lo = np.floor(mae.min() * 10.0) / 10.0
     hi = np.ceil(mae.max() * 10.0) / 10.0
 
-    fig, axes = plt.subplots(1, 2, figsize=(10.6, 3.9))
+    fig, axes = plt.subplots(2, 1, figsize=(3.5, 5.4))
     panels = [
         (axes[0], safe, 0.0, 10.0, "{:.0f}", 6.5,
          "(a) Worst seed: outputs on their safe side",
-         "outputs safe-side, of 10 (worst of 5 seeds)"),
+         "outputs safe-side, of 10\n(worst of 5 seeds)"),
         (axes[1], mae, lo, hi, "{:.2f}", lo + 0.66 * (hi - lo),
          "(b) Mean standardised MAE over five seeds",
-         "mean MAE [% of output SD]"),
+         "mean MAE\n[% of output SD]"),
     ]
     for ax, mat, vmin, vmax, cellfmt, ink_switch, title, cblabel in panels:
         im = ax.imshow(mat, cmap="Blues", vmin=vmin, vmax=vmax, aspect="auto")
-        ax.set_xticks(range(len(ALPHA_SPEED)), [fmt(a) for a in ALPHA_SPEED])
-        ax.set_yticks(range(len(ALPHA_OTHER)), [fmt(a) for a in ALPHA_OTHER])
-        ax.set_xlabel(r"$\alpha_\mathrm{speed}$")
-        ax.set_ylabel(r"$\alpha_\mathrm{other}$")
-        ax.set_title(title, fontsize=10)
+        ax.set_xticks(range(len(ALPHA_SPEED)), [fmt(a) for a in ALPHA_SPEED],
+                      fontsize=7.5)
+        ax.set_yticks(range(len(ALPHA_OTHER)), [fmt(a) for a in ALPHA_OTHER],
+                      fontsize=7.5)
+        ax.set_xlabel(r"$\alpha_\mathrm{speed}$", fontsize=8.5)
+        ax.set_ylabel(r"$\alpha_\mathrm{other}$", fontsize=8.5)
+        ax.set_title(title, fontsize=8)
         for i in range(len(ALPHA_OTHER)):
             for j in range(len(ALPHA_SPEED)):
                 # single-hue white->blue scale: dark ink on pale (low) cells,
                 # white ink once the cell is deep blue (high end of the scale)
                 ax.text(j, i, cellfmt.format(mat[i, j]), ha="center",
-                        va="center", fontsize=8.5,
+                        va="center", fontsize=7.5,
                         color="white" if mat[i, j] > ink_switch else "black")
         i = ALPHA_OTHER.index(picked[1])
         j = ALPHA_SPEED.index(picked[0])
         ax.add_patch(Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False,
                                edgecolor=EDGE, linewidth=2.2))
-        fig.colorbar(im, ax=ax, shrink=0.9, label=cblabel)
+        cb = fig.colorbar(im, ax=ax, shrink=0.9, pad=0.03)
+        cb.set_label(cblabel, fontsize=7.5)
+        cb.ax.tick_params(labelsize=7.5)
 
     fig.tight_layout()
     for ext in ("pdf", "png"):

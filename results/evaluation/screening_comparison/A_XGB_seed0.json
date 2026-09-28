@@ -1,0 +1,92 @@
+{
+ "approach": "A",
+ "family": "XGB",
+ "seed": 0,
+ "split_state": 42,
+ "n_train": 5045135,
+ "n_val": 630642,
+ "n_test": 630642,
+ "index_sha256": {
+  "train": "79ca2666c2f6ba02304a3d6497a09be2c0fcdc47a0139d9a275c548576790630",
+  "val": "774315ae8e5034fef4fcc41a4884781396b402524c97e9b155c5f7de91c75c31",
+  "test": "f2d212131572ae356204b4d1ca078e33854a1dc2533d33a8768f83925776fa57"
+ },
+ "data_sha256": "257bb635caad5dcbcceff2dc1b328e674f95ac1b3f69a9b297e91de5eef67295",
+ "script_sha256": "82d747c3783f1f550bbf242e21e1a2a538b03628bee21150110ed70a10f0ab04",
+ "limit": null,
+ "fit_seconds": 252.63552730111405,
+ "params": {
+  "regressor": {
+   "objective": "'reg:squarederror'",
+   "base_score": "None",
+   "booster": "None",
+   "callbacks": "None",
+   "colsample_bylevel": "None",
+   "colsample_bynode": "None",
+   "colsample_bytree": "0.8",
+   "device": "None",
+   "early_stopping_rounds": "None",
+   "enable_categorical": "True",
+   "eval_metric": "None",
+   "feature_types": "None",
+   "feature_weights": "None",
+   "gamma": "None",
+   "grow_policy": "None",
+   "importance_type": "None",
+   "interaction_constraints": "None",
+   "learning_rate": "0.1",
+   "max_bin": "None",
+   "max_cat_threshold": "None",
+   "max_cat_to_onehot": "None",
+   "max_delta_step": "None",
+   "max_depth": "8",
+   "max_leaves": "None",
+   "min_child_weight": "5",
+   "missing": "nan",
+   "monotone_constraints": "None",
+   "multi_strategy": "None",
+   "n_estimators": "200",
+   "n_jobs": "4",
+   "num_parallel_tree": "None",
+   "random_state": "0",
+   "reg_alpha": "None",
+   "reg_lambda": "None",
+   "sampling_method": "None",
+   "scale_pos_weight": "None",
+   "subsample": "0.8",
+   "tree_method": "'hist'",
+   "validate_parameters": "None",
+   "verbosity": "0"
+  }
+ },
+ "detection": {
+  "threshold_on_prediction": 9.301815032958984,
+  "val_f1": 0.95284085618124,
+  "f1": 0.9523087428059628,
+  "precision": 0.9624740087474009,
+  "recall": 0.9423559557029783,
+  "missed_infeasible": 6569,
+  "false_alarms": 4187
+ },
+ "speed_all_valid_rows": {
+  "n_rows": 516684,
+  "MAE": 0.7897175099925404,
+  "RMSE": 2.0035643575700104,
+  "R2": 0.528298206478484
+ },
+ "speed_valid_and_predicted_valid": {
+  "n_rows": 512497,
+  "MAE": 0.7472803234239641,
+  "RMSE": 1.8237446779570812,
+  "R2": 0.5708185247434798
+ },
+ "seconds_total": 313.1747696399689,
+ "env": {
+  "python": "3.14.4",
+  "numpy": "2.4.6",
+  "sklearn": "1.9.0",
+  "host": "apl11.lab.kask.eti.pg.edu.pl",
+  "threads": 4,
+  "xgboost": "3.4.1"
+ }
+}

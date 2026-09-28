@@ -14,6 +14,7 @@ from __future__ import annotations
 import csv
 import json
 import sys
+import textwrap
 import time
 from pathlib import Path
 
@@ -30,6 +31,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from s175 import data as sdata
 from s175.columns import (FEATURE_COLS, OUTPUT_COLS, UNITS, FUEL_IDX,
                           CLASS_VALID, CLASS_ALL_NEG)
+from s175.labels import output_label
 from s175.metrics import clamp_physical
 from s175.splits import load_split
 
@@ -75,7 +77,7 @@ def predict_reg(reg, X_rows, x_scaler, y_scaler, device, chunk=CHUNK):
 
 # ---------------------------------------------------------------------------
 def fig_pred_vs_true(y_true, y_pred, cls_te):
-    fig, axes = plt.subplots(2, 5, figsize=(17, 6.8))
+    fig, axes = plt.subplots(2, 5, figsize=(7.3, 3.7), layout="constrained")
     defined = cls_te != CLASS_ALL_NEG
     valid = cls_te == CLASS_VALID
     for j, c in enumerate(OUTPUT_COLS):
@@ -89,13 +91,20 @@ def fig_pred_vs_true(y_true, y_pred, cls_te):
         ss_res = np.sum((t - p) ** 2)
         ss_tot = np.sum((t - t.mean()) ** 2)
         r2 = 1 - ss_res / ss_tot
-        ax.set_title(f"{c} [{UNITS[c]}]  R²={r2:.4f}", fontsize=9)
-        ax.tick_params(labelsize=7)
+        ax.set_title(textwrap.fill(output_label(c, units=True), 20),
+                     fontsize=7)
+        ax.text(0.04, 0.96, f"R²={r2:.4f}", transform=ax.transAxes,
+                ha="left", va="top", fontsize=6.5)
+        ax.tick_params(labelsize=6.5)
+        ax.xaxis.set_major_locator(plt.MaxNLocator(3))
+        ax.yaxis.set_major_locator(plt.MaxNLocator(3))
         if j % 5 == 0:
-            ax.set_ylabel("surrogate", fontsize=8)
+            ax.set_ylabel("surrogate", fontsize=7)
         if j // 5 == 1:
-            ax.set_xlabel("simulator", fontsize=8)
-    fig.colorbar(hb, ax=axes, shrink=0.8, label="rows per hex (log)")
+            ax.set_xlabel("simulator", fontsize=7)
+    cb = fig.colorbar(hb, ax=axes, shrink=0.8, pad=0.01)
+    cb.set_label("rows per hex (log)", fontsize=7)
+    cb.ax.tick_params(labelsize=8)
     save_fig(fig, "fig_pred_vs_true")
 
 

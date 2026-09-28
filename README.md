@@ -40,16 +40,21 @@ scripts/
   05_paper_figures.py  pred-vs-true, per-input error, response slices, timing
   06_timing_simulator.py  simulator wall-clock measurement
   08_interpolation_test.py  surrogate vs fresh simulator runs at OFF-GRID inputs
-  17_algorithm_screening.py  model-family screening, step 1 (Table 4): single
+  17_algorithm_screening.py  original model-family screening, step 1: single
                       speed regressor with -1 infeasibility target (copied
                       unchanged from the original study; writes to its paths)
-  17b_two_stage_screening.py model-family screening, step 2 (Table 5): RF/XGB/MLP
+  17b_two_stage_screening.py original model-family screening, step 2: RF/XGB/MLP
                       infeasibility classifiers and valid-only speed regressors
                       (copied unchanged; results in two_stage_screening.json --
                       note: in its combined_results block the key
                       "false_negatives_dangerous" holds the false positives;
                       the correct missed-infeasible counts are the
                       classifier_results "FN_dangerous" values)
+  17c_screening_comparison.py  model-family comparison behind Table 4: single
+                      -1-target regressor vs classifier + valid-row regressor
+                      for RF/XGB/MLP on one shared partition, 3 seeds
+                      (run_screening_comparison.sh runs all 18 jobs; results in
+                      results/evaluation/screening_comparison/)
   verify_tables.py / verify_manuscript.py  check paper/main.tex against results
   run_alpha_grid.sh   joint loss-weight grid: screening split → 30 pairs ×
                       5 seeds → prespecified selection rule → grid table and

@@ -1,0 +1,75 @@
+{
+ "approach": "A",
+ "family": "MLP",
+ "seed": 1,
+ "split_state": 42,
+ "n_train": 5045135,
+ "n_val": 630642,
+ "n_test": 630642,
+ "index_sha256": {
+  "train": "79ca2666c2f6ba02304a3d6497a09be2c0fcdc47a0139d9a275c548576790630",
+  "val": "774315ae8e5034fef4fcc41a4884781396b402524c97e9b155c5f7de91c75c31",
+  "test": "f2d212131572ae356204b4d1ca078e33854a1dc2533d33a8768f83925776fa57"
+ },
+ "data_sha256": "257bb635caad5dcbcceff2dc1b328e674f95ac1b3f69a9b297e91de5eef67295",
+ "script_sha256": "82d747c3783f1f550bbf242e21e1a2a538b03628bee21150110ed70a10f0ab04",
+ "limit": null,
+ "fit_seconds": 6936.604878063779,
+ "params": {
+  "regressor": {
+   "activation": "'relu'",
+   "alpha": "0.0001",
+   "batch_size": "1024",
+   "beta_1": "0.9",
+   "beta_2": "0.999",
+   "early_stopping": "True",
+   "epsilon": "1e-08",
+   "hidden_layer_sizes": "(256, 128, 64)",
+   "learning_rate": "'adaptive'",
+   "learning_rate_init": "0.001",
+   "loss": "'squared_error'",
+   "max_fun": "15000",
+   "max_iter": "300",
+   "momentum": "0.9",
+   "n_iter_no_change": "15",
+   "nesterovs_momentum": "True",
+   "power_t": "0.5",
+   "random_state": "1",
+   "shuffle": "True",
+   "solver": "'adam'",
+   "tol": "0.0001",
+   "validation_fraction": "0.1",
+   "verbose": "False",
+   "warm_start": "False"
+  }
+ },
+ "detection": {
+  "threshold_on_prediction": 5.540016536754502,
+  "val_f1": 0.9928377855207123,
+  "f1": 0.9929437435112355,
+  "precision": 0.9955715520739604,
+  "recall": 0.9903297706172449,
+  "missed_infeasible": 1102,
+  "false_alarms": 502
+ },
+ "speed_all_valid_rows": {
+  "n_rows": 516684,
+  "MAE": 0.207406111908511,
+  "RMSE": 0.8428272716386114,
+  "R2": 0.9165285240727
+ },
+ "speed_valid_and_predicted_valid": {
+  "n_rows": 516182,
+  "MAE": 0.19297756266257524,
+  "RMSE": 0.6451900173089458,
+  "R2": 0.9507474128929803
+ },
+ "seconds_total": 7012.211164712906,
+ "env": {
+  "python": "3.14.4",
+  "numpy": "2.4.6",
+  "sklearn": "1.9.0",
+  "host": "apl11.lab.kask.eti.pg.edu.pl",
+  "threads": 4
+ }
+}
