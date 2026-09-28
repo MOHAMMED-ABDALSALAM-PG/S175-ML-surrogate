@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import textwrap
 import time
 from pathlib import Path
 
@@ -311,7 +312,8 @@ def fig_sea_heatmap(y_true, y_pred, cls_te, hs, outdir):
             if m.any() and rng_glob > 0:
                 mae = float(np.mean(np.abs(y_pred[m, i] - y_true[m, i])))
                 grid[i, j] = 100.0 * mae / rng_glob
-    fig, ax = plt.subplots(figsize=(4.5, 4.1))
+    grid = grid.T                                  # rows: sea-state bands, columns: outputs
+    fig, ax = plt.subplots(figsize=(7.2, 2.5))
     vmax = float(np.nanmax(grid))
     im = ax.imshow(grid, cmap="YlOrRd", vmin=0.0, vmax=vmax, aspect="auto")
     for i in range(grid.shape[0]):
@@ -322,11 +324,10 @@ def fig_sea_heatmap(y_true, y_pred, cls_te, hs, outdir):
                 ax.text(j, i, f"{grid[i, j]:.3f}%", ha="center", va="center",
                         fontsize=7.5, fontweight="bold",
                         color="white" if grid[i, j] > 0.6 * vmax else "black")
-    ax.set_xticks(range(len(SEA_BANDS)),
-                  [b[2].replace(" ", "\n") for b in SEA_BANDS], fontsize=7.5)
-    ax.set_yticks(range(len(OUTPUT_COLS)), [panel_label(c) for c in OUTPUT_COLS],
-                  fontsize=7.5)
-    cb = fig.colorbar(im, ax=ax, pad=0.03)
+    ax.set_xticks(range(len(OUTPUT_COLS)),
+                  [textwrap.fill(output_label(c), 10, break_long_words=False) for c in OUTPUT_COLS], fontsize=7.5)
+    ax.set_yticks(range(len(SEA_BANDS)), [b[2] for b in SEA_BANDS], fontsize=7.5)
+    cb = fig.colorbar(im, ax=ax, pad=0.015, fraction=0.03)
     cb.set_label("MAE / global range (%)", fontsize=7.5)
     cb.ax.tick_params(labelsize=7.5)
     fig.tight_layout()

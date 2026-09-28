@@ -1,0 +1,203 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="S175 Methodology Pipeline" id="A5ENQklOgi8h06QbmRXA">
+    <mxGraphModel dx="2776" dy="1560" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KI9j7cuEKok_PCHdQq48-1" parent="1" style="rounded=0;html=1;dashed=1;dashPattern=6 4;verticalAlign=top;fontStyle=1;align=left;spacingLeft=12;container=1;collapsible=0;strokeWidth=2;fontSize=24;fillColor=#FFCC99;fontColor=#ffffff;strokeColor=#A50040;" value="&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;&lt;font style=&quot;font-size: 31px;&quot;&gt;Data generation module&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="470" width="1660" x="176" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-2" parent="KI9j7cuEKok_PCHdQq48-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=28;" value="&lt;b&gt;S175 WeatherRouting performance simulator&lt;/b&gt;" vertex="1">
+          <mxGeometry height="80" width="700" x="459" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-3" parent="KI9j7cuEKok_PCHdQq48-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;" value="&lt;font style=&quot;font-size: 23px;&quot;&gt;Full factorial design of experiments&lt;br&gt;(grid spacing: ΔH&lt;sub&gt;s&lt;/sub&gt; = 0.25 m, Δχ = 5°)&lt;br&gt;126,153,720 cases;&lt;br&gt;infeasible outputs encoded as -1&lt;/font&gt;" vertex="1">
+          <mxGeometry height="115" width="730" x="444" y="135" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-4" parent="KI9j7cuEKok_PCHdQq48-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;fontStyle=1;" value="Screening campaign&#10;&#10;Stratified 5% subsample&#10;screening-training / validation /&#10;held-out selection" vertex="1">
+          <mxGeometry height="160" width="480" x="60" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-5" parent="KI9j7cuEKok_PCHdQq48-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;fontStyle=1;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Final training campaign&lt;br&gt;&lt;br&gt;Labelled cases, 80/10/10 split&lt;br&gt;stratified by feasibility, H&lt;sub&gt;s&lt;/sub&gt;, wind&lt;br&gt;standardised on final-training data&lt;/font&gt;" vertex="1">
+          <mxGeometry height="150" width="480" x="569" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-6" parent="KI9j7cuEKok_PCHdQq48-1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;fontStyle=1;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Structured holdout campaigns&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 22px;&quot;&gt;&lt;br&gt;Level, block, and corner holdouts&lt;br&gt;complete two-stage surrogate retrained per regime&lt;br&gt;each regime has its own validation partition&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="165" width="546" x="1100" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-7" edge="1" parent="KI9j7cuEKok_PCHdQq48-1" source="KI9j7cuEKok_PCHdQq48-2" style="html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-8" edge="1" parent="KI9j7cuEKok_PCHdQq48-1" source="KI9j7cuEKok_PCHdQq48-3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.15;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-9" edge="1" parent="KI9j7cuEKok_PCHdQq48-1" source="KI9j7cuEKok_PCHdQq48-3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-10" edge="1" parent="KI9j7cuEKok_PCHdQq48-1" source="KI9j7cuEKok_PCHdQq48-3" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.85;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-11" parent="1" style="rounded=0;html=1;dashed=1;dashPattern=6 4;strokeColor=#d79b00;fillColor=#ffe6cc;verticalAlign=top;fontStyle=1;align=left;spacingLeft=12;container=1;collapsible=0;strokeWidth=2;fontSize=24;" value="&lt;font style=&quot;font-size: 22px;&quot;&gt;Algorithm and loss-weight screening module (5% stratified subsample)&lt;/font&gt;" vertex="1">
+          <mxGeometry height="1310" width="780" x="170" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-12" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=24;fontStyle=2;" value="Model-family comparison (shared partition, 3 seeds):&#10;single speed regressor with infeasibility = -1&#10;vs. classifier + valid-row speed regressor" vertex="1">
+          <mxGeometry height="112" width="700" x="40" y="73.06772908366534" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-13" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=24;fontStyle=1;" value="Random Forest" vertex="1">
+          <mxGeometry height="88.72509960159361" width="220" x="40" y="193.10756972111554" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-14" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=24;fontStyle=1;" value="XGBoost" vertex="1">
+          <mxGeometry height="88.72509960159361" width="220" x="280" y="193.10756972111554" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-15" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=24;fontStyle=1;" value="MLP&#10;(256-128-64)" vertex="1">
+          <mxGeometry height="88.72509960159361" width="220" x="520" y="193.10756972111554" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-16" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#67AB9F;strokeColor=#006EAF;fontSize=24;" value="Two-stage formulation best for every family;&#10;MLP best in both roles → MLP family selected&#10;for C1, C2, and R; R extended to multi-output prediction" vertex="1">
+          <mxGeometry height="130.4780876494024" width="640" x="70" y="334.0239043824701" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-17" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=20;fontStyle=2;" value="&lt;b&gt;&lt;font style=&quot;font-size: 22px;&quot;&gt;Loss-weight screening&lt;br&gt;Ten-output MLP (512-256-128) trained on fully valid and&lt;br&gt;fuel-only-infeasible screening cases; fuel target masked where undefined;&lt;br&gt;selection metrics evaluated on the held-out selection partition&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="130.4780876494024" width="756" x="12" y="511.47410358565736" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-18" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#6c8ebf;fontSize=20;" value="&lt;b&gt;&lt;font style=&quot;font-size: 21px; color: rgb(0, 0, 0);&quot;&gt;Joint loss-weight grid&lt;br&gt;α&lt;sub&gt;speed&lt;/sub&gt; ∈ {1.0, 1.5, 2.0, 3.0, 5.0}&lt;br&gt;α&lt;sub&gt;other&lt;/sub&gt; ∈ {1.5, 1.0, 0.8, 0.67, 0.5, 0.33}&lt;br&gt;30 pairs × 5 seeds, trained jointly using the final-regressor protocol&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="130.4780876494024" width="700" x="40" y="669.0916334661355" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-19" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=20;" value="&lt;div&gt;&lt;span style=&quot;font-size: 22px;&quot;&gt;&lt;b&gt;Prespecified selection rule&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 22px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 22px;&quot;&gt;&lt;b&gt;• Eligibility in every seed, evaluated on positive-target selection rows: ship speed under-predicted in more than 50%; each of the other nine outputs over-predicted in more than 50%.&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 22px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 22px;&quot;&gt;&lt;b&gt;• Among eligible pairs: lowest mean standardised MAE; exact ties broken by higher mean R².&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="258.8685258964143" width="740" x="20" y="828.796812749004" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-20" parent="KI9j7cuEKok_PCHdQq48-11" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=20;fontStyle=1;" value="&lt;div&gt;Selected for the final campaign&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;MLP family for C1, C2, and R.&lt;/div&gt;&lt;div&gt;Only eligible pair among the 30 tested:&lt;/div&gt;&lt;div&gt;• (α&lt;sub&gt;speed&lt;/sub&gt;, α&lt;sub&gt;other&lt;/sub&gt;) = (1.5, 0.33)&lt;/div&gt;&lt;div&gt;• α&lt;sub&gt;other&lt;/sub&gt; = 0.33 is the lower boundary of the evaluated grid.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="195.98425196850394" width="756" x="12" y="1106.8942672282244" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-21" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-12" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-22" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-13" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.2;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-23" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-14" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-24" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-15" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.8;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-25" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-16" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-26" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-17" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-27" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-18" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-28" edge="1" parent="KI9j7cuEKok_PCHdQq48-11" source="KI9j7cuEKok_PCHdQq48-19" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-29" parent="1" style="rounded=0;html=1;dashed=1;dashPattern=6 4;strokeColor=#050505;fillColor=#f9f7ed;verticalAlign=top;fontStyle=1;align=left;spacingLeft=12;container=1;collapsible=0;strokeWidth=3;fontSize=24;" value="Two-stage surrogate construction module (final training campaign)" vertex="1">
+          <mxGeometry height="960" width="858" x="987" y="553" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-30" parent="KI9j7cuEKok_PCHdQq48-29" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=24;fontStyle=1;" value="Final-training cases by label (assigned before the split):&#10;fully valid / fuel-only infeasible / completely infeasible" vertex="1">
+          <mxGeometry height="90" width="756" x="54" y="71" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-31" parent="KI9j7cuEKok_PCHdQq48-29" style="rounded=0;html=1;dashed=1;dashPattern=2 2;strokeColor=#b85450;fillColor=#f8cecc;verticalAlign=top;fontStyle=1;align=center;container=1;collapsible=0;fontSize=24;" value="Stage 1: Feasibility classification" vertex="1">
+          <mxGeometry height="350" width="816" x="24" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-32" parent="KI9j7cuEKok_PCHdQq48-31" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;" value="Classifier C1: MLP (512-256-128)&#10;complete infeasibility&#10;trained on all final-training cases" vertex="1">
+          <mxGeometry height="160" width="390" x="7" y="46" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-33" parent="KI9j7cuEKok_PCHdQq48-31" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;" value="Classifier C2: MLP (512-256-128-64)&#10;fuel-only infeasibility&#10;trained on cases that are not&#10;completely infeasible" vertex="1">
+          <mxGeometry height="165" width="402" x="404" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-34" parent="KI9j7cuEKok_PCHdQq48-31" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;" value="Thresholds τ₁ and τ₂ selected on final validation:&#10;highest thresholds maintaining&#10;infeasible-class recall ≥ 0.99" vertex="1">
+          <mxGeometry height="100" width="623" x="94" y="243" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-35" edge="1" parent="KI9j7cuEKok_PCHdQq48-31" source="KI9j7cuEKok_PCHdQq48-32" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.25;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-36" edge="1" parent="KI9j7cuEKok_PCHdQq48-31" source="KI9j7cuEKok_PCHdQq48-33" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.75;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-37" parent="KI9j7cuEKok_PCHdQq48-29" style="rounded=0;html=1;dashed=1;dashPattern=2 2;strokeColor=#82b366;fillColor=#d5e8d4;verticalAlign=top;fontStyle=1;align=center;container=1;collapsible=0;fontSize=24;" value="Stage 2: Multi-output regression" vertex="1">
+          <mxGeometry height="300" width="797" x="31" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-38" parent="KI9j7cuEKok_PCHdQq48-37" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;" value="Final multi-output MLP regressor (512-256-128)&lt;br&gt;fully valid + fuel-only-infeasible training cases&lt;br&gt;fuel target masked where undefined&lt;br&gt;selected weights: α&lt;sub&gt;speed&lt;/sub&gt; = 1.5; α&lt;sub&gt;other&lt;/sub&gt; = 0.33" vertex="1">
+          <mxGeometry height="155" width="746" x="25" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-39" parent="KI9j7cuEKok_PCHdQq48-37" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=24;fontStyle=2;" value="Residuals mostly on the conservative side:&#10;10/10 outputs (seeds 0 and 1); 9/10 (seed 2)" vertex="1">
+          <mxGeometry height="65" width="746" x="25" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-40" edge="1" parent="KI9j7cuEKok_PCHdQq48-37" source="KI9j7cuEKok_PCHdQq48-38" style="html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-41" edge="1" parent="KI9j7cuEKok_PCHdQq48-29" source="KI9j7cuEKok_PCHdQq48-30" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-42" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=24;fontStyle=1;" value="Assembled two-stage surrogate&#10;C1 &gt; τ₁ → all outputs = -1;  else regressor R;&#10;C2 &gt; τ₂ → fuel = -1" vertex="1">
+          <mxGeometry height="150" width="660" x="286" y="1890" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-43" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=24;fontStyle=1;" value="Evaluation&#10;primary screening-disjoint test subset (11,984,559 rows)&#10;screening-disjoint structured holdouts&#10;fresh off-grid simulator runs&#10;interpolation baseline and loss ablation" vertex="1">
+          <mxGeometry height="180" width="730" x="1046" y="1875" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-44" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-4" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-45" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-5" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-30">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="996" y="525" />
+              <mxPoint x="1419" y="525" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-46" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-6" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0.8;entryY=0;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-43">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1916" y="402" />
+              <mxPoint x="1916" y="1820" />
+              <mxPoint x="1630" y="1820" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-47" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-20" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-31">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="958" y="1687" />
+              <mxPoint x="958" y="933" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-48" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-20" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-37">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="976" y="1687" />
+              <mxPoint x="976" y="1323" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-49" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-30" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=1;exitY=0.5;entryX=1;entryY=0.5;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-37">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1861" y="669" />
+              <mxPoint x="1861" y="1323" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-50" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-34" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0;exitY=0.5;entryX=0.75;entryY=0;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-42">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="998" y="1051" />
+              <mxPoint x="998" y="1840" />
+              <mxPoint x="781" y="1840" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-51" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-39" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;exitX=0.5;exitY=1;entryX=0.25;entryY=0;strokeWidth=3;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-42">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1416" y="1855" />
+              <mxPoint x="451" y="1855" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KI9j7cuEKok_PCHdQq48-52" edge="1" parent="1" source="KI9j7cuEKok_PCHdQq48-42" style="html=1;endArrow=block;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2;strokeColor=#000000;fontSize=24;" target="KI9j7cuEKok_PCHdQq48-43">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

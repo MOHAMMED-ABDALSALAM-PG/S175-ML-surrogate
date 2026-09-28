@@ -145,14 +145,10 @@ the input values of the two off-grid validation designs
 
 ## Acknowledgements
 
-The authors gratefully acknowledge PhD Eng. **Roberto Vettor** for authoring and
-developing the theoretical general ship model underlying the S175
-WeatherRouting performance simulator employed in this study. This work was
-originally carried out within the international **MarTERA-1 ROUTING** project
-(2018–2022), under the supervision of **Prof. Carlos Guedes Soares** at
-Instituto Superior Técnico, Lisbon, Portugal. The authors sincerely appreciate
-their foundational contributions to the formulation and development of the
-general ship performance model.
+The authors gratefully acknowledge **Prof. Roberto Vettor** for developing the
+theoretical general ship model that underlies the S175 WeatherRouting
+performance simulator used in this study. His foundational contribution to
+the formulation of the ship-performance model is sincerely appreciated.
 
 ## License
 

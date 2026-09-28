@@ -333,7 +333,7 @@ The overall methodology followed in this work is summarised in \autoref{fig:meth
 
 \begin{figure*}[ht!]
 \centering
-\includegraphics[width=0.85\textwidth]{S175ML-V5-F.drawio-updated-22-08-2026.drawio.pdf}
+\includegraphics[width=0.85\textwidth]{S175ML-V5-F.drawio-updated-28-09-2026.drawio.pdf}
 \caption{Methodology for constructing and evaluating the two-stage S175 surrogate}
 \label{fig:methodology}
 \end{figure*}
@@ -341,7 +341,7 @@ The overall methodology followed in this work is summarised in \autoref{fig:meth
 
 Three supervised-learning families were evaluated as candidate surrogate models: Random Forests, gradient-boosted decision trees implemented through eXtreme Gradient Boosting (XGBoost), and multi-layer perceptrons (MLPs). These families represent complementary learning strategies based on bagging, sequentially boosted trees, and neural-network function approximation, respectively. Random Forests have been applied as surrogates in simulation-based engineering optimisation~\cite{jiao2025rf}, while XGBoost and neural networks have demonstrated strong performance in approximating nonlinear simulation responses~\cite{stevanovic2024}. MLP-based surrogates have also been used to approximate high-fidelity engineering simulations and ship-hydrodynamic quantities~\cite{ablanque2025,matai2025,rechevilanova2024}.
 
-The three model families were screened using the same stratified data subset, input and output definitions, data split, and evaluation metrics, thereby enabling a consistent comparison of their predictive performance. The screening used ship speed as the regression target and complete infeasibility as the classification target, and it did not reproduce the final ten-output configuration (\autoref{sec:selection}). An important consideration was that the S175 simulator produces ten outputs from the same operating condition, with several outputs linked through the underlying propulsion, resistance, and seakeeping relationships. A joint multi-output model can therefore learn these responses simultaneously rather than treating each output as an independent prediction problem. Although multi-output implementations of Random Forests and gradient boosting are available, an MLP provides a direct mechanism for learning a shared nonlinear representation through its hidden layers and producing all ten predictions through a single output layer. Based on the screening results and this architectural suitability, the MLP was selected for both the feasibility-classification and the regression stages, while the tree-based methods were retained as screening baselines.
+The three model families were screened using the same stratified data subset, input and output definitions, data split, and evaluation metrics, thereby enabling a consistent comparison of their predictive performance. The screening used ship speed as the regression target and complete infeasibility as the classification target, and it did not reproduce the final ten-output configuration (\autoref{sec:selection}, \autoref{tab:algselect}). An important consideration was that the S175 simulator produces ten outputs from the same operating condition, with several outputs linked through the underlying propulsion, resistance, and seakeeping relationships. A joint multi-output model can therefore learn these responses simultaneously rather than treating each output as an independent prediction problem. Although multi-output implementations of Random Forests and gradient boosting are available, an MLP provides a direct mechanism for learning a shared nonlinear representation through its hidden layers and producing all ten predictions through a single output layer. Based on the screening results and this architectural suitability, the MLP was selected for both the feasibility-classification and the regression stages, while the tree-based methods were retained as screening baselines.
 
 
 \subsection{Two-stage architecture}
@@ -377,7 +377,7 @@ and, with the binary validity mask $m_{ij}$ of the preceding subsection, the los
 L=\frac{\sum_{i,j} m_{ij}\,\ell_{ij}}{\sum_{i,j} m_{ij}},
 \label{eq:masked}
 \end{equation}
-where both sums run over all samples and outputs of the mini-batch and $e_{ij}$ is computed on the standardised targets. In \autoref{eq:asym}, $\alpha_j>1$ penalises over-prediction more heavily and therefore biases output $j$ toward under-prediction, whereas $\alpha_j<1$ penalises under-prediction more heavily relative to over-prediction and therefore biases the output toward over-prediction. Ship speed is assigned the separate weight $\alpha_{\mathrm{speed}}$, while the remaining nine outputs share the weight $\alpha_{\mathrm{other}}$. Because all ten outputs are predicted through shared hidden layers, changing either weight can affect every output; the two weights were therefore selected jointly rather than through successive independent sweeps. The candidate set comprised $\alpha_{\mathrm{speed}}\in\{1.0,1.5,2.0,3.0,5.0\}$ and $\alpha_{\mathrm{other}}\in\{1.5,1.0,0.8,0.67,0.5,0.33\}$, giving thirty pairs. The uniform settings arise as points of this grid: $(1.0,1.0)$ recovers the symmetric mean squared error, and $(1.5,1.5)$ is the uniform asymmetric weighting revisited in the ablation of \autoref{tab:lossablation}. Each pair was trained from five random seeds on the stratified 5\% screening subsample using the same architecture, masked loss, optimisation settings, batch size of 65{,}536, and automatic mixed-precision training as the final regressor. Repeating each configuration across multiple seeds was used to quantify variability across stochastic training runs~\cite{bouthillier2021variance}. The screening subsample was partitioned into training, validation, and selection subsets in proportions of 80\%, 10\%, and 10\%, respectively. Training was performed on the screening-training partition, early stopping was based on the screening-validation partition, and weight selection used only the held-out selection partition. Every row in the screening subsample was subsequently excluded from the primary test subset, thereby separating loss-weight selection from final performance evaluation and reducing selection bias~\cite{cawley2010selection}.
+where both sums run over all samples and outputs of the mini-batch and $e_{ij}$ is computed on the standardised targets. In \autoref{eq:asym}, $\alpha_j>1$ penalises over-prediction more heavily and therefore biases output $j$ toward under-prediction, whereas $\alpha_j<1$ penalises under-prediction more heavily relative to over-prediction and therefore biases the output toward over-prediction. Ship speed is assigned the separate weight $\alpha_{\mathrm{speed}}$, while the remaining nine outputs share the weight $\alpha_{\mathrm{other}}$. Because all ten outputs are predicted through shared hidden layers, changing either weight can affect every output; the two weights were therefore selected jointly rather than through successive independent sweeps. The candidate set comprised $\alpha_{\mathrm{speed}}\in\{1.0,1.5,2.0,3.0,5.0\}$ and $\alpha_{\mathrm{other}}\in\{1.5,1.0,0.8,0.67,0.5,0.33\}$, giving thirty pairs. The uniform settings arise as points of this grid: $(1.0,1.0)$ recovers the symmetric mean squared error, and $(1.5,1.5)$ is the uniform asymmetric weighting revisited in the loss-configuration ablation of \autoref{sec:selection}. Each pair was trained from five random seeds on the stratified 5\% screening subsample using the same architecture, masked loss, optimisation settings, batch size of 65{,}536, and automatic mixed-precision training as the final regressor. Repeating each configuration across multiple seeds was used to quantify variability across stochastic training runs~\cite{bouthillier2021variance}. The screening subsample was partitioned into training, validation, and selection subsets in proportions of 80\%, 10\%, and 10\%, respectively. Training was performed on the screening-training partition, early stopping was based on the screening-validation partition, and weight selection used only the held-out selection partition. Every row in the screening subsample was subsequently excluded from the primary test subset, thereby separating loss-weight selection from final performance evaluation and reducing selection bias~\cite{cawley2010selection}.
 The selection rule was specified before the results of the joint-grid campaign were examined. Directional rates were computed on selection rows with strictly positive target values. A pair was eligible only if ship speed was under-predicted in more than half of these rows and each of the remaining nine outputs was over-predicted in more than half, in every one of the five seeds. Among eligible pairs, the pair with the lowest mean standardised MAE was to be selected, with mean $R^2$ used only to break an exact tie. Each output's MAE was normalised by that output's standard deviation on the selection partition before averaging across outputs and seeds. The asymmetric weighting is applied together with the validity mask introduced in the preceding subsection, so that the fuel-consumption error is direction-weighted when a valid fuel target exists and omitted when fuel consumption is infeasible. The joint-grid results, the selected configuration, and the boundary of the evaluated weight grid are reported in \autoref{tab:alphagrid} and \autoref{fig:alphagrid}.
 
 
@@ -390,13 +390,13 @@ Beyond the random split, structured holdout regimes were constructed to evaluate
 \subsection{Implementation and experimental settings}\label{sec:env}
 The surrogate pipeline was implemented in Python 3.14.4 using PyTorch 2.13.0 with CUDA 13.0 for all neural-network training and inference and NumPy 2.5.1 for data handling; the Random Forest and XGBoost screening baselines used the scikit-learn and XGBoost library implementations with the hyperparameters given in \autoref{sec:selection}. All training and evaluation ran on a single workstation equipped with an Intel Xeon E5-4620~v2 CPU at 2.60~GHz and an NVIDIA Quadro RTX~5000 GPU with 16~GB of memory, the same host used for the computational comparison of \autoref{sec:speed}, with all networks trained entirely on the GPU under the mixed-precision configuration of the preceding subsection. Under these settings, training the reference-seed models on the full dataset required approximately 38 minutes for the regressor, 84 minutes for the complete-infeasibility classifier, and 43 minutes for the fuel-only classifier, so one complete seed of the two-stage surrogate trains in under three hours, and the 150 screening-stage trainings of the loss-weight grid completed in approximately seven hours in total. 
 \section{Results}\label{sec:results}
-This section reports the performance of the surrogate trained with the configuration selected in \autoref{sec:method}. Unless stated otherwise, the reported results use the screening-disjoint test subset of the random split. The original held-out test subset contains 12{,}615{,}370 rows. Removing the 630{,}811 rows, corresponding to 5.00\%, that also occur in the earlier screening subsample leaves 11{,}984{,}559 rows that were not used during model-family screening, loss-weight selection, final training, validation, or threshold calibration. This screening-disjoint subset therefore serves as the primary test set of the paper. The same exclusion is applied to every structured-holdout test set. Evaluating the complete test subset instead changes none of the reported results at the displayed precision. All three networks were trained with random seeds 0, 1, and 2. Unless stated otherwise, the detailed tables and figures report the run with seed 0, which was the first run trained and is the default of the training script, while \autoref{tab:seeds} reports the three-seed mean, standard deviation, and minimum result for each regression output. Seed 0 is not the best run on every output: it attains the highest $R^2$ and the lowest MAE for six of the ten outputs.
+This section reports the performance of the surrogate trained with the configuration selected in \autoref{sec:method}. Unless stated otherwise, the reported results use the screening-disjoint test subset of the random split. The original held-out test subset contains 12{,}615{,}370 rows. Removing the 630{,}811 rows, corresponding to 5.00\%, that also occur in the earlier screening subsample leaves 11{,}984{,}559 rows that were not used during model-family screening, loss-weight selection, final training, validation, or threshold calibration. This screening-disjoint subset therefore serves as the primary test set of the paper. The same exclusion is applied to every structured-holdout test set. Evaluating the complete test subset instead changes none of the reported results at the displayed precision. All three networks were trained with random seeds 0, 1, and 2. Unless stated otherwise, the detailed tables and figures report the run with seed 0, which was the first run trained and is the default of the training script, while the three-seed mean, standard deviation, and minimum result for each regression output are reported with the regression results in \autoref{sec:regacc}. Seed 0 is not the best run on every output: it attains the highest $R^2$ and the lowest MAE for six of the ten outputs.
 
 \subsection{Model and loss selection}\label{sec:selection}
 
 This subsection reports the preliminary model-family screening, the joint selection of the asymmetric-loss weights, and the subsequent loss-configuration ablation.
 
-The candidate model families were compared on one 80/10/10 partition of the stratified 5\% screening subsample into training, validation, and test partitions, stratified by significant-wave-height band, wind-speed band, and speed feasibility. For each family, two formulations were trained from three random seeds. In the single-regressor formulation, one ship-speed regressor was trained on all rows with complete infeasibility encoded as a target value of $-1$, and a row was classified as infeasible when its prediction did not exceed a threshold. In the two-stage formulation, a binary classifier of complete infeasibility was followed by a ship-speed regressor trained on valid rows only. In both formulations, the detection threshold was the point of maximum F1 on the validation partition, and the speed MAE and $R^2$ were computed on all 516{,}684 test rows with a valid speed, so that both formulations were scored on identical rows. The Random Forest used 100 trees, a maximum depth of 20, and a minimum leaf size of 5. XGBoost used 200 trees, a maximum depth of 8, a learning rate of 0.1, and row and column subsampling rates of 0.8. The screening MLP contained three hidden layers of 256, 128, and 64 units and was trained using ReLU activations, the Adam optimiser, and early stopping.
+The candidate model families were compared on one 80/10/10 partition of the stratified 5\% screening subsample into training, validation, and test partitions, stratified by significant-wave-height band, wind-speed band, and speed feasibility. For each family, two formulations were trained from three random seeds (\autoref{tab:algselect}). In the single-regressor formulation, one ship-speed regressor was trained on all rows with complete infeasibility encoded as a target value of $-1$, and a row was classified as infeasible when its prediction did not exceed a threshold. In the two-stage formulation, a binary classifier of complete infeasibility was followed by a ship-speed regressor trained on valid rows only. In both formulations, the detection threshold was the point of maximum F1 on the validation partition, and the speed MAE and $R^2$ were computed on all 516{,}684 test rows with a valid speed, so that both formulations were scored on identical rows. The Random Forest used 100 trees, a maximum depth of 20, and a minimum leaf size of 5. XGBoost used 200 trees, a maximum depth of 8, a learning rate of 0.1, and row and column subsampling rates of 0.8. The screening MLP contained three hidden layers of 256, 128, and 64 units and was trained using ReLU activations, the Adam optimiser, and early stopping.
 
 \begin{table*}[ht]
 \footnotesize
@@ -461,14 +461,14 @@ The selected value $\alpha_{\mathrm{other}}=0.33$ is the lower boundary of the e
 \label{fig:alphagrid}
 \end{figure}
 
-The effects of batch-normalisation placement, masked training, and output-specific weighting were examined using five regressors trained under the protocol of \autoref{sec:method} and evaluated on identical screening-disjoint test rows. The first arm reproduces the initial configuration: uniform $\alpha=1.5$ for all ten outputs, no fuel mask, exclusion of fuel-only-infeasible rows from training, and batch normalisation after activation. The second arm retains the unmasked data handling but uses the corrected batch-normalisation placement. The remaining three arms use masked training and differ only in their weighting: uniform $\alpha=1.5$, symmetric $\alpha=1.0$, and the selected output-specific weights. Comparison of the corrected unmasked arm with the uniform masked arm captures the combined effect of masking the undefined fuel target and retaining the partially infeasible cases during regression training. The initial and corrected unmasked arms place three and two outputs on their specified conservative sides, respectively, while the uniform and symmetric masked arms place one and six outputs on their conservative sides. Only the selected output-specific masked configuration places all ten outputs preferentially on their prescribed conservative error sides. \autoref{fig:lossablation} visualises the error-direction results for the five configurations.
+The effects of batch-normalisation placement, masked training, and output-specific weighting were examined using five regressors trained under the protocol of \autoref{sec:method} and evaluated on identical screening-disjoint test rows. The first arm reproduces the initial configuration: uniform $\alpha=1.5$ for all ten outputs, no fuel mask, exclusion of fuel-only-infeasible rows from training, and batch normalisation after activation. The second arm retains the unmasked data handling but uses the corrected batch-normalisation placement. The remaining three arms use masked training and differ only in their weighting: uniform $\alpha=1.5$, symmetric $\alpha=1.0$, and the selected output-specific weights. Comparison of the corrected unmasked arm with the uniform masked arm captures the combined effect of masking the undefined fuel target and retaining the partially infeasible cases during regression training. The initial and corrected unmasked arms place three and two outputs on their specified conservative sides, respectively, while the uniform and symmetric masked arms place one and six outputs on their conservative sides. Only the selected output-specific masked configuration places all ten outputs preferentially on their prescribed conservative error sides. \autoref{tab:lossablation} lists the over-prediction rates, and \autoref{fig:lossablation} visualises the error-direction results for the five configurations.
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 \centering
-\includegraphics[width=\linewidth]{fig_loss_ablation_safety.pdf}
+\includegraphics[width=0.9\textwidth]{fig_loss_ablation_safety.pdf}
 \caption{Over-prediction rate per output for the five loss configurations.}
 \label{fig:lossablation}
-\end{figure}
+\end{figure*}
 
 \begin{table*}[ht]
 \centering
@@ -527,7 +527,7 @@ C2 (fuel-only infeasibility) & 0.92 & 0.9905 & 0.99988 & 0.9983 & 16{,}765 & 0.9
 \label{fig:confusion}
 \end{figure*}
 
-\subsection{Regression accuracy}
+\subsection{Regression accuracy}\label{sec:regacc}
 \autoref{tab:regression} reports the per-output accuracy of the regression stage on the primary screening-disjoint test subset. Each output was evaluated only on rows for which that target is defined by the simulator, independently of the predicted feasibility decisions. \autoref{fig:scatter} compares the surrogate predictions with the simulator values for all ten outputs using the corresponding target-valid rows. To provide a dimensionless comparison across outputs with different units, the relative MAE in \autoref{tab:regression} is expressed as a percentage of each output's standard deviation. Under this normalisation, the error remains below 1.5\% of the standard deviation for every output, with $R^2\geq0.9994$ throughout. Ship speed is over-predicted in 40.7\% of the positive-target cases, while the remaining nine outputs are over-predicted in 51.5--76.9\% of cases. Therefore, in the reported run every output errs preferentially on its specified safe side; the margin is small for motion sickness incidence (51.5\%). The same holds for seed 1, whereas seed 2 places nine of the ten outputs on their safe side, with ship speed over-predicted in 61.4\% of the positive-target cases (\autoref{tab:seeds}). \autoref{fig:residuals} presents the residual distributions, while \autoref{fig:seaheat} shows the range-normalised MAE across the evaluated sea-condition bands, i.e.\ the MAE within each significant-wave-height band (0--2, 2--5, 5--8, and 8--10~m) expressed as a percentage of the output's range over the test rows on which it is defined.
 \begin{table*}[ht]
 \centering
@@ -603,7 +603,7 @@ Fuel consumption       & $0.99927 \pm 1.6 \times 10^{-4}$ & 0.99909 & $0.5180 \p
 \end{figure*}
 \begin{figure*}[htpb]
 \centering
-\includegraphics[width=0.55\textwidth]{step7_error_heatmap_sea_conditions.pdf}
+\includegraphics[width=\textwidth]{step7_error_heatmap_sea_conditions.pdf}
 \caption{Range-normalised MAE by output and wave-height band.}
 \label{fig:seaheat}
 \end{figure*}
@@ -663,6 +663,40 @@ The originally supplied interpolation scheme was evaluated on the same fresh off
 
 \begin{table*}[ht]
 \centering
+\caption{Off-grid validation against fresh simulator runs (\checkmark{} = conservative side).}
+\label{tab:external-multidim}
+\footnotesize
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{
+  l
+  S[table-format=3.6]
+  S[table-format=1.5]
+  c
+  S[table-format=3.6]
+  S[table-format=1.5]
+  c
+}
+\toprule
+ & \multicolumn{3}{c}{Midpoint Placement} 
+ & \multicolumn{3}{c}{Irregular Placement} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+Output & {MAE} & {$R^2$} & {Over-pred.\ [\%]} & {MAE} & {$R^2$} & {Over-pred.\ [\%]} \\
+\midrule
+Ship speed [\unit{kn}] & 0.0396 & 0.99956 & 40.0\,\checkmark & 0.0497 & 0.99944 & 69.3 \\
+Brake power [\unit{kW}] & 160.5 & 0.99901 & 92.8\,\checkmark & 127.6 & 0.99945 & 68.8\,\checkmark \\
+Brake torque [\unit{kNm}] & 16.72 & 0.99803 & 97.8\,\checkmark & 11.13 & 0.99919 & 82.4\,\checkmark \\
+Lateral acc.\ RMS [$g$] & 0.000310 & 0.99931 & 66.6\,\checkmark & 0.000279 & 0.99929 & 56.6\,\checkmark \\
+Motion sickness [\%] & 0.0980 & 0.99940 & 65.4\,\checkmark & 0.0916 & 0.99961 & 51.2\,\checkmark \\
+Rolling RMS [\unit{\degree}] & 0.0562 & 0.99758 & 65.4\,\checkmark & 0.0580 & 0.99671 & 75.3\,\checkmark \\
+Slamming prob.\ [\%] & 0.0106 & 0.99592 & 59.1\,\checkmark & 0.0134 & 0.99755 & 78.1\,\checkmark \\
+Green water prob.\ [\%] & 0.0472 & 0.99888 & 58.4\,\checkmark & 0.0606 & 0.99929 & 59.3\,\checkmark \\
+Prop.\ emergence [\%] & 0.1221 & 0.99976 & 55.3\,\checkmark & 0.1651 & 0.99963 & 48.4 \\
+Fuel consumption [\unit{kg/nm}] & 1.190 & 0.99766 & 90.2\,\checkmark & 0.8925 & 0.99913 & 60.1\,\checkmark \\
+\bottomrule
+\end{tabular}
+\end{table*}
+\begin{table*}[ht]
+\centering
 \caption{Multilinear interpolation baseline against the surrogate on fresh off-grid runs.}
 \label{tab:interpbaseline}
 \footnotesize
@@ -694,40 +728,6 @@ Green water prob.      & 0.9901 & 0.9988 & 0.9990 & 0.9993 & 29.8 & 20.2 \\
 Prop.\ emergence prob. & 0.9975 & 0.9998 & 0.9987 & 0.9997 & 29.8 & 20.2 \\
 \addlinespace
 Fuel consumption       & 0.9970 & 0.9966 & 0.9954 & 0.9990 & 41.6 & 24.8 \\
-\bottomrule
-\end{tabular}
-\end{table*}
-\begin{table*}[ht]
-\centering
-\caption{Off-grid validation against fresh simulator runs (\checkmark{} = conservative side).}
-\label{tab:external-multidim}
-\footnotesize
-\setlength{\tabcolsep}{6pt}
-\begin{tabular}{
-  l
-  S[table-format=3.6]
-  S[table-format=1.5]
-  c
-  S[table-format=3.6]
-  S[table-format=1.5]
-  c
-}
-\toprule
- & \multicolumn{3}{c}{Midpoint Placement} 
- & \multicolumn{3}{c}{Irregular Placement} \\
-\cmidrule(lr){2-4} \cmidrule(lr){5-7}
-Output & {MAE} & {$R^2$} & {Over-pred.\ [\%]} & {MAE} & {$R^2$} & {Over-pred.\ [\%]} \\
-\midrule
-Ship speed [\unit{kn}] & 0.0396 & 0.99956 & 40.0\,\checkmark & 0.0497 & 0.99944 & 69.3 \\
-Brake power [\unit{kW}] & 160.5 & 0.99901 & 92.8\,\checkmark & 127.6 & 0.99945 & 68.8\,\checkmark \\
-Brake torque [\unit{kNm}] & 16.72 & 0.99803 & 97.8\,\checkmark & 11.13 & 0.99919 & 82.4\,\checkmark \\
-Lateral acc.\ RMS [$g$] & 0.000310 & 0.99931 & 66.6\,\checkmark & 0.000279 & 0.99929 & 56.6\,\checkmark \\
-Motion sickness [\%] & 0.0980 & 0.99940 & 65.4\,\checkmark & 0.0916 & 0.99961 & 51.2\,\checkmark \\
-Rolling RMS [\unit{\degree}] & 0.0562 & 0.99758 & 65.4\,\checkmark & 0.0580 & 0.99671 & 75.3\,\checkmark \\
-Slamming prob.\ [\%] & 0.0106 & 0.99592 & 59.1\,\checkmark & 0.0134 & 0.99755 & 78.1\,\checkmark \\
-Green water prob.\ [\%] & 0.0472 & 0.99888 & 58.4\,\checkmark & 0.0606 & 0.99929 & 59.3\,\checkmark \\
-Prop.\ emergence [\%] & 0.1221 & 0.99976 & 55.3\,\checkmark & 0.1651 & 0.99963 & 48.4 \\
-Fuel consumption [\unit{kg/nm}] & 1.190 & 0.99766 & 90.2\,\checkmark & 0.8925 & 0.99913 & 60.1\,\checkmark \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -790,7 +790,7 @@ The principal limitations are that the surrogate measures fidelity to the simula
 The complete implementation is publicly available in the \href{https://github.com/MOHAMMED-ABDALSALAM-PG/S175-ML-surrogate}{S175-ML-surrogate GitHub repository}. The repository contains the training, evaluation, and figure-generation code, the experiment configurations, the split definitions with SHA-256 checksums, the trained model checkpoints for every reported run together with their full provenance records (configuration, seed, data and split hashes, and library versions), and the scripts that regenerate every table and figure in this paper from the recorded results. The dataset and the S175 WeatherRouting simulator are not redistributed; the dataset is available from the corresponding author upon reasonable request.
 
 \section*{Data availability}
-The dataset generated and analysed during the current study (126{,}153{,}720 evaluations of the S175 WeatherRouting simulator, 15.9~GB) is not publicly deposited owing to its size, but is available from the corresponding author on reasonable request. The trained model checkpoints, the split definitions with SHA-256 checksums, and all evaluation tables underlying the figures are publicly available in the code repository listed under Code availability.
+The dataset generated and analysed during the current study (126{,}153{,}720 evaluations of the S175 WeatherRouting simulator, 15.9~GB) is not publicly deposited owing to its size, but is available on reasonable request from the corresponding author, Prof. Joanna Sz{\l}apczy{\'n}ska (joanna.szlapczynska@pg.edu.pl). The trained model checkpoints, the split definitions with SHA-256 checksums, and all evaluation tables underlying the figures are publicly available in the code repository listed under Code availability.
 \section*{CRediT authorship contribution statement}
 
 \textbf{Mohammed Abdalsalam:} Methodology, Software, Formal analysis, Investigation, Visualization,

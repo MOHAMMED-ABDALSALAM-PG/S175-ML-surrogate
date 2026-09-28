@@ -121,7 +121,7 @@ def main() -> int:
     print("wrote", EV / "latex" / "table_loss_ablation.tex")
 
     # ------------------------------------------------------------- figure
-    fig, ax = plt.subplots(figsize=(3.5, 4.4))
+    fig, ax = plt.subplots(figsize=(7.0, 3.3))
     ys = np.arange(len(OUTPUT_COLS))[::-1]
     ax.axvline(50, color="k", lw=0.8, ls=":", zorder=1)
     for i, y in enumerate(ys):
@@ -139,13 +139,13 @@ def main() -> int:
         ax.annotate("safe →" if want_over else "← safe",
                     (98 if want_over else 2, y),
                     ha="right" if want_over else "left", va="center",
-                    fontsize=6.5, color="#5a6b7f", zorder=2)
-    ax.set_yticks(ys, [output_label(c) for c in OUTPUT_COLS], fontsize=7)
+                    fontsize=7.5, color="#5a6b7f", zorder=2)
+    ax.set_yticks(ys, [output_label(c) for c in OUTPUT_COLS], fontsize=8)
     ax.set_xlim(0, 100)
-    ax.tick_params(axis="x", labelsize=7)
-    ax.set_xlabel("over-prediction rate on positive-truth rows [%]", fontsize=7)
-    ax.legend(fontsize=6.5, loc="upper center", bbox_to_anchor=(0.35, -0.12),
-              ncol=1, frameon=False, handletextpad=0.3)
+    ax.tick_params(axis="x", labelsize=8)
+    ax.set_xlabel("over-prediction rate on positive-truth rows [%]", fontsize=8)
+    ax.legend(fontsize=7.5, loc="upper center", bbox_to_anchor=(0.45, -0.17),
+              ncol=3, frameon=False, handletextpad=0.3, columnspacing=1.2)
     ax.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     fig.savefig(ROOT / "figures" / "fig_loss_ablation_safety.png", dpi=300,
