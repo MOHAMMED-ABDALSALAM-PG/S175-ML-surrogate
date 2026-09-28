@@ -116,10 +116,6 @@ model = MLP(**ck["model_config"]); model.load_state_dict(ck["model"]).eval()
   outputs err preferentially on their conservative side for seeds 0 and 1 and
   9 of 10 for seed 2 (the uniform-α baseline: 3 of 10 on the same test rows);
   off-grid, 10 of 10 at the midpoints and 8 of 10 at the irregular inputs.
-- **Limits:** at corner extrapolation the completely-infeasible classifier
-  passes 11.2% of infeasible cases as feasible; at irregular off-grid inputs
-  its recall falls from 0.99 to 0.91 — quantified with Wilson CIs in the
-  tables.
 - **Speed (same workstation, simulator on CPU, surrogate on GPU):** single
   point 2.65 ms vs 8.94 s (×3,378); identical 864-point batch 2.74 ms vs
   14.34 s (×5,226); large-batch throughput about 4.03·10⁶ predictions/s
