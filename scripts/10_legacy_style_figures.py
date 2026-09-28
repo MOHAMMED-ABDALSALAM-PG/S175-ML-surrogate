@@ -210,8 +210,6 @@ def _confusion_panel(ax, conf, labels, cmap, title):
 def fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir):
     """Clf1 / Clf2 / combined three-class, absolute counts -- old layout."""
     fig, axes = plt.subplots(1, 3, figsize=(24, 6.5))
-    fig.suptitle("Full Test Split — Classification Performance",
-                 fontsize=16, fontweight="bold")
 
     lab1 = cls_te == CLASS_ALL_NEG
     pr1 = p1 > thr1
@@ -244,8 +242,6 @@ def fig_confusion(cls_te, pred_cls, p1, p2, thr1, thr2, outdir):
 def fig_residuals(y_true, y_pred, cls_te, outdir):
     """2x5 residual histograms on defined rows, old layout."""
     fig, axes = plt.subplots(2, 5, figsize=(30, 11))
-    fig.suptitle("Residual Distributions (Regressor, rows with a defined "
-                 "target)", fontsize=16, fontweight="bold")
     for i, c in enumerate(OUTPUT_COLS):
         ax = axes[i // 5, i % 5]
         defined = (cls_te == CLASS_VALID) if c == "fuel" else (cls_te != CLASS_ALL_NEG)

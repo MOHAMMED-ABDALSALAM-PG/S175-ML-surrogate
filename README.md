@@ -5,7 +5,7 @@ simulation: nine operating and environmental inputs → ten performance and
 seakeeping outputs, with explicit modelling of the simulator's two
 infeasibility modes and a safety-aware asymmetric loss.
 
-**Paper (in preparation):** *Data-driven machine learning surrogate model for
+**Paper (manuscript sources in [`paper/`](paper/)):** *Data-driven machine learning surrogate model for
 the S175 ship performance prediction* — Mohammed Abdalsalam¹, Aleksander
 Kniat², Przemysław Krata², Joanna Szłapczyńska¹\*
 ¹ Gdańsk University of Technology, Faculty of Electronics, Telecommunications
@@ -48,6 +48,7 @@ runs/               trained checkpoints (~700 KB each) + full provenance:
 splits/             split manifests with sha256 (index arrays regenerable)
 results/evaluation/ all metric tables (CSV/JSON)
 figures/            all paper figures, 300 dpi PNG + vector PDF
+paper/              manuscript sources (main.tex, sample.bib, included figures)
 tests/              executable assertions, incl. the asymmetric-loss direction contrast
 ```
 

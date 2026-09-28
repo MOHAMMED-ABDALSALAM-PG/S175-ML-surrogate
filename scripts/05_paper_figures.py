@@ -95,8 +95,6 @@ def fig_pred_vs_true(y_true, y_pred, cls_te):
             ax.set_ylabel("surrogate", fontsize=8)
         if j // 5 == 1:
             ax.set_xlabel("simulator", fontsize=8)
-    fig.suptitle("Surrogate vs simulator on the S1_random test split "
-                 "(12.6M rows, log-density)", y=1.0)
     fig.colorbar(hb, ax=axes, shrink=0.8, label="rows per hex (log)")
     save_fig(fig, "fig_pred_vs_true")
 
