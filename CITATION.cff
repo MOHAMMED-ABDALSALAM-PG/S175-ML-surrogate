@@ -2,6 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software or the trained surrogate models, please cite the accompanying paper (in preparation)."
 title: "Data-driven machine learning surrogate model for the S175 ship performance prediction"
 type: software
+repository-code: "https://github.com/MOHAMMED-ABDALSALAM-PG/S175-ML-surrogate"
 authors:
   - family-names: Abdalsalam
     given-names: Mohammed

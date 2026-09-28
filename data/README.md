@@ -12,7 +12,7 @@ repository. It is regenerated from the S175 WeatherRouting simulator.
    | Parameter | Values | n |
    |---|---|---|
    | Draft (m) | 8.0, 8.5, 9.0 | 3 |
-   | Trim (m) | -0.75, -0.25, 0.25 | 3 |
+   | Trim (m) | -0.75, 0.00, 0.25 | 3 |
    | EngRPM (1/min) | 122.4 : 7.2 : 144.0 | 4 |
    | P/D | 0.7 : 0.1 : 1.1 | 5 |
    | Hs (m) | 0 : 0.25 : 10 | 41 |

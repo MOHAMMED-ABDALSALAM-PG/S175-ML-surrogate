@@ -1,0 +1,120 @@
+{
+ "description": "Input values of the two off-grid validation designs (full factorials; every combination of the listed values was run through the S175 WeatherRouting simulator ver. 0.993). No value coincides with a training-grid level. Angles in degrees.",
+ "source_files": {
+  "midpoint": "~/S175_simulation/S175/output_interpolation.txt",
+  "irregular": "~/S175_simulation/S175/output_interpolation_random.txt (called 'random' in scripts 08/14)"
+ },
+ "midpoint": {
+  "n_combinations": 4608,
+  "levels": {
+   "draft": [
+    8.25,
+    8.75
+   ],
+   "trim": [
+    -0.38,
+    0.12
+   ],
+   "GMt": [
+    0.55
+   ],
+   "EngRPM": [
+    126.0,
+    140.4
+   ],
+   "PD": [
+    0.75,
+    0.95,
+    1.05
+   ],
+   "shaft_gen": [
+    0.0
+   ],
+   "Hs": [
+    0.38,
+    2.62,
+    5.12,
+    7.88
+   ],
+   "Tp": [
+    4.84,
+    7.77,
+    11.54
+   ],
+   "Chi": [
+    12.5,
+    52.5,
+    92.5,
+    152.5
+   ],
+   "Vwind": [
+    7.5,
+    17.5
+   ],
+   "Theta_wind": [
+    45.0,
+    135.0
+   ]
+  }
+ },
+ "irregular": {
+  "n_combinations": 54675,
+  "levels": {
+   "draft": [
+    8.13,
+    8.67,
+    8.91
+   ],
+   "trim": [
+    -0.58,
+    -0.21,
+    0.18
+   ],
+   "GMt": [
+    0.55
+   ],
+   "EngRPM": [
+    124.1,
+    133.5,
+    142.7
+   ],
+   "PD": [
+    0.73,
+    0.87,
+    1.07
+   ],
+   "shaft_gen": [
+    0.0
+   ],
+   "Hs": [
+    0.63,
+    1.87,
+    4.41,
+    6.58,
+    8.92
+   ],
+   "Tp": [
+    5.59,
+    9.29,
+    13.69
+   ],
+   "Chi": [
+    7.3,
+    33.8,
+    71.6,
+    118.4,
+    167.2
+   ],
+   "Vwind": [
+    3.2,
+    12.8,
+    22.1
+   ],
+   "Theta_wind": [
+    17.5,
+    73.0,
+    142.0
+   ]
+  }
+ }
+}

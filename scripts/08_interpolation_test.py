@@ -7,8 +7,10 @@ evidence is fresh SIMULATOR runs at input values that lie BETWEEN the grid
 levels -- points the surrogate has never seen in any split. Two such runs
 exist (produced with WeatherRouting ver. 0.993 in May 2026):
 
-  midpoint : every input at midpoints between grid levels        (2,304 rows)
-  random   : random positions between grid levels               (46,080 rows)
+  midpoint : full factorial of midpoints between selected adjacent grid levels (4,608 rows)
+  random   : full factorial of selected off-grid values that are not midpoints
+             (54,675 rows; the "irregular" design of the paper; no random-number
+             generator was involved)  -- value lists: results/evaluation/offgrid_design_levels.json
 
 This script verifies -- not assumes -- that every varying input value in
 those files is off-grid (minimum distance to the nearest training grid level

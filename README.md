@@ -40,6 +40,17 @@ scripts/
   05_paper_figures.py  pred-vs-true, per-input error, response slices, timing
   06_timing_simulator.py  simulator wall-clock measurement
   08_interpolation_test.py  surrogate vs fresh simulator runs at OFF-GRID inputs
+  17_algorithm_screening.py  model-family screening, step 1 (Table 4): single
+                      speed regressor with -1 infeasibility target (copied
+                      unchanged from the original study; writes to its paths)
+  17b_two_stage_screening.py model-family screening, step 2 (Table 5): RF/XGB/MLP
+                      infeasibility classifiers and valid-only speed regressors
+                      (copied unchanged; results in two_stage_screening.json --
+                      note: in its combined_results block the key
+                      "false_negatives_dangerous" holds the false positives;
+                      the correct missed-infeasible counts are the
+                      classifier_results "FN_dangerous" values)
+  verify_tables.py / verify_manuscript.py  check paper/main.tex against results
   run_alpha_grid.sh   joint loss-weight grid: screening split → 30 pairs ×
                       5 seeds → prespecified selection rule → grid table and
                       figure (scripts 19–24, in order)
@@ -110,18 +121,33 @@ per-output loss.
 
 ## Data availability
 
-Neither the dataset (15.9 GB of simulator output; 126,153,720 operating
-points) nor the S175 WeatherRouting simulator that generates it is
-distributed in this repository. The dataset is available **upon request to
-the corresponding author, Prof. Joanna Szłapczyńska** (Gdańsk University of
-Technology).
+The dataset used in this project consists of 126,153,720 evaluations of the
+S175 WeatherRouting ship-performance simulator (ver. 0.993) over the full
+factorial design described in the paper (15.9 GB of simulator output, shaft
+generator off). It was generated specifically for this project and is **not
+included in this repository**, and neither is the simulator itself.
+
+The dataset is available on reasonable request from the corresponding author:
+**Prof. Joanna Szłapczyńska**, Gdańsk University of Technology, Faculty of
+Electronics, Telecommunications and Informatics
+(joanna.szlapczynska@pg.edu.pl).
+
+What *is* included: the split definitions with SHA-256 checksums (the index
+arrays are regenerated from the recorded seeds), the trained checkpoints of
+every reported run with their provenance records, all evaluation tables, and
+the input values of the two off-grid validation designs
+(`results/evaluation/offgrid_design_levels.json`).
 
 ## Acknowledgements
 
-The authors gratefully acknowledge **Prof. Roberto Vettor** for developing the
-theoretical general ship model that underlies the S175 WeatherRouting
-performance simulator used in this study. His foundational contribution to
-the formulation of the ship-performance model is sincerely appreciated.
+The authors gratefully acknowledge PhD Eng. **Roberto Vettor** for authoring and
+developing the theoretical general ship model underlying the S175
+WeatherRouting performance simulator employed in this study. This work was
+originally carried out within the international **MarTERA-1 ROUTING** project
+(2018–2022), under the supervision of **Prof. Carlos Guedes Soares** at
+Instituto Superior Técnico, Lisbon, Portugal. The authors sincerely appreciate
+their foundational contributions to the formulation and development of the
+general ship performance model.
 
 ## License
 
