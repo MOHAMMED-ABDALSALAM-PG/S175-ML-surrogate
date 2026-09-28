@@ -19,7 +19,7 @@ is reported per feature), then scores the CURRENT v3 model
 03_evaluate.py: clamped predictions, oracle feasibility masking, fuel scored
 on fully-valid rows only.
 
-Honesty note carried into the output: the two files differ in size, in the
+Note carried into the output: the two files differ in size, in the
 number of distinct levels, and in their distance-to-grid distributions, so
 midpoint-vs-random differences must not be over-interpreted; the supported
 claim is that accuracy holds at off-grid inputs in both.

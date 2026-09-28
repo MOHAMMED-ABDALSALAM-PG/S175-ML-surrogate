@@ -8,7 +8,7 @@ Run:
 batch sizes and exits without training. It exists to answer one question with
 measurement instead of assumption: the original run took 103 hours for a single
 seed, which makes a multi-seed study impossible unless that time comes down.
-The suspected cause is in the published code -- BATCH_SIZE = 512 against 100.9M
+The suspected cause is in the original study's code -- BATCH_SIZE = 512 against 100.9M
 rows is ~197,000 optimiser steps per epoch. The pilot measures what larger
 batches and mixed precision actually buy, and the seed budget follows from the
 measurement rather than from a guess.
@@ -52,7 +52,7 @@ def log(msg: str) -> None:
 
 
 def git_commit() -> str:
-    """The commit this run is attributable to, or an honest admission.
+    """The commit this run is attributable to, or "uncommitted" when there is none.
 
     `git rev-parse HEAD` in a repository with no commits exits non-zero and
     echoes the literal string "HEAD" on stdout, which the previous form

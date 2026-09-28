@@ -33,6 +33,11 @@ configs/            experiment definitions (YAML); v1_original.yaml is the
                     uniform-alpha baseline reproduced for the ablation
 src/s175/           library: schema, loader, splits, losses, models, metrics
 scripts/
+  00_screening_subsample.py  draws the 5% screening subsample (6,306,419 rows):
+                    5% of every Hs-band x wave-direction x wind-speed x
+                    feasibility stratum, random_state 42 (copied unchanged
+                    from the original study; needs the full dataset, which
+                    is not distributed)
   01_prepare.py     cache build + leakage-safe split generation (seeded)
   02_train.py       train one (config, split, seed); timing pilot included
   03_evaluate.py    test-set evaluation of every run (oracle masking, CIs)
@@ -73,7 +78,9 @@ tests/              executable assertions, incl. the asymmetric-loss direction c
 Three MLPs sharing one input standardisation (fitted on train only):
 a 512-256-128 regressor with a **masked per-output asymmetric loss**
 (α=1.5 for ship speed → biased to under-predict; α=0.33 for the other nine →
-biased to over-predict, so power/fuel/risk are never under-stated), and two
+biased to over-predict, so propulsion, fuel and seakeeping outputs err
+preferentially on their conservative side -- a distributional tendency, not a
+per-prediction guarantee), and two
 feasibility classifiers (C1: completely infeasible; C2: fuel-only infeasible)
 whose decision thresholds are selected on validation for recall ≥ 0.99, never
 an implicit 0.5.
@@ -91,22 +98,28 @@ model = MLP(**ck["model_config"]); model.load_state_dict(ck["model"]).eval()
 
 ## Headline results (details in results/evaluation/)
 
-- **Accuracy:** R² ≥ 0.999 for all ten outputs on the held-out random test
-  split (12.6M rows, 3 seeds); R² ≥ 0.98 under every extrapolation regime
-  tested (unseen input levels, held-out operating regions, corner
-  extrapolation).
+- **Accuracy:** R² ≥ 0.9994 for all ten outputs on the screening-disjoint
+  random test split (11,984,559 rows, seed 0; three-seed spread in
+  `s1_seed_spread.json`). Under the structured holdouts the minimum output R²
+  ranges from 0.921 (unseen draft level, slamming probability) to 0.9993
+  (unseen wave-direction levels).
 - **Off-grid validation against the physical model:** fresh simulator runs at
-  inputs strictly *between* training grid levels — R² ≥ 0.996 (midpoints,
-  4,608 points) and ≥ 0.997 (random positions, 54,675 points).
-- **Safety bias:** the per-output asymmetric loss puts all 10 outputs on their
-  safe error side in-distribution (the uniform-α baseline: 2 of 10 on the
-  same test rows) and largely holds off-grid (18/20 cells across the two
-  off-grid designs).
-- **Honest limits:** at corner extrapolation the completely-infeasible
-  classifier misses 11.2% of positives; off-grid random inputs reduce its
-  recall from 0.99 to 0.91 — quantified with Wilson CIs in the tables.
-- **Speed:** 0.25 µs per point batched on one GPU — ~3.6·10⁷× the single-point
-  simulator wall time (measured, `results/evaluation/timing_table.csv`).
+  inputs strictly *between* training grid levels — R² ≥ 0.9959 (midpoint
+  design, 4,608 combinations) and ≥ 0.9967 (irregular design, 54,675
+  combinations).
+- **Conservative error direction:** with the per-output asymmetric loss all 10
+  outputs err preferentially on their conservative side for seeds 0 and 1 and
+  9 of 10 for seed 2 (the uniform-α baseline: 3 of 10 on the same test rows);
+  off-grid, 10 of 10 at the midpoints and 8 of 10 at the irregular inputs.
+- **Limits:** at corner extrapolation the completely-infeasible classifier
+  passes 11.2% of infeasible cases as feasible; at irregular off-grid inputs
+  its recall falls from 0.99 to 0.91 — quantified with Wilson CIs in the
+  tables.
+- **Speed (same workstation, simulator on CPU, surrogate on GPU):** single
+  point 2.65 ms vs 8.94 s (×3,378); identical 864-point batch 2.74 ms vs
+  14.34 s (×5,226); large-batch throughput about 4.03·10⁶ predictions/s
+  (0.25 µs per point, amortised) — `results/simulator_timing.json`,
+  `results/evaluation/same_inputs_timing.json`, `figures/inference_speed.json`.
 
 ## Reproducing
 

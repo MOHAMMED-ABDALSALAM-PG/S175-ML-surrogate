@@ -83,7 +83,7 @@ def per_output(y_true: np.ndarray, y_pred: np.ndarray,
                 )
             ),
             "safe_direction": SAFE_DIRECTION[c],
-            # judged on the positive-restricted rate, which is the honest one
+            # judged on the rate over rows with a positive target (zero-target rows excluded)
             "safe_direction_met": bool(
                 (oe_pos > 50.0) if want_over else (oe_pos < 50.0)
             ) if not math.isnan(oe_pos) else None,

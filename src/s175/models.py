@@ -3,8 +3,8 @@
 The architectures match the ones the original study selected in its tuning step
 (regressor 512-256-128, C1 512-256-128, C2 512-256-128-64), so that the rewrite
 changes the training procedure and the evaluation -- not the model capacity.
-Keeping them identical is what makes the corrected results comparable to the
-published ones.
+Keeping them identical is what makes the results comparable to those of the
+original study.
 
 Two deliberate differences from the original `step7_8_full.py`:
 
@@ -12,7 +12,7 @@ Two deliberate differences from the original `step7_8_full.py`:
    (Linear -> ReLU -> BatchNorm). Both orderings train, but Linear -> BN -> ReLU
    is the form BatchNorm was proposed with and it makes the bias in the
    preceding Linear redundant. The order is exposed as a flag so the original
-   can be reproduced exactly when comparing against the published run.
+   can be reproduced exactly when comparing against the original study's run.
 
 *  The classifiers emit a single logit rather than two, so the decision
    threshold is an explicit, tunable number instead of an implicit argmax at

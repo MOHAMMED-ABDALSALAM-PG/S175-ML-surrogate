@@ -50,7 +50,7 @@ UNITS = {
 }
 
 # Physical bounds. None means unbounded on that side.
-# All ten outputs are non-negative; the three probabilities are percentages.
+# All ten outputs are non-negative; MSI and the three probabilities are percentages.
 # Used to clamp predictions -- the unconstrained network can otherwise emit
 # negative probabilities (measured at 86.7% of slamming predictions on the
 # original v1 model).

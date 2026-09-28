@@ -1,7 +1,7 @@
 """Masked, per-output asymmetric squared-error loss.
 
-This is the loss the manuscript describes and that the final published run did
-not use. The published `step7_8_full.py` had:
+This is the loss described in the manuscript. The original study's
+`step7_8_full.py` used instead:
 
     weights = torch.where(error > 0, self.alpha, 1.0)   # one scalar, all outputs
     return (weights * error ** 2).mean()                # no mask
@@ -37,7 +37,7 @@ def build_alpha_vector(alpha_speed: float = 1.5,
 def check_alpha_directions(alpha_vec) -> None:
     """Assert each alpha points the way SAFE_DIRECTION says it should.
 
-    Guards against the failure that produced the published table: an alpha
+    Guards against a failure observed in the original study: an alpha
     vector whose values silently contradict the stated safety intent.
     """
     if len(alpha_vec) != len(OUTPUT_COLS):

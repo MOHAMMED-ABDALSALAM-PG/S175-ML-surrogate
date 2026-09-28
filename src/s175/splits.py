@@ -1,9 +1,9 @@
 """Split construction, and persistence of the resulting indices.
 
 Four regimes, because a random row split on a dense factorial lattice only
-measures interpolation between adjacent grid nodes. The original work reported
-S1 alone and obtained R^2 > 0.9999; the genuinely off-grid simulator checks
-landed near 0.99, and that gap is the honest story.
+measures interpolation between adjacent grid nodes. An earlier version of this
+study reported S1 alone (R^2 > 0.9999), whereas off-grid simulator checks gave
+values near 0.99; the structured regimes quantify that gap.
 
 S1  random      stratified 80/10/10 over rows, as originally done
 S2  level       hold out entire values of one input variable

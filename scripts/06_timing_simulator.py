@@ -13,7 +13,7 @@ orders of magnitude:
   single   One process invocation that evaluates one operating point
            (`-SafetyIndexes`, reading S175.wrin). Includes process start and
            the load of the hull/hydrostatic model data. This is what a caller
-           pays to ask the simulator one question -- the honest comparison for
+           pays to ask the simulator one question -- the relevant comparison for
            an optimiser that queries point by point.
 
   batch    `-CreateMetamodel` over a grid of K points in one invocation, so the

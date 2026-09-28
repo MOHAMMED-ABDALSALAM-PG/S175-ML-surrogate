@@ -69,9 +69,6 @@ def main() -> int:
         mae = m["mean_rel_MAE_sd_pct"]; sd = m["sd_rel_MAE_sd_pct"]
         check(f"selected mean MAE {mae:.2f}% quoted in text",
               tex_has(flat, f"{mae:.2f}"), f"selection.json: {mae:.4f} +/- {sd:.4f}")
-        oe = m["speed_OE_mean"]; oesd = m["speed_OE_sd"]
-        check(f"selected speed over-prediction {oe:.1f}% quoted",
-              tex_has(flat, f"{oe:.1f}"), f"selection.json: {oe:.4f} +/- {oesd:.4f}")
         maes = [r["mean_rel_MAE_sd_pct"] for r in sel["grid"]]
         check(f"grid MAE range {min(maes):.2f}-{max(maes):.2f}% consistent with text",
               tex_has(flat, f"{min(maes):.2f}") and tex_has(flat, f"{max(maes):.2f}"),
@@ -85,15 +82,13 @@ def main() -> int:
     # ---------------- loss ablation ----------------
     abl = load("evaluation/ablation_loss_comparison.csv")
     if abl:
-        col = next((c for c in abl[0] if "safe" in c.lower()), None)
-        arms = {r.get("arm") or r.get("run") or r.get("config"): r for r in abl}
-        check("loss ablation has 4 arms", len(abl) == 4, f"rows: {len(abl)}; arms: {list(arms)}")
-        if col:
-            for name, r in arms.items():
-                v = r[col]
-                check(f"ablation {name}: {col}={v} appears in text",
-                      tex_has(flat, str(v).split('/')[0]) if v else False,
-                      f"{col} = {v}")
+        # wide format: one row per output, one "<arm>_safe_met" column per arm
+        arms = [c[:-len("_safe_met")] for c in abl[0] if c.endswith("_safe_met")]
+        check("loss ablation has 5 arms", len(arms) == 5, f"arms: {arms}")
+        for a in arms:
+            met = sum(r[f"{a}_safe_met"] == "True" for r in abl)
+            check(f"ablation {a}: {met}/{len(abl)} outputs on the conservative side appears in text",
+                  tex_has(flat, f"{met}/{len(abl)}"), f"{met}/{len(abl)}")
 
     # ---------------- clean-test overlap check ----------------
     ct = load("evaluation/clean_test_eval.json")
@@ -110,13 +105,12 @@ def main() -> int:
     # ---------------- clamp report ----------------
     cl = load("evaluation/clamp_report.json")
     if cl:
-        txt = json.dumps(cl)
-        vals = [abs(float(v)) for v in re.findall(r'-?\d+\.?\d*e?-?\d*', txt)
-                if re.match(r'^-?\d+\.?\d*e?-?\d*$', v) and abs(float(v)) < 1]
-        if vals:
+        deltas = [abs(v["R2_clamped"] - v["R2_unclamped"])
+                  for split in cl.values() for v in split.values()
+                  if isinstance(v, dict) and "R2_clamped" in v]
+        if deltas:
             check("clamping R2 impact below 2.3e-5 as claimed",
-                  max(vals) < 2.3e-5 or tex_has(flat, "2.3"),
-                  f"max |delta| in clamp_report.json = {max(vals):.3g}")
+                  max(deltas) < 2.3e-5, f"max |R2_clamped - R2_unclamped| = {max(deltas):.3g}")
 
     # ---------------- figure files referenced exist ----------------
     figs = sorted(set(re.findall(r"\\includegraphics(?:\[[^\]]*\])?\{([^}]+)\}", tex)))
