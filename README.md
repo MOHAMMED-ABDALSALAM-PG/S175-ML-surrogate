@@ -45,6 +45,11 @@ scripts/
   05_paper_figures.py  pred-vs-true, per-input error, response slices, timing
   06_timing_simulator.py  simulator wall-clock measurement
   08_interpolation_test.py  surrogate vs fresh simulator runs at OFF-GRID inputs
+  17a_architecture_search.py  architecture search behind the network sizes:
+                    regressor and classifier configurations compared on one
+                    80/10/10 split of the screening subsample (copied
+                    unchanged from the original study; results in
+                    results/evaluation/architecture_search.json)
   17_algorithm_screening.py  original model-family screening, step 1: single
                       speed regressor with -1 infeasibility target (copied
                       unchanged from the original study; writes to its paths)
