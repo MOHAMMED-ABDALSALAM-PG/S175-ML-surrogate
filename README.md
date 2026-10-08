@@ -147,8 +147,7 @@ generator off). It was generated specifically for this project and is **not
 included in this repository**, and neither is the simulator itself.
 
 The dataset is available on reasonable request from the corresponding author:
-**Prof. Joanna Szłapczyńska**, Gdańsk University of Technology, Faculty of
-Electronics, Telecommunications and Informatics
+**Prof. Joanna Szłapczyńska**, Polish project leader of the ROUTING project
 (joanna.szlapczynska@pg.edu.pl).
 
 What *is* included: the split definitions with SHA-256 checksums (the index
