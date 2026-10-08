@@ -1,0 +1,31 @@
+{
+  "name": "S1_random",
+  "description": "Stratified random row split, 80/10/10. Comparable to the original experiments. Measures interpolation between adjacent grid nodes, not generalisation.",
+  "counts": {
+    "train": 100922980,
+    "val": 12615370,
+    "test": 12615370
+  },
+  "sha256": {
+    "train": "c987e6aa3b169165ea42ab538d56d45f0d1c10d558346cdab606cdc660969f28",
+    "val": "3ee3521fba12b101af28e4e98492887a4882401d05f5b9c8d7339895ba230d20",
+    "test": "d862167b898ebb212d9880d1e25ba3585b797e8bdac91eebf34c0f0ceed9e2e9"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 67817408,
+      "fuel-only infeasible": 14865553,
+      "completely infeasible": 18240019
+    },
+    "val": {
+      "fully valid": 8477177,
+      "fuel-only infeasible": 1858193,
+      "completely infeasible": 2280000
+    },
+    "test": {
+      "fully valid": 8477177,
+      "fuel-only infeasible": 1858193,
+      "completely infeasible": 2280000
+    }
+  }
+}

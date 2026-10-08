@@ -1,0 +1,33 @@
+# Ablation arm C: identical to v3_masked_peroutput EXCEPT the loss is the
+# plain symmetric squared error (alpha = 1.0 everywhere), with the fuel mask
+# kept. This is the no-directional-bias reference of the ablation: comparing
+# v3 against this arm quantifies what the asymmetry as a whole buys (and
+# costs) once the masking is held fixed.
+name: abl_symmetric_masked
+description: >
+  Ablation: symmetric squared error (alpha 1.0 on all outputs) WITH the fuel
+  mask. The no-asymmetry reference for the loss ablation.
+
+split: S1_random
+ablation_loss: true    # bypass the SAFE_DIRECTION guard on purpose
+
+hidden: [512, 256, 128]
+hidden_clf1: [512, 256, 128]
+hidden_clf2: [512, 256, 128, 64]
+batchnorm: true
+bn_after_act: false
+dropout: 0.0
+
+alpha_speed: 1.0
+alpha_others: 1.0        # symmetric MSE -- no directional bias
+
+lr: 0.001
+batch_size: 512
+max_epochs: 200
+patience: 15
+amp: true
+
+clf_target_recall: 0.99
+
+pilot_steps: 200
+pilot_batch_sizes: [512, 4096, 16384, 65536]

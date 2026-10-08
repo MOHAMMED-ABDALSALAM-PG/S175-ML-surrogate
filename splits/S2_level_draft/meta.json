@@ -1,0 +1,31 @@
+{
+  "name": "S2_level_draft",
+  "description": "Hold out draft = [8.5] entirely. Tests interpolation to unseen levels of one input.",
+  "counts": {
+    "train": 74767106,
+    "val": 9335374,
+    "test": 42051240
+  },
+  "sha256": {
+    "train": "4eff96283ff0adf9e60220f619a5893fe586f96bebc7beb75c8b1ca45f6932e4",
+    "val": "9f3d5cacf213914268d01cc428d9565f757e906371939a2dd7b5e4144975f483",
+    "test": "92505adfb5fa8ca7c2dce4477511d5c56a715daf4d3e29b88f962aed41e0be04"
+  },
+  "class_counts": {
+    "train": {
+      "fully valid": 50290296,
+      "fuel-only infeasible": 10804446,
+      "completely infeasible": 13672364
+    },
+    "val": {
+      "fully valid": 6279216,
+      "fuel-only infeasible": 1349036,
+      "completely infeasible": 1707122
+    },
+    "test": {
+      "fully valid": 28202250,
+      "fuel-only infeasible": 6428457,
+      "completely infeasible": 7420533
+    }
+  }
+}

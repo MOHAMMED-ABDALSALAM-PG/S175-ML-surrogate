@@ -1,0 +1,85 @@
+{
+  "environment": {
+    "python": "3.14.4",
+    "torch": "2.13.0+cu130",
+    "numpy": "2.5.1",
+    "cuda_available": true,
+    "gpu": "Quadro RTX 5000",
+    "git_commit": "HEAD"
+  },
+  "n_train_rows": 100922980,
+  "measurements": [
+    {
+      "batch_size": 512,
+      "amp": false,
+      "steps": 200,
+      "s_per_step": 0.009991232469910755,
+      "rows_per_s": 51244.929145820715,
+      "projected_epoch_s": 1969.4237397190504,
+      "projected_epoch_h": 0.5470621499219585
+    },
+    {
+      "batch_size": 512,
+      "amp": true,
+      "steps": 200,
+      "s_per_step": 0.012543931925029029,
+      "rows_per_s": 40816.54803773301,
+      "projected_epoch_s": 2472.599591388801,
+      "projected_epoch_h": 0.6868332198302225
+    },
+    {
+      "batch_size": 4096,
+      "amp": false,
+      "steps": 200,
+      "s_per_step": 0.01072540211986052,
+      "rows_per_s": 381897.1031785676,
+      "projected_epoch_s": 264.26746670767596,
+      "projected_epoch_h": 0.0734076296410211
+    },
+    {
+      "batch_size": 4096,
+      "amp": true,
+      "steps": 200,
+      "s_per_step": 0.013691400314855854,
+      "rows_per_s": 299165.89288209146,
+      "projected_epoch_s": 337.3478808955545,
+      "projected_epoch_h": 0.09370774469320958
+    },
+    {
+      "batch_size": 16384,
+      "amp": false,
+      "steps": 200,
+      "s_per_step": 0.010827816564997192,
+      "rows_per_s": 1513139.7823051547,
+      "projected_epoch_s": 66.69772428179202,
+      "projected_epoch_h": 0.018527145633831118
+    },
+    {
+      "batch_size": 16384,
+      "amp": true,
+      "steps": 200,
+      "s_per_step": 0.013779416104953271,
+      "rows_per_s": 1189019.9029631207,
+      "projected_epoch_s": 84.87913427562724,
+      "projected_epoch_h": 0.023577537298785343
+    },
+    {
+      "batch_size": 65536,
+      "amp": false,
+      "steps": 200,
+      "s_per_step": 0.0171204918899457,
+      "rows_per_s": 3827927.3995910794,
+      "projected_epoch_s": 26.36491486509936,
+      "projected_epoch_h": 0.007323587462527601
+    },
+    {
+      "batch_size": 65536,
+      "amp": true,
+      "steps": 200,
+      "s_per_step": 0.013822012784949038,
+      "rows_per_s": 4741422.325362263,
+      "projected_epoch_s": 21.285380857164856,
+      "projected_epoch_h": 0.0059126057936569046
+    }
+  ]
+}

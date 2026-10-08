@@ -1,0 +1,97 @@
+"""Loss-weight grid figure for the manuscript (companion to tab:alphagrid).
+
+Two side-by-side heatmap panels over the same 5 x 6 grid, from results/alpha_grid/
+selection.json: (a) the worst seed's count of outputs on their safe side,
+(b) the mean standardised MAE over seeds. The selected pair is outlined.
+
+  python scripts/24_alpha_grid_figure.py
+Out:  figures/fig_alpha_grid.{pdf,png}
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Rectangle
+
+ROOT = Path(__file__).resolve().parents[1]
+SRC = ROOT / "results" / "alpha_grid" / "selection.json"
+
+ALPHA_SPEED = [1.0, 1.5, 2.0, 3.0, 5.0]      # columns
+ALPHA_OTHER = [1.5, 1.0, 0.8, 0.67, 0.5, 0.33]  # rows, toward safety
+EDGE = "#1c2b3a"
+
+
+def fmt(a: float) -> str:
+    return f"{a:g}"
+
+
+def main() -> int:
+    sel = json.loads(SRC.read_text())
+    if sel["selected"] is None:
+        raise SystemExit(
+            f"{SRC} records no eligible pair ({sel.get('reason', 'unknown')}) "
+            "-- extend the grid per the selection rule and re-run script 22 "
+            "before drawing the manuscript figure")
+    by_pair = {(g["alpha_speed"], g["alpha_other"]): g for g in sel["grid"]}
+    picked = (sel["selected"]["alpha_speed"], sel["selected"]["alpha_other"])
+
+    safe = np.array([[min(int(s.split("/")[0])
+                          for s in by_pair[(sp, ao)]["safe_by_seed"])
+                      for sp in ALPHA_SPEED] for ao in ALPHA_OTHER])
+    mae = np.array([[by_pair[(sp, ao)]["mean_rel_MAE_sd_pct"]
+                     for sp in ALPHA_SPEED] for ao in ALPHA_OTHER])
+
+    # imshow clips silently, so the MAE scale is taken from the data (padded
+    # to a tenth) rather than pinned to today's range; the ink switch follows
+    # it, keeping the printed number legible against its own cell.
+    lo = np.floor(mae.min() * 10.0) / 10.0
+    hi = np.ceil(mae.max() * 10.0) / 10.0
+
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.9))
+    panels = [
+        (axes[0], safe, 0.0, 10.0, "{:.0f}", 6.5,
+         "(a) Worst seed: outputs on their safe side",
+         "outputs safe-side, of 10\n(worst of 5 seeds)"),
+        (axes[1], mae, lo, hi, "{:.2f}", lo + 0.66 * (hi - lo),
+         "(b) Mean standardised MAE over five seeds",
+         "mean MAE\n[% of output SD]"),
+    ]
+    for ax, mat, vmin, vmax, cellfmt, ink_switch, title, cblabel in panels:
+        im = ax.imshow(mat, cmap="Blues", vmin=vmin, vmax=vmax, aspect="auto")
+        ax.set_xticks(range(len(ALPHA_SPEED)), [fmt(a) for a in ALPHA_SPEED],
+                      fontsize=7.5)
+        ax.set_yticks(range(len(ALPHA_OTHER)), [fmt(a) for a in ALPHA_OTHER],
+                      fontsize=7.5)
+        ax.set_xlabel(r"$\alpha_\mathrm{speed}$", fontsize=8.5)
+        ax.set_ylabel(r"$\alpha_\mathrm{other}$", fontsize=8.5)
+        ax.set_title(title, fontsize=8)
+        for i in range(len(ALPHA_OTHER)):
+            for j in range(len(ALPHA_SPEED)):
+                # single-hue white->blue scale: dark ink on pale (low) cells,
+                # white ink once the cell is deep blue (high end of the scale)
+                ax.text(j, i, cellfmt.format(mat[i, j]), ha="center",
+                        va="center", fontsize=7.5,
+                        color="white" if mat[i, j] > ink_switch else "black")
+        i = ALPHA_OTHER.index(picked[1])
+        j = ALPHA_SPEED.index(picked[0])
+        ax.add_patch(Rectangle((j - 0.5, i - 0.5), 1, 1, fill=False,
+                               edgecolor=EDGE, linewidth=2.2))
+        cb = fig.colorbar(im, ax=ax, shrink=0.9, pad=0.03)
+        cb.set_label(cblabel, fontsize=7.5)
+        cb.ax.tick_params(labelsize=7.5)
+
+    fig.tight_layout()
+    for ext in ("pdf", "png"):
+        fig.savefig(ROOT / "figures" / f"fig_alpha_grid.{ext}",
+                    dpi=300, bbox_inches="tight")
+    print("wrote figures/fig_alpha_grid.{pdf,png}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

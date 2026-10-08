@@ -1,0 +1,279 @@
+{
+  "classifier_results": {
+    "RF": {
+      "accuracy": 0.9953475981618731,
+      "f1_for_neg1": 0.9871138322075138,
+      "precision_for_neg1": 0.9881032981913145,
+      "recall_for_neg1": 0.9861263459024018,
+      "TN": 112376,
+      "FN_dangerous": 1581,
+      "FP_conservative": 1353,
+      "TP": 515332,
+      "train_time_s": 77.33421158790588
+    },
+    "XGB": {
+      "accuracy": 0.9962419248955826,
+      "f1_for_neg1": 0.9895869032241057,
+      "precision_for_neg1": 0.9909627687190362,
+      "recall_for_neg1": 0.9882148529708574,
+      "TN": 112614,
+      "FN_dangerous": 1343,
+      "FP_conservative": 1027,
+      "TP": 515658,
+      "train_time_s": 38.12358379364014
+    },
+    "MLP": {
+      "accuracy": 0.9978720097931949,
+      "f1_for_neg1": 0.9941231596556224,
+      "precision_for_neg1": 0.9922113342133098,
+      "recall_for_neg1": 0.9960423668576743,
+      "TN": 113506,
+      "FN_dangerous": 451,
+      "FP_conservative": 891,
+      "TP": 515794,
+      "train_time_s": 2674.7845871448517
+    }
+  },
+  "combined_results": {
+    "RF_clf + RF_reg": {
+      "classifier": "RF",
+      "regressor": "RF",
+      "total_train_time_s": 214.99595856666565,
+      "classification": {
+        "accuracy": 0.9953475981618731,
+        "f1": 0.9871138322075138,
+        "precision": 0.9881032981913145,
+        "recall": 0.9861263459024018,
+        "TN": 515332,
+        "FP": 1353,
+        "FN": 1581,
+        "TP": 112376,
+        "false_negatives_dangerous": 1353
+      },
+      "regression": {
+        "n_rows": 515332,
+        "MAE": 0.04803262815420297,
+        "RMSE": 0.07858301178574326,
+        "R2": 0.9992711850607275,
+        "Max_Error": 1.1381738606568232,
+        "Overestimated_pct": 46.77838752493538,
+        "Mean_overestimation": 0.05124372240329859,
+        "Mean_underestimation": -0.0454116198912037
+      }
+    },
+    "RF_clf + XGB_reg": {
+      "classifier": "RF",
+      "regressor": "XGB",
+      "total_train_time_s": 103.4200484752655,
+      "classification": {
+        "accuracy": 0.9953475981618731,
+        "f1": 0.9871138322075138,
+        "precision": 0.9881032981913145,
+        "recall": 0.9861263459024018,
+        "TN": 515332,
+        "FP": 1353,
+        "FN": 1581,
+        "TP": 112376,
+        "false_negatives_dangerous": 1353
+      },
+      "regression": {
+        "n_rows": 515332,
+        "MAE": 0.054180504595065654,
+        "RMSE": 0.0791190883910511,
+        "R2": 0.9992612075027797,
+        "Max_Error": 1.0425650390625005,
+        "Overestimated_pct": 49.865135485473445,
+        "Mean_overestimation": 0.0543717732233746,
+        "Mean_underestimation": -0.05399026500516944
+      }
+    },
+    "RF_clf + MLP_reg": {
+      "classifier": "RF",
+      "regressor": "MLP",
+      "total_train_time_s": 707.6341619491577,
+      "classification": {
+        "accuracy": 0.9953475981618731,
+        "f1": 0.9871138322075138,
+        "precision": 0.9881032981913145,
+        "recall": 0.9861263459024018,
+        "TN": 515332,
+        "FP": 1353,
+        "FN": 1581,
+        "TP": 112376,
+        "false_negatives_dangerous": 1353
+      },
+      "regression": {
+        "n_rows": 515332,
+        "MAE": 0.024418798940336453,
+        "RMSE": 0.033902986999102776,
+        "R2": 0.9998643449851761,
+        "Max_Error": 0.6270662415424333,
+        "Overestimated_pct": 51.951945541903086,
+        "Mean_overestimation": 0.02435020251751019,
+        "Mean_underestimation": -0.024492968803471026
+      }
+    },
+    "XGB_clf + RF_reg": {
+      "classifier": "XGB",
+      "regressor": "RF",
+      "total_train_time_s": 175.7853307723999,
+      "classification": {
+        "accuracy": 0.9962419248955826,
+        "f1": 0.9895869032241057,
+        "precision": 0.9909627687190362,
+        "recall": 0.9882148529708574,
+        "TN": 515658,
+        "FP": 1027,
+        "FN": 1343,
+        "TP": 112614,
+        "false_negatives_dangerous": 1027
+      },
+      "regression": {
+        "n_rows": 515658,
+        "MAE": 0.048040962059875784,
+        "RMSE": 0.07858385649454737,
+        "R2": 0.9992711348801862,
+        "Max_Error": 1.1381738606568232,
+        "Overestimated_pct": 46.77208537441483,
+        "Mean_overestimation": 0.051224793924318314,
+        "Mean_underestimation": -0.04543830028990047
+      }
+    },
+    "XGB_clf + XGB_reg": {
+      "classifier": "XGB",
+      "regressor": "XGB",
+      "total_train_time_s": 64.20942068099976,
+      "classification": {
+        "accuracy": 0.9962419248955826,
+        "f1": 0.9895869032241057,
+        "precision": 0.9909627687190362,
+        "recall": 0.9882148529708574,
+        "TN": 515658,
+        "FP": 1027,
+        "FN": 1343,
+        "TP": 112614,
+        "false_negatives_dangerous": 1027
+      },
+      "regression": {
+        "n_rows": 515658,
+        "MAE": 0.05418381694538494,
+        "RMSE": 0.07912227943625075,
+        "R2": 0.9992611129207903,
+        "Max_Error": 1.0425650390625005,
+        "Overestimated_pct": 49.84990051545792,
+        "Mean_overestimation": 0.054367437492048726,
+        "Mean_underestimation": -0.05400129555304743
+      }
+    },
+    "XGB_clf + MLP_reg": {
+      "classifier": "XGB",
+      "regressor": "MLP",
+      "total_train_time_s": 668.423534154892,
+      "classification": {
+        "accuracy": 0.9962419248955826,
+        "f1": 0.9895869032241057,
+        "precision": 0.9909627687190362,
+        "recall": 0.9882148529708574,
+        "TN": 515658,
+        "FP": 1027,
+        "FN": 1343,
+        "TP": 112614,
+        "false_negatives_dangerous": 1027
+      },
+      "regression": {
+        "n_rows": 515658,
+        "MAE": 0.02441940318247722,
+        "RMSE": 0.03390278470178648,
+        "R2": 0.9998643401805231,
+        "Max_Error": 0.6270662415424333,
+        "Overestimated_pct": 51.94469978163822,
+        "Mean_overestimation": 0.024349193041698133,
+        "Mean_underestimation": -0.024495295845051883
+      }
+    },
+    "MLP_clf + RF_reg": {
+      "classifier": "MLP",
+      "regressor": "RF",
+      "total_train_time_s": 2812.4463341236115,
+      "classification": {
+        "accuracy": 0.9978720097931949,
+        "f1": 0.9941231596556224,
+        "precision": 0.9922113342133098,
+        "recall": 0.9960423668576743,
+        "TN": 515794,
+        "FP": 891,
+        "FN": 451,
+        "TP": 113506,
+        "false_negatives_dangerous": 891
+      },
+      "regression": {
+        "n_rows": 515794,
+        "MAE": 0.048036870423036046,
+        "RMSE": 0.07858204141044854,
+        "R2": 0.9992706671378738,
+        "Max_Error": 1.1381738606568215,
+        "Overestimated_pct": 46.764793696708374,
+        "Mean_overestimation": 0.051211160924371626,
+        "Mean_underestimation": -0.045445846485113905
+      }
+    },
+    "MLP_clf + XGB_reg": {
+      "classifier": "MLP",
+      "regressor": "XGB",
+      "total_train_time_s": 2700.8704240322113,
+      "classification": {
+        "accuracy": 0.9978720097931949,
+        "f1": 0.9941231596556224,
+        "precision": 0.9922113342133098,
+        "recall": 0.9960423668576743,
+        "TN": 515794,
+        "FP": 891,
+        "FN": 451,
+        "TP": 113506,
+        "false_negatives_dangerous": 891
+      },
+      "regression": {
+        "n_rows": 515794,
+        "MAE": 0.05418032344444761,
+        "RMSE": 0.07911043184587717,
+        "R2": 0.9992608260053258,
+        "Max_Error": 1.0425650390625005,
+        "Overestimated_pct": 49.83714428628483,
+        "Mean_overestimation": 0.054356006686048806,
+        "Mean_underestimation": -0.05400578092816167
+      }
+    },
+    "MLP_clf + MLP_reg": {
+      "classifier": "MLP",
+      "regressor": "MLP",
+      "total_train_time_s": 3305.0845375061035,
+      "classification": {
+        "accuracy": 0.9978720097931949,
+        "f1": 0.9941231596556224,
+        "precision": 0.9922113342133098,
+        "recall": 0.9960423668576743,
+        "TN": 515794,
+        "FP": 891,
+        "FN": 451,
+        "TP": 113506,
+        "false_negatives_dangerous": 891
+      },
+      "regression": {
+        "n_rows": 515794,
+        "MAE": 0.024417771980182083,
+        "RMSE": 0.03389247945661928,
+        "R2": 0.999864329366843,
+        "Max_Error": 0.6270662415424333,
+        "Overestimated_pct": 51.93546260716487,
+        "Mean_overestimation": 0.024345067468507314,
+        "Mean_underestimation": -0.024496331821850716
+      }
+    }
+  },
+  "best_combinations": {
+    "best_mae": "MLP_clf + MLP_reg",
+    "best_f1": "MLP_clf + RF_reg",
+    "best_overest": "MLP_clf + RF_reg",
+    "best_overall": "MLP_clf + MLP_reg"
+  }
+}
