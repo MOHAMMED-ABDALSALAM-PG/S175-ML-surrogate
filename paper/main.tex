@@ -457,12 +457,12 @@ Only $(\alpha_{\mathrm{speed}},\alpha_{\mathrm{other}})=(1.5,0.33)$ satisfied th
 
 The selected value $\alpha_{\mathrm{other}}=0.33$ is the lower boundary of the evaluated grid. Consequently, the experiment identifies the only eligible pair among the 30 evaluated configurations but does not establish that $0.33$ is optimal among intermediate or smaller untested values. The prespecified extension to $\alpha_{\mathrm{other}}\in\{0.25,0.20\}$ was not activated because an eligible pair had already been identified. A finer investigation of the loss-weight boundary is left for future work. The directional-compliance and accuracy patterns across the complete grid are visualised in \autoref{fig:alphagrid}.
 
-\begin{figure}[ht!]
+\begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{fig_alpha_grid.pdf}
 \caption{Joint asymmetric-loss weight grid: (a) worst-seed conservative-direction count; (b) mean standardised MAE.}
 \label{fig:alphagrid}
-\end{figure}
+\end{figure*}
 
 The effects of batch-normalisation placement, masked training, and output-specific weighting were examined using five regressors trained under the protocol of \autoref{sec:method} and evaluated on identical screening-disjoint test rows. The first arm reproduces the initial configuration: uniform $\alpha=1.5$ for all ten outputs, no fuel mask, exclusion of fuel-only-infeasible rows from training, and batch normalisation after activation. The second arm retains the unmasked data handling but uses the corrected batch-normalisation placement. The remaining three arms use masked training and differ only in their weighting: uniform $\alpha=1.5$, symmetric $\alpha=1.0$, and the selected output-specific weights. Comparison of the corrected unmasked arm with the uniform masked arm captures the combined effect of masking the undefined fuel target and retaining the fuel-only infeasible cases during regression training. The initial and corrected unmasked arms place three and two outputs on their specified conservative sides, respectively, while the uniform and symmetric masked arms place one and six outputs on their conservative sides. Only the selected output-specific masked configuration places all ten outputs preferentially on their prescribed conservative error sides. \autoref{tab:lossablation} lists the over-prediction rates, and \autoref{fig:lossablation} visualises the error-direction results for the five configurations.
 

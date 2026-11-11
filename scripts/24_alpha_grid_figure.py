@@ -1,6 +1,6 @@
 """Loss-weight grid figure for the manuscript (companion to tab:alphagrid).
 
-Two heatmap panels over the same 5 x 6 grid, from results/alpha_grid/
+Two side-by-side heatmap panels over the same 5 x 6 grid, from results/alpha_grid/
 selection.json: (a) the worst seed's count of outputs on their safe side,
 (b) the mean standardised MAE over seeds. The selected pair is outlined.
 
@@ -52,7 +52,7 @@ def main() -> int:
     lo = np.floor(mae.min() * 10.0) / 10.0
     hi = np.ceil(mae.max() * 10.0) / 10.0
 
-    fig, axes = plt.subplots(2, 1, figsize=(3.5, 5.4))
+    fig, axes = plt.subplots(1, 2, figsize=(7.2, 2.9))
     panels = [
         (axes[0], safe, 0.0, 10.0, "{:.0f}", 6.5,
          "(a) Worst seed: outputs on their safe side",
